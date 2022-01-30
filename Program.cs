@@ -1,4 +1,4 @@
-namespace MyChess;
+namespace winForm;
 
 static class Program
 {

@@ -1,4 +1,4 @@
-namespace MyChess;
+namespace winForm;
 
 public partial class Form1 : Form
 {

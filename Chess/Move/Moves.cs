@@ -14,11 +14,11 @@ namespace Chess.Moves
             public int StartSquare;
             public int TargetSquare;
         }
-        public List<Move> ReturnPosebleMoves(int pos)
+        public List<Move> ReturnPosebleMoves(int StartSquare)
         {
-            List<Move> PosebleSquares = new List<Move>();
+            List<Move> PosebleMoves = new List<Move>();
 
-            return PosebleSquares;
+            return PosebleMoves;
         }
 
         public bool IsMovePoseble(Move move)

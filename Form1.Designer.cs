@@ -1,4 +1,4 @@
-﻿namespace MyChess;
+﻿namespace winForm;
 
 partial class Form1
 {
