@@ -1,7 +1,10 @@
+using MyChessGUI;
+
 namespace winForm;
 
 static class Program
 {
+    private static GameOfChess? game;
     /// <summary>
     ///  The main entry point for the application.
     /// </summary>
@@ -9,6 +12,23 @@ static class Program
     static void Main()
     {
         ApplicationConfiguration.Initialize();
-        Application.Run(new Form1());
-    }    
+
+        Form1 myForm = new Form1();
+
+        var gameThread = new Thread(() => StartGame(myForm));
+
+        myForm.Shown += (s, e) => gameThread.Start();
+        myForm.FormClosing += (s, e) =>
+        {
+            game?.Stop();
+            gameThread.Join();
+        };
+
+        Application.Run(myForm);
+    }
+    private static void StartGame(Form1 myForm)
+    {
+        game = new GameOfChess(myForm);
+        game.Play();
+    }
 }

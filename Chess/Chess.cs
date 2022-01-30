@@ -12,6 +12,21 @@ namespace Chess
             _board = new Board();
             posebleMoves = new PosebleMoves(_board);
         }
+        public ChessGame(int[] board, int castle)
+        {
+            _board = new Board(board, castle);
+            posebleMoves = new PosebleMoves(_board);
+        }
+        public ChessGame(Board board)
+        {
+            _board = new Board(board.board, board.castle);
+            posebleMoves = new PosebleMoves(_board);
+        }
+        public ChessGame(string FENboard)
+        {
+            _board = new Board(FENboard);
+            posebleMoves = new PosebleMoves(_board);
+        }
 
         /// <summary>
         /// This returnes a list of the poseble moves
@@ -26,7 +41,15 @@ namespace Chess
         /// </summary>
         public bool MakeMove(PosebleMoves.Move Move)
         {
-            return false;
+            //for now
+            _board.board[Move.TargetSquare] = _board.board[Move.StartSquare];
+
+            return true;
+        }
+
+        public Board GetBoard()
+        {
+            return _board;
         }
 
         public string GetFENBoard()

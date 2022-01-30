@@ -1,4 +1,4 @@
-using Chess;
+using Chess.ChessBoard;
 using winForm;
 
 namespace MyChessGUI
@@ -11,6 +11,21 @@ namespace MyChessGUI
         {
             formGUI = new FormGUI(form);
             _form = form;
+        }
+
+        public void PrintBoard()
+        {
+
+        }
+
+        public void PrintBoard(Board board)
+        {
+
+        }
+
+        public void PrintBoard(string FENboard)
+        {
+
         }
     }
 }

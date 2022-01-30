@@ -8,6 +8,14 @@ namespace Chess.ChessBoard
         {
 
         }
+        public Board(int[] board, int castle)
+        {
+
+        }
+        public Board(string FENboard)
+        {
+
+        }
     }
 }
 /*

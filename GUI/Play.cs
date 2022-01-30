@@ -7,6 +7,8 @@ namespace MyChessGUI
     {
         private ChessGame chessGame = new ChessGame();
         private ChessAPI chessAPI;
+        private int SelecktedSquare;
+        private bool _isRunning;
         private Form1 _form;
         public GameOfChess(Form1 form)
         {
@@ -19,8 +21,11 @@ namespace MyChessGUI
 
         public void Play()
         {
-
+            while (_isRunning)
+                Thread.Sleep(1000);
         }
+
+        public void Stop() => _isRunning = false;
 
         private void KeyPress(object? sender, KeyPressEventArgs e)
         {
@@ -29,7 +34,7 @@ namespace MyChessGUI
 
         private void MouseClick(object? sender, MouseEventArgs e)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
