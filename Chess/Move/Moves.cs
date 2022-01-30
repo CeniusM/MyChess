@@ -13,6 +13,16 @@ namespace Chess.Moves
         {
             public int StartSquare;
             public int TargetSquare;
+            public Move()
+            {
+                StartSquare = 64;
+                TargetSquare = 64;
+            }
+            public Move(int StartSquare, int TargetSquare)
+            {
+                this.StartSquare = StartSquare;
+                this.TargetSquare = TargetSquare;
+            }
         }
         public List<Move> ReturnPosebleMoves(int StartSquare)
         {
