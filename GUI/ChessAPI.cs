@@ -20,6 +20,8 @@ namespace MyChessGUI
         }
 
         public void PrintBoard(Board board)
+        // make it so when it checks for wich peice it needs to print, 
+        // make it check the color first, and then do the pawn, rook and so on
         {
 
         }

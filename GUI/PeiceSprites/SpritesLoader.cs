@@ -20,7 +20,9 @@ namespace MyChessGUI.Sprites
         };
         public static List<Bitmap> GetSprites(string PathToFolder)
         {
+            List<Bitmap> sprites = new List<Bitmap>();
 
+            return sprites;
         }
     }
 }
