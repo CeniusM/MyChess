@@ -23,10 +23,16 @@ namespace MyChessGUI
             _form.graphicsObj.DrawImage(_bitmap, 0, 0);
         }
 
-        public void DrawSquare(int x1, int y1, int x2, int y2, Color color)
+        // public void DrawSquare(int x1, int y1, int x2, int y2, Color color) // test :D
+        // {
+        //     _brush.Color = color;
+        //     _graphicsObj.FillRectangle(_brush, x2 - x1, y2 - y1, (x2 - x1) * 2 << 1, (y2 - y1) << 1);
+        // }
+
+        public void DrawSquare(int x, int y, int height, int width, Color color)
         {
             _brush.Color = color;
-            _graphicsObj.FillRectangle(_brush, x2 - x1, y2 - y1, (x2 - x1) * 2 << 1, (y2 - y1) << 1);
+            _graphicsObj.FillRectangle(_brush, x, y, width, height);
         }
 
         public void DrawBitmap(Bitmap bitmap, int x, int y)

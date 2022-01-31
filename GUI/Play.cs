@@ -30,7 +30,7 @@ namespace MyChessGUI
             _isRunning = true;
 
             chessAPI.PrintBoard(chessGame.GetBoard());
-            
+
             while (_isRunning)
                 Thread.Sleep(1000);
         }
@@ -39,7 +39,10 @@ namespace MyChessGUI
 
         private void KeyPress(object? sender, KeyPressEventArgs e)
         {
-            throw new NotImplementedException();
+            if (e.KeyChar == 'r') // rePrints the whole board
+            {
+                chessAPI.PrintBoard(chessGame.GetBoard());
+            }
         }
 
         private void MouseClick(object? sender, MouseEventArgs e)

@@ -23,13 +23,14 @@ namespace MyChessGUI
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    if (i + j % 2 == 0) // white squares, mnake it its own method
+                    if ((i + j) % 2 == 0) // white squares, mnake it its own method
                     {
-                        _formGUI.DrawSquare(i * _form.Width, j * _form.Height, (i + 1) * _form.Width, (j + 1) * _form.Height, Color.White);
+                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.WhiteSmoke);
                     }
                     else
                     {
-                        _formGUI.DrawSquare(i * _form.Width, j * _form.Height, (i + 1) * _form.Width, (j + 1) * _form.Height, Color.Black);
+                        // _formGUI.DrawSquare(i * _form.Width, j * _form.Height, (i + 1) * _form.Width, (j + 1) * _form.Height, Color.Black);
+                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.LimeGreen);
                     }
 
                     if ((board.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
@@ -38,7 +39,9 @@ namespace MyChessGUI
             }
 
             //test
-            // _formGUI.DrawSquare(100, 100, 300, 400, Color.Red);
+            // _formGUI.DrawSquare(0, 0, 100, 100, Color.Yellow);
+            // _formGUI.DrawSquare(0, 0, 100, 100, Color.Brown);
+            // _formGUI.DrawSquare(0, 100, 300, 200, Color.Red);
             // _formGUI.PrintSquareOnForm(100, 100, 200, 200, Color.Blue);
             _formGUI.DrawBitmap(_sprites[5], 0, 0);
 
