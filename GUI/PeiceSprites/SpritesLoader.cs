@@ -5,7 +5,6 @@ namespace MyChessGUI.Sprites
     {
         private static string[] SpriteNames =
         {
-            // this is the order
             "Wpawn",
             "Bpawn",
             "Wrook",
