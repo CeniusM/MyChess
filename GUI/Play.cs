@@ -27,6 +27,10 @@ namespace MyChessGUI
 
         public void Play()
         {
+            _isRunning = true;
+
+            chessAPI.PrintBoard(chessGame.GetBoard());
+            
             while (_isRunning)
                 Thread.Sleep(1000);
         }
@@ -40,10 +44,8 @@ namespace MyChessGUI
 
         private void MouseClick(object? sender, MouseEventArgs e)
         {
-            // its totaly ok its messy o.o, i mean, why would you have to click fast right?... i still need to clean it up tho
-            // and its not acurate, it should always do it so like 620 = 6, and 134 = 1, and so on... but it dosent
-            int squareY = (int)MathF.Floor((_squareDimensions[0] * (float)e.Y));
-            int squareX = (int)MathF.Floor((_squareDimensions[1] * (float)e.X));
+            int squareY = (int)((float)8 / (float)_form.Height * (float)e.Y);
+            int squareX = (int)((float)8 / (float)_form.Width * (float)e.X);
 
             if (_selecktedSquare == 64)
             {
@@ -55,6 +57,7 @@ namespace MyChessGUI
                 _selecktedSquare = 64;
             }
 
+            // later on only print the square that is changed, make a method that takes a list of moves
             chessAPI.PrintBoard(chessGame.GetBoard());
 
             // debugging

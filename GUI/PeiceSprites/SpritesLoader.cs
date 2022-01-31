@@ -5,22 +5,29 @@ namespace MyChessGUI.Sprites
     {
         private static string[] SpriteNames =
         {
-            "Bbishop",
-            "Bking",
-            "Bknight",
+            // this is the order
+            "Wpawn",
             "Bpawn",
-            "Bqueen",
+            "Wrook",
             "Brook",
             "Wbishop",
-            "Wking",
+            "Bbishop",
             "Wknight",
-            "Wpawn",
+            "Bknight",
             "Wqueen",
-            "Wrool"
+            "Bqueen",
+            "Wking",
+            "Bking"
         };
         public static List<Bitmap> GetSprites(string PathToFolder)
         {
             List<Bitmap> sprites = new List<Bitmap>();
+
+            for (int i = 0; i < SpriteNames.Count(); i++)
+            {
+                string Path = PathToFolder + @"\" + SpriteNames[i] + ".bmp";
+                sprites.Add(new Bitmap(Path));
+            }
 
             return sprites;
         }
