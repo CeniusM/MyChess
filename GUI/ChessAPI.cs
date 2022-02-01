@@ -74,7 +74,7 @@ namespace MyChessGUI
 
         }
 
-        private void PrintPeice(int x, int y, int piece) // later add it so it does the background
+        private void PrintPeice(int x, int y, int piece) // later add it so it does the background, or at list be able to
         {
             void PrintWSprite(int sprite) => _formGUI.DrawBitmap(_sprites[(sprite - 1) << 1], x * 100, y * 100);
             void PrintBSprite(int sprite) => _formGUI.DrawBitmap(_sprites[((sprite - 1) << 1) + 1], x * 100, y * 100);

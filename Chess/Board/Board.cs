@@ -2,6 +2,8 @@ namespace Chess.ChessBoard
 {
     public static class Piece
     {
+        public const int ColorBits = 24;
+        public const int PieceBits = 7;
         public const int None = 0;
         public const int Pawm = 1;
         public const int Rook = 2;
@@ -29,6 +31,7 @@ namespace Chess.ChessBoard
     {
         public int[] board = new int[64];
         public int castle = 0;
+
         public Board()
         {
 
@@ -79,6 +82,26 @@ namespace Chess.ChessBoard
             board[50] = Piece.WPawm;
             board[49] = Piece.WPawm;
             board[48] = Piece.WPawm;
+
+            for (int i = 16; i < 48; i++)
+            {
+                board[i] = Piece.None;
+            }
+        }
+
+        public static bool IsPieceThisPiece(int piece1, int piece2)
+        {
+            return (piece1 & 7) == piece2;
+        }
+
+        public static bool IsPieceWhite(int piece)
+        {
+            return (piece & Piece.ColorBits) == Piece.White;
+        }
+
+        public static bool IsPieceBlack(int piece)
+        {
+            return (piece & Piece.ColorBits) == Piece.Black;
         }
     }
 }

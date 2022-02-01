@@ -1,4 +1,5 @@
 using Chess.ChessBoard;
+using Chess.Moves.PieceMovment;
 
 namespace Chess.Moves
 {
@@ -33,7 +34,14 @@ namespace Chess.Moves
 
         public bool IsMovePoseble(Move move)
         {
-            return false;
+            bool IsMovePoseble = false;
+
+            if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm))
+                IsMovePoseble = Pawn.IsMovePoseble(_board, move);
+            else
+                IsMovePoseble = true;
+
+            return IsMovePoseble;
         }
     }
 }
