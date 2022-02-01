@@ -43,6 +43,7 @@ namespace Chess
         {
             //for now
             _board.board[Move.TargetSquare] = _board.board[Move.StartSquare];
+            _board.board[Move.StartSquare] = Piece.None;
 
             return true;
         }

@@ -1,6 +1,7 @@
 using Chess;
 using Chess.Moves;
 using winForm;
+using Chess.ChessBoard;
 
 namespace MyChessGUI
 {
@@ -47,6 +48,7 @@ namespace MyChessGUI
             {
                 chessGame.StartOver();
                 chessAPI.PrintBoard(chessGame.GetBoard());
+                _selecktedSquare = -1;
             }
         }
 
@@ -57,18 +59,23 @@ namespace MyChessGUI
 
             if ((squareX + (squareY * 8)) > 63) return;
 
-            if (chessGame.GetBoard().board[squareX + (squareY * 8)] == 0 && _selecktedSquare != -1)
+            if (_selecktedSquare != -1 && (chessGame.GetBoard().board[squareX + (squareY * 8)] == 0 || (chessGame.GetBoard().board[squareX + (squareY * 8)] & Piece.White + Piece.Black) != (chessGame.GetBoard().board[_selecktedSquare] & Piece.White + Piece.Black))) // second click
             {
+                // checks of the first piece is moving to either another colored piece or or nothing
                 chessGame.MakeMove(new PosebleMoves.Move(_selecktedSquare, squareX + (squareY * 8)));
                 _selecktedSquare = -1;
             }
-            else if (chessGame.GetBoard().board[squareX + (squareY * 8)] != 0)
+            else if (squareX + (squareY * 8) == _selecktedSquare) // checks if you click the same square
+            {
+                _selecktedSquare = -1;
+            }
+            else if (chessGame.GetBoard().board[squareX + (squareY * 8)] != 0) // first click
             {
                 _selecktedSquare = squareX + (squareY * 8);
             }
 
             // later on only print the square that is changed, make a method that takes a list of moves
-            chessAPI.PrintBoard(chessGame.GetBoard());
+            chessAPI.PrintBoard(chessGame.GetBoard(), _selecktedSquare);
 
             // debugging
             CS_MyConsole.MyConsole.WriteLine((squareX + ", " + squareY + "\n" + e.X + ", " + e.Y + "\n"));
