@@ -19,7 +19,7 @@ namespace MyChessGUI
 
             _squareDimensions[0] = form.Height / 8;
             _squareDimensions[1] = form.Width / 8;
-            _selecktedSquare = 64;
+            _selecktedSquare = -1;
 
             _form.MouseClick += MouseClick;
             _form.KeyPress += KeyPress;
@@ -43,28 +43,35 @@ namespace MyChessGUI
             {
                 chessAPI.PrintBoard(chessGame.GetBoard());
             }
+            else if (e.KeyChar == 'o') // Resests the board
+            {
+                chessGame.StartOver();
+                chessAPI.PrintBoard(chessGame.GetBoard());
+            }
         }
 
         private void MouseClick(object? sender, MouseEventArgs e)
         {
-            int squareY = (int)((float)8 / (float)_form.Height * (float)e.Y);
-            int squareX = (int)((float)8 / (float)_form.Width * (float)e.X);
+            int squareX = (int)((float)8 / 800 * (float)e.X);
+            int squareY = (int)((float)8 / 800 * (float)e.Y);
 
-            if (_selecktedSquare == 64)
+            if ((squareX + (squareY * 8)) > 63) return;
+
+            if (chessGame.GetBoard().board[squareX + (squareY * 8)] == 0 && _selecktedSquare != -1)
             {
-                _selecktedSquare = squareX + squareY * 8;
+                chessGame.MakeMove(new PosebleMoves.Move(_selecktedSquare, squareX + (squareY * 8)));
+                _selecktedSquare = -1;
             }
-            else
+            else if (chessGame.GetBoard().board[squareX + (squareY * 8)] != 0)
             {
-                chessGame.MakeMove(new PosebleMoves.Move(_selecktedSquare, squareX + squareY * 8));
-                _selecktedSquare = 64;
+                _selecktedSquare = squareX + (squareY * 8);
             }
 
             // later on only print the square that is changed, make a method that takes a list of moves
             chessAPI.PrintBoard(chessGame.GetBoard());
 
             // debugging
-            // CS_MyConsole.MyConsole.WriteLine((squareX + ", " + squareY + "\n" + e.X + ", " + e.Y + "\n"));
+            CS_MyConsole.MyConsole.WriteLine((squareX + ", " + squareY + "\n" + e.X + ", " + e.Y + "\n"));
         }
     }
 }

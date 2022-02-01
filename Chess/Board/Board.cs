@@ -11,6 +11,18 @@ namespace Chess.ChessBoard
         public const int King = 6;
         public const int White = 8;
         public const int Black = 16;
+        public const int BPawm = 1 + Black;
+        public const int BRook = 2 + Black;
+        public const int BKnight = 3 + Black;
+        public const int BBishop = 4 + Black;
+        public const int BQueen = 5 + Black;
+        public const int BKing = 6 + Black;
+        public const int WPawm = 1 + White;
+        public const int WRook = 2 + White;
+        public const int WKnight = 3 + White;
+        public const int WBishop = 4 + White;
+        public const int WQueen = 5 + White;
+        public const int WKing = 6 + White;
     }
 
     class Board
@@ -28,6 +40,45 @@ namespace Chess.ChessBoard
         public Board(string FENboard)
         {
 
+        }
+
+        public void SetUpToStanderd()
+        {
+            board[0] = Piece.Rook + Piece.Black;
+            board[1] = Piece.Knight + Piece.Black;
+            board[2] = Piece.Bishop + Piece.Black;
+            board[3] = Piece.Queen + Piece.Black;
+            board[4] = Piece.King + Piece.Black;
+            board[5] = Piece.Bishop + Piece.Black;
+            board[6] = Piece.Knight + Piece.Black;
+            board[7] = Piece.Rook + Piece.Black;
+
+            board[8] = Piece.Pawm + Piece.Black;
+            board[9] = Piece.BPawm;
+            board[10] = Piece.BPawm;
+            board[11] = Piece.BPawm;
+            board[12] = Piece.BPawm;
+            board[13] = Piece.BPawm;
+            board[14] = Piece.BPawm;
+            board[15] = Piece.BPawm;
+
+            board[63] = Piece.WRook;
+            board[62] = Piece.WKnight;
+            board[61] = Piece.WBishop;
+            board[60] = Piece.WKing;
+            board[59] = Piece.WQueen;
+            board[58] = Piece.WBishop;
+            board[57] = Piece.WKnight;
+            board[56] = Piece.WRook;
+
+            board[55] = Piece.WPawm;
+            board[54] = Piece.WPawm;
+            board[53] = Piece.WPawm;
+            board[52] = Piece.WPawm;
+            board[51] = Piece.WPawm;
+            board[50] = Piece.WPawm;
+            board[49] = Piece.WPawm;
+            board[48] = Piece.WPawm;
         }
     }
 }

@@ -11,11 +11,6 @@ namespace Chess
         {
             _board = new Board();
             posebleMoves = new PosebleMoves(_board);
-
-            //test
-            _board.board[1] = Piece.Bishop + Piece.White;
-            _board.board[45] = Piece.King + Piece.Black;
-            _board.board[61] = Piece.King + Piece.White;
         }
         public ChessGame(int[] board, int castle)
         {
@@ -47,9 +42,14 @@ namespace Chess
         public bool MakeMove(PosebleMoves.Move Move)
         {
             //for now
-            // _board.board[Move.TargetSquare] = _board.board[Move.StartSquare];
+            _board.board[Move.TargetSquare] = _board.board[Move.StartSquare];
 
             return true;
+        }
+
+        public void StartOver()
+        {
+            _board.SetUpToStanderd();
         }
 
         public Board GetBoard()

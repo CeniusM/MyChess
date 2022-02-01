@@ -45,62 +45,17 @@ namespace MyChessGUI
 
         }
 
-        private void PrintPeice(int x, int y, int Piece)
+        private void PrintPeice(int x, int y, int piece) // later add it so it does the background
         {
-            if ((Piece & 8) == 8) // chescks if the peice is white
-            {
-                if ((Piece & 1) == 1) // pawn
-                {
-                    _formGUI.DrawBitmap(_sprites[0], x * 100, y * 100); // make this a local fucktion or method instead of writing it 200 times...
-                }
-                else if ((Piece & 2) == 2) // rook
-                {
-                    _formGUI.DrawBitmap(_sprites[1 << 1], x * 100, y * 100);
-                }
-                else if ((Piece & 3) == 3) // bishop
-                {
-                    _formGUI.DrawBitmap(_sprites[2 << 1], x * 100, y * 100);
-                }
-                else if ((Piece & 4) == 4) // knight
-                {
-                    _formGUI.DrawBitmap(_sprites[3 << 1], x * 100, y * 100);
-                }
-                else if ((Piece & 5) == 5) // queen
-                {
-                    _formGUI.DrawBitmap(_sprites[4 << 1], x * 100, y * 100);
-                }
-                else if ((Piece & 6) == 6) // king
-                {
-                    _formGUI.DrawBitmap(_sprites[5 << 1], x * 100, y * 100);
-                }
-            }
+            void PrintWSprite(int sprite) => _formGUI.DrawBitmap(_sprites[(sprite - 1) << 1], x * 100, y * 100);
+            void PrintBSprite(int sprite) => _formGUI.DrawBitmap(_sprites[((sprite - 1) << 1) + 1], x * 100, y * 100);
+
+            if ((piece & Piece.White) == Piece.White)
+                PrintWSprite((piece & 0b111));
+            else if ((piece & Piece.Black) == Piece.Black)
+                PrintBSprite((piece & 0b111));
             else
-            {
-                if ((Piece & 1) == 1) // pawn
-                {
-                    _formGUI.DrawBitmap(_sprites[1], x * 100, y * 100);
-                }
-                else if ((Piece & 2) == 2) // rook
-                {
-                    _formGUI.DrawBitmap(_sprites[(1 << 1) + 1], x * 100, y * 100);
-                }
-                else if ((Piece & 3) == 3) // bishop
-                {
-                    _formGUI.DrawBitmap(_sprites[(2 << 1) + 1], x * 100, y * 100);
-                }
-                else if ((Piece & 4) == 4) // knight
-                {
-                    _formGUI.DrawBitmap(_sprites[(3 << 1) + 1], x * 100, y * 100);
-                }
-                else if ((Piece & 5) == 5) // queen
-                {
-                    _formGUI.DrawBitmap(_sprites[(4 << 1) + 1], x * 100, y * 100);
-                }
-                else if ((Piece & 6) == 6) // king
-                {
-                    _formGUI.DrawBitmap(_sprites[(5 << 1) + 1], x * 100, y * 100);
-                }
-            }
+                throw new NotImplementedException("Cant use Piceses with no color value");
         }
     }
 }
