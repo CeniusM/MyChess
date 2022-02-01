@@ -11,7 +11,7 @@ namespace MyChessGUI
         public ChessAPI(Form1 form)
         {
             _formGUI = new FormGUI(form);
-            _sprites = Sprites.SpriteFetcher.GetSprites(@"C:\GitHub\MyChess\GUI\PeiceSprites\100x100"); // larn relativ path
+            _sprites = Sprites.SpriteFetcher.GetSprites(@"C:\GitHub\MyChess\GUI\PeiceSprites\100x100"); // learn relativ path
             _form = form;
         }
 
@@ -29,21 +29,13 @@ namespace MyChessGUI
                     }
                     else
                     {
-                        // _formGUI.DrawSquare(i * _form.Width, j * _form.Height, (i + 1) * _form.Width, (j + 1) * _form.Height, Color.Black);
                         _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.LimeGreen);
                     }
 
                     if ((board.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
-                        PrintSquare(i, j, board.board[i]);
+                        PrintPeice(i, j, board.board[i + (j * 8)]);
                 }
             }
-
-            //test
-            // _formGUI.DrawSquare(0, 0, 100, 100, Color.Yellow);
-            // _formGUI.DrawSquare(0, 0, 100, 100, Color.Brown);
-            // _formGUI.DrawSquare(0, 100, 300, 200, Color.Red);
-            // _formGUI.PrintSquareOnForm(100, 100, 200, 200, Color.Blue);
-            _formGUI.DrawBitmap(_sprites[5], 0, 0);
 
             _formGUI.Print();
         }
@@ -53,60 +45,60 @@ namespace MyChessGUI
 
         }
 
-        private void PrintSquare(int x, int y, int Piece)
+        private void PrintPeice(int x, int y, int Piece)
         {
             if ((Piece & 8) == 8) // chescks if the peice is white
             {
                 if ((Piece & 1) == 1) // pawn
                 {
-                    _formGUI.DrawBitmap(_sprites[0], x * _form.Height, y * _form.Width); // make this a local fucktion or method instead of writing it 200 times...
+                    _formGUI.DrawBitmap(_sprites[0], x * 100, y * 100); // make this a local fucktion or method instead of writing it 200 times...
                 }
                 else if ((Piece & 2) == 2) // rook
                 {
-                    _formGUI.DrawBitmap(_sprites[1 << 1], x * _form.Height, y * _form.Width);
+                    _formGUI.DrawBitmap(_sprites[1 << 1], x * 100, y * 100);
                 }
                 else if ((Piece & 3) == 3) // bishop
                 {
-                    _formGUI.DrawBitmap(_sprites[2 << 1], x * _form.Height, y * _form.Width);
+                    _formGUI.DrawBitmap(_sprites[2 << 1], x * 100, y * 100);
                 }
                 else if ((Piece & 4) == 4) // knight
                 {
-                    _formGUI.DrawBitmap(_sprites[3 << 1], x * _form.Height, y * _form.Width);
+                    _formGUI.DrawBitmap(_sprites[3 << 1], x * 100, y * 100);
                 }
                 else if ((Piece & 5) == 5) // queen
                 {
-                    _formGUI.DrawBitmap(_sprites[4 << 1], x * _form.Height, y * _form.Width);
+                    _formGUI.DrawBitmap(_sprites[4 << 1], x * 100, y * 100);
                 }
                 else if ((Piece & 6) == 6) // king
                 {
-                    _formGUI.DrawBitmap(_sprites[5 << 1], x * _form.Height, y * _form.Width);
+                    _formGUI.DrawBitmap(_sprites[5 << 1], x * 100, y * 100);
                 }
             }
             else
             {
                 if ((Piece & 1) == 1) // pawn
                 {
-                    _formGUI.DrawBitmap(_sprites[1], x * _form.Height, y * _form.Width);
+                    _formGUI.DrawBitmap(_sprites[1], x * 100, y * 100);
                 }
                 else if ((Piece & 2) == 2) // rook
                 {
-                    _formGUI.DrawBitmap(_sprites[(1 << 1) + 1], x * _form.Height, y * _form.Width);
+                    _formGUI.DrawBitmap(_sprites[(1 << 1) + 1], x * 100, y * 100);
                 }
                 else if ((Piece & 3) == 3) // bishop
                 {
-                    _formGUI.DrawBitmap(_sprites[(2 << 1) + 1], x * _form.Height, y * _form.Width);
+                    _formGUI.DrawBitmap(_sprites[(2 << 1) + 1], x * 100, y * 100);
                 }
                 else if ((Piece & 4) == 4) // knight
                 {
-                    _formGUI.DrawBitmap(_sprites[(3 << 1) + 1], x * _form.Height, y * _form.Width);
+                    _formGUI.DrawBitmap(_sprites[(3 << 1) + 1], x * 100, y * 100);
                 }
                 else if ((Piece & 5) == 5) // queen
                 {
-                    _formGUI.DrawBitmap(_sprites[(4 << 1) + 1], x * _form.Height, y * _form.Width);
+                    _formGUI.DrawBitmap(_sprites[(4 << 1) + 1], x * 100, y * 100);
                 }
                 else if ((Piece & 6) == 6) // king
                 {
-                    _formGUI.DrawBitmap(_sprites[(5 << 1) + 1], x * _form.Height, y * _form.Width);
+                    _formGUI.DrawBitmap(_sprites[(5 << 1) + 1], x * 100, y * 100);
                 }
             }
         }

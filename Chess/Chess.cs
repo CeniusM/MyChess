@@ -13,9 +13,9 @@ namespace Chess
             posebleMoves = new PosebleMoves(_board);
 
             //test
-            _board.board[1] = 10;
-            _board.board[45] = 5;
-            _board.board[61] = 1;
+            _board.board[1] = Piece.Bishop + Piece.White;
+            _board.board[45] = Piece.King + Piece.Black;
+            _board.board[61] = Piece.King + Piece.White;
         }
         public ChessGame(int[] board, int castle)
         {

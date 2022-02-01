@@ -18,13 +18,13 @@ namespace MyChessGUI.Sprites
             "Wking",
             "Bking"
         };
-        public static List<Bitmap> GetSprites(string PathToFolder)
+        public static List<Bitmap> GetSprites(string PathToFolder) // note* Paint.net, 100x100, 120/tomme
         {
             List<Bitmap> sprites = new List<Bitmap>();
 
             for (int i = 0; i < SpriteNames.Count(); i++)
             {
-                string Path = PathToFolder + @"\" + SpriteNames[i] + ".bmp";
+                string Path = PathToFolder + @"\" + SpriteNames[i] + ".png";
                 sprites.Add(new Bitmap(Path));
             }
 
