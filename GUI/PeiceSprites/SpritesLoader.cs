@@ -1,6 +1,10 @@
+using System.Resources;
+using System.Reflection;
+
 // this is used to return a list of all the sprites in any given reselution
 namespace MyChessGUI.Sprites
 {
+
     class SpriteFetcher
     {
         private static string[] SpriteNames =
@@ -18,14 +22,16 @@ namespace MyChessGUI.Sprites
             "Wking",
             "Bking"
         };
-        public static List<Bitmap> GetSprites(string PathToFolder) // note* Paint.net, 100x100, 120/tomme
+        public static List<Bitmap> GetSprites() // note* Paint.net, 100x100, 120/tomme
         {
             List<Bitmap> sprites = new List<Bitmap>();
 
             for (int i = 0; i < SpriteNames.Count(); i++)
             {
-                string Path = PathToFolder + @"\" + SpriteNames[i] + ".png";
-                sprites.Add(new Bitmap(Path));
+                //string Path = PathToFolder + @"\" + SpriteNames[i] + ".png";
+                //var rm = new ResourceManager("MyChess", Assembly.GetExecutingAssembly());
+                var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"MyChess.GUI.PeiceSprites._100x100.{SpriteNames[i]}.png");
+                sprites.Add(new Bitmap(stream!));
             }
 
             return sprites;

@@ -15,7 +15,7 @@ namespace MyChessGUI
         private Form1 _form;
         public GameOfChess(Form1 form)
         {
-            chessAPI = new ChessAPI(form);
+            chessAPI = new ChessAPI(form, chessGame.GetBoard());
             _form = form;
 
             _squareDimensions[0] = form.Height / 8;
@@ -30,7 +30,7 @@ namespace MyChessGUI
         {
             _isRunning = true;
 
-            chessAPI.PrintBoard(chessGame.GetBoard());
+            chessAPI.PrintBoard();
 
             while (_isRunning)
                 Thread.Sleep(1000);
@@ -42,12 +42,12 @@ namespace MyChessGUI
         {
             if (e.KeyChar == 'r') // rePrints the whole board
             {
-                chessAPI.PrintBoard(chessGame.GetBoard());
+                chessAPI.PrintBoard();
             }
             else if (e.KeyChar == 'o') // Resests the board
             {
                 chessGame.StartOver();
-                chessAPI.PrintBoard(chessGame.GetBoard());
+                chessAPI.PrintBoard();
                 _selecktedSquare = -1;
             }
         }
@@ -75,7 +75,7 @@ namespace MyChessGUI
             }
 
             // later on only print the square that is changed, make a method that takes a list of moves
-            chessAPI.PrintBoard(chessGame.GetBoard(), _selecktedSquare);
+            chessAPI.PrintBoard(_selecktedSquare);
 
             // debugging
             CS_MyConsole.MyConsole.WriteLine((squareX + ", " + squareY + "\n" + e.X + ", " + e.Y + "\n"));

@@ -7,18 +7,27 @@ namespace MyChessGUI
     {
         private FormGUI _formGUI;
         private List<Bitmap> _sprites;
+        private Board _board;
         private Form1 _form;
-        public ChessAPI(Form1 form)
+        private bool _isPrinting = false;
+        public ChessAPI(Form1 form, Board board)
         {
             _formGUI = new FormGUI(form);
-            _sprites = Sprites.SpriteFetcher.GetSprites(@"C:\GitHub\MyChess\GUI\PeiceSprites\100x100"); // learn relativ path
+            _board = board;
+            _sprites = Sprites.SpriteFetcher.GetSprites(); // learn relativ path
             _form = form;
+            form.Paint += (s, e) => PrintBoard();
         }
 
-        public void PrintBoard(Board board, int selecktedPiece)
+        public void PrintBoard(int selecktedPiece)
         // make it so when it checks for wich peice it needs to print, 
         // make it check if there is an empty square first, then the color, and then do the pawn, rook and so on
         {
+            if (_isPrinting)
+                return;
+
+            _isPrinting = true;
+
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -36,37 +45,40 @@ namespace MyChessGUI
                         _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.LimeGreen);
                     }
 
-                    if ((board.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
-                        PrintPeice(i, j, board.board[i + (j * 8)]);
+                    if ((_board.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
+                        PrintPeice(i, j, _board.board[i + (j * 8)]);
                 }
             }
 
             _formGUI.Print();
+
+            _isPrinting = false;
         }
 
-        public void PrintBoard(Board board)
+        public void PrintBoard()
         // make it so when it checks for wich peice it needs to print, 
         // make it check if there is an empty square first, then the color, and then do the pawn, rook and so on
         {
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    if ((i + j) % 2 == 0) // white squares, mnake it its own method
-                    {
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.WhiteSmoke);
-                    }
-                    else
-                    {
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.LimeGreen);
-                    }
+            PrintBoard(-1);
+            // for (int i = 0; i < 8; i++)
+            // {
+            //     for (int j = 0; j < 8; j++)
+            //     {
+            //         if ((i + j) % 2 == 0) // white squares, mnake it its own method
+            //         {
+            //             _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.WhiteSmoke);
+            //         }
+            //         else
+            //         {
+            //             _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.LimeGreen);
+            //         }
 
-                    if ((board.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
-                        PrintPeice(i, j, board.board[i + (j * 8)]);
-                }
-            }
+            //         if ((board.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
+            //             PrintPeice(i, j, board.board[i + (j * 8)]);
+            //     }
+            // }
 
-            _formGUI.Print();
+            // _formGUI.Print();
         }
 
         public void PrintBoard(string FENboard)

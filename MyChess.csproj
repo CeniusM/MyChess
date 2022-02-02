@@ -8,4 +8,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\Bpawn.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\Wpawn.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\Brook.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\Wrook.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\Wknight.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\Bknight.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\Wbishop.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\Bbishop.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\Wqueen.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\Bqueen.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\Wking.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\Bking.png" />
+  </ItemGroup>
+
 </Project>

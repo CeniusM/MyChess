@@ -108,6 +108,11 @@ namespace Chess.ChessBoard
         {
             return (piece1 & Piece.ColorBits) == (piece2 & Piece.ColorBits);
         }
+
+        public static bool IsPieceOppositeOrNone(int piece1, int piece2)
+        {
+            return (piece1 & piece2) != piece1;
+        }
     }
 }
 /*
