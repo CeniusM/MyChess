@@ -30,8 +30,8 @@ namespace Chess.ChessBoard
     class Board
     {
         public int[] board = new int[64];
+        public List<int> EnpasantPieces = new List<int>();
         public int castle = 0;
-
         public Board()
         {
 

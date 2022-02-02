@@ -11,13 +11,12 @@ namespace Chess.Moves.PieceMovment
 
             if (Board.IsPieceWhite(board.board[move.StartSquare]))
             {
-
+                
             }
             else if (Board.IsPieceBlack(board.board[move.StartSquare]))
             {
 
             }
-
 
             return IsMovePoseble;
         }
