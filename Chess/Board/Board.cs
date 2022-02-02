@@ -103,6 +103,11 @@ namespace Chess.ChessBoard
         {
             return (piece & Piece.ColorBits) == Piece.Black;
         }
+
+        public static bool IsPiecesSameColor(int piece1, int piece2)
+        {
+            return (piece1 & Piece.ColorBits) == (piece2 & Piece.ColorBits);
+        }
     }
 }
 /*
