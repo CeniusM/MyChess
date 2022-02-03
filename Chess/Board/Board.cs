@@ -90,29 +90,15 @@ namespace Chess.ChessBoard
         }
 
         public static bool IsPieceThisPiece(int piece1, int piece2)
-        {
-            return (piece1 & 7) == piece2;
-        }
-
+        { return (piece1 & 7) == piece2; }
         public static bool IsPieceWhite(int piece)
-        {
-            return (piece & Piece.ColorBits) == Piece.White;
-        }
-
+        { return (piece & Piece.ColorBits) == Piece.White; }
         public static bool IsPieceBlack(int piece)
-        {
-            return (piece & Piece.ColorBits) == Piece.Black;
-        }
-
+        { return (piece & Piece.ColorBits) == Piece.Black; }
         public static bool IsPiecesSameColor(int piece1, int piece2)
-        {
-            return (piece1 & Piece.ColorBits) == (piece2 & Piece.ColorBits);
-        }
-
+        { return (piece1 & Piece.ColorBits) == (piece2 & Piece.ColorBits); }
         public static bool IsPieceOppositeOrNone(int piece1, int piece2)
-        {
-            return (piece1 & piece2) != piece1;
-        }
+        { return (piece1 & piece2 & Piece.PieceBits) != piece1; }
     }
 }
 /*

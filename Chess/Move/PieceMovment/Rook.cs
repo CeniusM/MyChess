@@ -5,15 +5,18 @@ namespace Chess.Moves.PieceMovment
 {
     class knight
     {
+        int[] directions =
+        {
+            8,
+            1,
+            -1
+            -8
+        };
         public static bool IsMovePoseble(Board board, PosebleMoves.Move move)
         {
             bool IsMovePoseble = false;
 
-            if (Board.IsPieceWhite(board.board[move.StartSquare]))
-            {
-                
-            }
-            else if (Board.IsPieceBlack(board.board[move.StartSquare]))
+            for (int i = 0; i < 4; i++)
             {
 
             }

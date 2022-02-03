@@ -22,6 +22,8 @@ namespace MyChessGUI
             _squareDimensions[1] = form.Width / 8;
             _selecktedSquare = -1;
 
+            int renderDirections = Directions.directions[0].North; // just makes it so its loaded
+
             _form.MouseClick += MouseClick;
             _form.KeyPress += KeyPress;
         }
@@ -78,6 +80,7 @@ namespace MyChessGUI
             chessAPI.PrintBoard(_selecktedSquare);
 
             // debugging
+            // chessAPI.TestTheDirections();
             CS_MyConsole.MyConsole.WriteLine((squareX + ", " + squareY + "\n" + e.X + ", " + e.Y + "\n"));
         }
     }
