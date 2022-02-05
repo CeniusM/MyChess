@@ -29,10 +29,12 @@ namespace Chess.Moves
         {
             List<Move> PosebleMoves = new List<Move>();
 
+
+
             return PosebleMoves;
         }
 
-        public bool IsMovePoseble(Move move)
+        public bool IsMovePoseble(Move move) // checks one move and returns true if its poseble
         {
             bool IsMovePoseble = false;
 
@@ -40,6 +42,8 @@ namespace Chess.Moves
                 IsMovePoseble = Pawn.IsMovePoseble(_board, move);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Knight))
                 IsMovePoseble = Knight.IsMovePoseble(_board, move);
+            else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Rook))
+                IsMovePoseble = Rook.IsMovePoseble(_board, move);
             else
                 IsMovePoseble = true;
 
