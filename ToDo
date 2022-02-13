@@ -5,19 +5,33 @@ Remake the Directions class, n,e,s,w,ne,se,sw,nw
 make the queen and bishop
 
 3.
-remkae the player ui
+remake the player ui
 
 4.
 make the posblemoves list
 
+4.5.
+make the castle work
+and make the code for if the kings is in check
+implement the poseblemoves
+
+4.75.
+as soon as the chess code compitly works, make an evaluation method that estimates, look to video for insperation
+
+4.875
+make a method that just runs the all the difrent moves in a serten amount of depth
+
 5.
-implement the poseblemoves into the player ui
+implement the heighliheting of posblemoves from the seleckted piece, 
+and make the squares you just moved light up
+and a bar where you can see the evaluation
 
 6.
 make a random ai
 
-7.
+7. Make the code faaaast, just come with ideers
 remake the piece movement code
+make it so the game remebers where the pieces are instead of looping over all of them
 
 8.
 maby use copute shader to do the bitmap stuff. or just a seperate lone thread
@@ -26,4 +40,7 @@ maby use copute shader to do the bitmap stuff. or just a seperate lone thread
 make the ui even better
 
 10.
-Make an AI
+Make an AI/algorithm
+
+11.
+make, it, faaaast, with copute shader or multi threading
