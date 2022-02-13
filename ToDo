@@ -1,0 +1,29 @@
+1.
+Remake the Directions class, n,e,s,w,ne,se,sw,nw
+
+2.
+make the queen and bishop
+
+3.
+remkae the player ui
+
+4.
+make the posblemoves list
+
+5.
+implement the poseblemoves into the player ui
+
+6.
+make a random ai
+
+7.
+remake the piece movement code
+
+8.
+maby use copute shader to do the bitmap stuff. or just a seperate lone thread
+
+9.
+make the ui even better
+
+10.
+Make an AI
