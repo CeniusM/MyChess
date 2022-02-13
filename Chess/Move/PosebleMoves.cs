@@ -36,18 +36,32 @@ namespace Chess.Moves
 
         public bool IsMovePoseble(Move move) // checks one move and returns true if its poseble
         {
-            bool IsMovePoseble = false;
+            bool isMovePoseble = false;
 
             if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm))
-                IsMovePoseble = Pawn.IsMovePoseble(_board, move);
+                isMovePoseble = Pawn.IsMovePoseble(_board, move);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Knight))
-                IsMovePoseble = Knight.IsMovePoseble(_board, move);
+                isMovePoseble = Knight.IsMovePoseble(_board, move);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Rook))
-                IsMovePoseble = Rook.IsMovePoseble(_board, move);
+                isMovePoseble = Rook.IsMovePoseble(_board, move);
+            else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.King))
+                isMovePoseble = King.IsMovePoseble(_board, move);
             else
-                IsMovePoseble = true;
+                isMovePoseble = true;
 
-            return IsMovePoseble;
+            if (IsKingInCheck())
+                isMovePoseble = false;
+
+            return isMovePoseble;
+        }
+
+        private bool IsKingInCheck()
+        {
+            bool isKingInCheck = false;
+
+            // check if any of the kings is in check
+
+            return isKingInCheck;
         }
     }
 }

@@ -19,7 +19,10 @@ namespace Chess.Moves.PieceMovment
 
             for (int i = 0; i < 4; i++)
             {
-                
+                for (int j = 0; j < Directions.DirectionValuesArr[move.StartSquare, i]; j++) // AHHHHHHHHHHH
+                {
+                    
+                }
             }
 
             return IsMovePoseble;

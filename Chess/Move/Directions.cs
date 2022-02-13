@@ -11,6 +11,17 @@ namespace Chess.Moves
         public const int SouthWest = 6;
         public const int NothWest = 7;
     }
+    public static class DirectionValues
+    {
+        public const int North = -8;
+        public const int East = 1;
+        public const int South = 8;
+        public const int West = -1;
+        public const int NorthEast = -7;
+        public const int SouthEast = 9;
+        public const int SouthWest = 7;
+        public const int NothWest = -9;
+    }
     class Directions
     {
         public struct DirectionValues
