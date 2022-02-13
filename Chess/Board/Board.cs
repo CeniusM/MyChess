@@ -89,6 +89,8 @@ namespace Chess.ChessBoard
             }
         }
 
+        public static bool IsPieceOpposite(int piece1, int piece2) // 01 10 00, 101
+        { return (piece1 | piece2) == Piece.ColorBits; }
         public static bool IsPieceThisPiece(int piece1, int piece2)
         { return (piece1 & 7) == piece2; }
         public static bool IsPieceWhite(int piece)

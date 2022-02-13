@@ -64,14 +64,14 @@ namespace MyChessGUI
             if (_selecktedSquare != -1 && (chessGame.GetBoard().board[squareX + (squareY * 8)] == 0 || (chessGame.GetBoard().board[squareX + (squareY * 8)] & Piece.White + Piece.Black) != (chessGame.GetBoard().board[_selecktedSquare] & Piece.White + Piece.Black))) // second click
             {
                 // checks of the first piece is moving to either another colored piece or or nothing
-                chessGame.MakeMove(new PosebleMoves.Move(_selecktedSquare, squareX + (squareY * 8)));
+                chessGame.MakeMove(new PossibleMoves.Move(_selecktedSquare, squareX + (squareY * 8)));
                 _selecktedSquare = -1;
             }
             else if (squareX + (squareY * 8) == _selecktedSquare) // checks if you click the same square
             {
                 _selecktedSquare = -1;
             }
-            else if (chessGame.GetBoard().board[squareX + (squareY * 8)] != 0) // first click
+            else if (chessGame.GetBoard().board[squareX + (squareY * 8)] != 0 && Board.IsPiecesSameColor(chessGame.GetBoard().board[squareX + (squareY * 8)], chessGame.PlayerTurn)) // first click
             {
                 _selecktedSquare = squareX + (squareY * 8);
             }

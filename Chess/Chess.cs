@@ -6,47 +6,48 @@ namespace Chess
     class ChessGame
     {
         private Board _board;
-        private PosebleMoves _posebleMoves;
-        private int _playerTurn = 8; // 8 = white, 16 = black
+        private PossibleMoves _PossibleMoves;
+        public int PlayerTurn { get; private set; } = 8; // 8 = white, 16 = black
+
         public ChessGame()
         {
             _board = new Board();
-            _posebleMoves = new PosebleMoves(_board);
+            _PossibleMoves = new PossibleMoves(_board);
         }
         public ChessGame(int[] board, int castle)
         {
             _board = new Board(board, castle);
-            _posebleMoves = new PosebleMoves(_board);
+            _PossibleMoves = new PossibleMoves(_board);
         }
         public ChessGame(Board board)
         {
             _board = new Board(board.board, board.castle);
-            _posebleMoves = new PosebleMoves(_board);
+            _PossibleMoves = new PossibleMoves(_board);
         }
         public ChessGame(string FENboard)
         {
             _board = new Board(FENboard);
-            _posebleMoves = new PosebleMoves(_board);
+            _PossibleMoves = new PossibleMoves(_board);
         }
 
         /// <summary>
-        /// This returnes a list of the poseble moves
+        /// This returnes a list of the Possible moves
         /// </summary>
-        public List<PosebleMoves.Move> StartSquare(int StartSquare)
+        public List<PossibleMoves.Move> StartSquare(int StartSquare)
         {
-            return _posebleMoves.ReturnPosebleMoves(StartSquare);
+            return _PossibleMoves.ReturnPossibleMoves(StartSquare);
         }
 
         /// <summary>
         /// This takes a move and returns if it was valid
         /// </summary>
-        public bool MakeMove(PosebleMoves.Move move)
+        public bool MakeMove(PossibleMoves.Move move)
         {
-            if ((_board.board[move.StartSquare] & Piece.ColorBits) != _playerTurn)
+            if ((_board.board[move.StartSquare] & Piece.ColorBits) != PlayerTurn)
                 return false;
 
             //for now
-            if (_posebleMoves.IsMovePoseble(move))
+            if (_PossibleMoves.IsMovePossible(move))
             {
                 if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm)) // queen check, make it its own method
                 {
@@ -87,6 +88,6 @@ namespace Chess
             return FEN;
         }
 
-        private void ChangePlayer() => _playerTurn ^= 0b11000; // changes between 8 and 16
+        private void ChangePlayer() => PlayerTurn ^= 0b11000; // changes between 8 and 16
     }
 }

@@ -3,10 +3,10 @@ using Chess.Moves.PieceMovment;
 
 namespace Chess.Moves
 {
-    class PosebleMoves
+    class PossibleMoves
     {
         private Board _board;
-        public PosebleMoves(Board board)
+        public PossibleMoves(Board board)
         {
             _board = board;
         }
@@ -25,34 +25,34 @@ namespace Chess.Moves
                 this.TargetSquare = TargetSquare;
             }
         }
-        public List<Move> ReturnPosebleMoves(int StartSquare)
+        public List<Move> ReturnPossibleMoves(int StartSquare)
         {
-            List<Move> PosebleMoves = new List<Move>();
+            List<Move> PossibleMoves = new List<Move>();
 
 
 
-            return PosebleMoves;
+            return PossibleMoves;
         }
 
-        public bool IsMovePoseble(Move move) // checks one move and returns true if its poseble
+        public bool IsMovePossible(Move move) // checks one move and returns true if its Possible
         {
-            bool isMovePoseble = false;
+            bool isMovePossible = false;
 
             if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm))
-                isMovePoseble = Pawn.IsMovePoseble(_board, move);
+                isMovePossible = Pawn.IsMovePossible(_board, move);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Knight))
-                isMovePoseble = Knight.IsMovePoseble(_board, move);
+                isMovePossible = Knight.IsMovePossible(_board, move);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Rook))
-                isMovePoseble = Rook.IsMovePoseble(_board, move);
+                isMovePossible = Rook.IsMovePossible(_board, move);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.King))
-                isMovePoseble = King.IsMovePoseble(_board, move);
+                isMovePossible = King.IsMovePossible(_board, move);
             else
-                isMovePoseble = true;
+                isMovePossible = true;
 
             if (IsKingInCheck())
-                isMovePoseble = false;
+                isMovePossible = false;
 
-            return isMovePoseble;
+            return isMovePossible;
         }
 
         private bool IsKingInCheck()

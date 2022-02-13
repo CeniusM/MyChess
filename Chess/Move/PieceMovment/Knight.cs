@@ -16,7 +16,7 @@ namespace Chess.Moves.PieceMovment
             15,
             17
         };
-        public static bool IsMovePoseble(Board board, PosebleMoves.Move move)
+        public static bool IsMovePossible(Board board, PossibleMoves.Move move)
         {
             if (KnightMoves.Contains((move.StartSquare - move.TargetSquare)))
                 if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
