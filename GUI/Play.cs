@@ -12,6 +12,7 @@ namespace MyChessGUI
         private int[] _squareDimensions = new int[2];
         private int _selecktedSquare;
         private bool _isRunning;
+        private Random rnd = new Random();
         private Form1 _form;
         public GameOfChess(Form1 form)
         {
@@ -76,12 +77,24 @@ namespace MyChessGUI
                 _selecktedSquare = squareX + (squareY * 8);
             }
 
+
+            if (chessGame.PlayerTurn == Piece.Black) // play vs completly random ai
+            {
+                while (true) // the shitiest way imagineble
+                {
+                    chessGame.MakeMove(new PossibleMoves.Move(rnd.Next(0, 64), rnd.Next(0, 64)));
+                    if (chessGame.PlayerTurn == Piece.White)
+                        break;
+                }
+            }
+
             // later on only print the square that is changed, make a method that takes a list of moves
             chessAPI.PrintBoard(_selecktedSquare);
 
+
             // debugging
             // chessAPI.TestTheDirections();
-            CS_MyConsole.MyConsole.WriteLine((squareX + ", " + squareY + "\n" + e.X + ", " + e.Y + "\n"));
+            // CS_MyConsole.MyConsole.WriteLine((squareX + ", " + squareY + "\n" + e.X + ", " + e.Y + "\n"));
         }
     }
 }

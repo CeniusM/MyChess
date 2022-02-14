@@ -5,7 +5,7 @@ namespace Chess
 {
     class ChessGame
     {
-        private Board _board;
+        public Board _board { get; private set; }
         private PossibleMoves _PossibleMoves;
         public int PlayerTurn { get; private set; } = 8; // 8 = white, 16 = black
 
@@ -65,6 +65,7 @@ namespace Chess
 
                 _board.board[move.TargetSquare] = _board.board[move.StartSquare];
                 _board.board[move.StartSquare] = Piece.None;
+                CS_MyConsole.MyConsole.WriteLine(move.StartSquare + "." + move.TargetSquare + ". piece = " + (_board.board[move.StartSquare] & Piece.PieceBits)); // debuging
                 ChangePlayer();
                 return true;
             }

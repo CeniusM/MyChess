@@ -24,7 +24,7 @@ namespace Chess.Moves.V2 // V2 neededs to be removed
             7,
             -9
         };
-        public static readonly int[][] DirectionValues = new int[64][4]; // HUUUUUUUUUUHH?????????
+        public static readonly int[,] DirectionValues = new int[64, 8]; // HUUUUUUUUUUHH?????????
         static Directions()
         {
             for (int i = 0; i < 8; i++)
@@ -36,10 +36,10 @@ namespace Chess.Moves.V2 // V2 neededs to be removed
                     int East = 7 - i;
                     int West = i;
 
-                    DirectionValues[i + (j << 3)][DirectionsIndex.North] = North;
-                    DirectionValues[i + (j << 3)][DirectionsIndex.South] = South;
-                    DirectionValues[i + (j << 3)][DirectionsIndex.East] = East;
-                    DirectionValues[i + (j << 3)][DirectionsIndex.West] = West;
+                    DirectionValues[i + (j << 3), DirectionsIndex.North] = North;
+                    DirectionValues[i + (j << 3), DirectionsIndex.South] = South;
+                    DirectionValues[i + (j << 3), DirectionsIndex.East] = East;
+                    DirectionValues[i + (j << 3), DirectionsIndex.West] = West;
 
                     // DirectionValuesArr[(i + (j * 8)), DirectionNames.North] = North;
                     // DirectionValuesArr[(i + (j * 8)), DirectionNames.East] = East;
