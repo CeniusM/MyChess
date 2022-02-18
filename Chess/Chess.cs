@@ -49,7 +49,7 @@ namespace Chess
             //for now
             if (_PossibleMoves.IsMovePossible(move))
             {
-                if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm)) // queen check, make it its own method
+                if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm)) // pawn promotian check, make it its own method
                 {
                     if (Board.IsPieceWhite(_board.board[move.StartSquare]))
                     {

@@ -38,6 +38,9 @@ namespace Chess.Moves
         {
             bool isMovePossible = false;
 
+            if (Board.IsPiecesSameColor(_board.board[move.StartSquare], _board.board[move.TargetSquare]))
+                return false;
+
             if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm))
                 isMovePossible = Pawn.IsMovePossible(_board, move);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Knight))

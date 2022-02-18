@@ -26,7 +26,7 @@ namespace Chess.ChessBoard
         public const int WQueen = 5 + White;
         public const int WKing = 6 + White;
     }
-
+    
     class Board
     {
         public int[] board = new int[64];
