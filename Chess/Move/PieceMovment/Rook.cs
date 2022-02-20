@@ -5,16 +5,16 @@ namespace Chess.Moves.PieceMovment
 {
     class Rook
     {
+        private static int[] directionValues =
+        {
+            -8, // north
+            1, // east
+            8, // south
+            -1, // west
+        };
+
         public static bool IsMovePossible(Board board, PossibleMoves.Move move)
         {
-            int[] directionValues =
-            {
-                -8, // north
-                1, // east
-                8, // south
-                -1, // west
-            };
-
             bool IsMovePossible = true;
 
             int rookDirection;
@@ -49,6 +49,14 @@ namespace Chess.Moves.PieceMovment
             }
 
             return IsMovePossible;
+        }
+
+        public static List<PossibleMoves.Move> GetPossibleMoves(Board board)
+        {
+            int playerTurn = board.PlayerTurn; // so i dont need to get it each time
+            List<PossibleMoves.Move> posssibleMoves = new List<PossibleMoves.Move>();
+
+            return posssibleMoves;
         }
     }
 }

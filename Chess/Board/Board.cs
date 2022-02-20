@@ -30,8 +30,9 @@ namespace Chess.ChessBoard
     class Board
     {
         public int[] board = new int[64];
-        public List<int> EnpasantPieces = new List<int>();
+        public int[] EnpasantPieces = new int[2]; // 0 index is whites piece and 1 is blacks pieces
         public int castle = 0;
+        public int PlayerTurn { get; private set; } = 8; // 8 = white, 16 = black
         public Board()
         {
 
@@ -87,7 +88,11 @@ namespace Chess.ChessBoard
             {
                 board[i] = Piece.None;
             }
+
+            PlayerTurn = 0b1000;
         }
+
+        public void ChangePlayer() => PlayerTurn ^= 0b11000; // changes between 8 and 16
 
         public static bool IsPieceOpposite(int piece1, int piece2) // 01 10 00, 101
         { return ((piece1 | piece2) & Piece.ColorBits) == Piece.ColorBits; }

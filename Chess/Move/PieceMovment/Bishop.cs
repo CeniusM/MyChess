@@ -3,14 +3,10 @@ using Chess.Moves;
 
 namespace Chess.Moves.PieceMovment
 {
-    class King
+    class Bishop
     {
-        private static int[] KingMoves =
+        private static int[] directionValues =
         {
-            DirectionValues.North,
-            DirectionValues.South,
-            DirectionValues.East,
-            DirectionValues.West,
             DirectionValues.NorthEast,
             DirectionValues.SouthEast,
             DirectionValues.SouthWest,
@@ -19,10 +15,9 @@ namespace Chess.Moves.PieceMovment
         
         public static bool IsMovePossible(Board board, PossibleMoves.Move move)
         {
-            if (KingMoves.Contains((move.StartSquare - move.TargetSquare)))
-                if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
-                    return true;
-            return false;
+            bool IsMovePossible = true;
+
+            return IsMovePossible;
         }
 
         public static List<PossibleMoves.Move> GetPossibleMoves(Board board)

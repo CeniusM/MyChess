@@ -7,7 +7,7 @@ namespace Chess
     {
         public Board _board { get; private set; }
         private PossibleMoves _PossibleMoves;
-        public int PlayerTurn { get; private set; } = 8; // 8 = white, 16 = black
+        public bool isGameOver { get; private set; } = false;
 
         public ChessGame()
         {
@@ -43,7 +43,7 @@ namespace Chess
         /// </summary>
         public bool MakeMove(PossibleMoves.Move move)
         {
-            if ((_board.board[move.StartSquare] & Piece.ColorBits) != PlayerTurn)
+            if ((_board.board[move.StartSquare] & Piece.ColorBits) != _board.PlayerTurn)
                 return false;
 
             //for now
@@ -65,8 +65,8 @@ namespace Chess
 
                 _board.board[move.TargetSquare] = _board.board[move.StartSquare];
                 _board.board[move.StartSquare] = Piece.None;
+                _board.ChangePlayer();
                 CS_MyConsole.MyConsole.WriteLine(move.StartSquare + "." + move.TargetSquare + ". piece = " + (_board.board[move.StartSquare] & Piece.PieceBits)); // debuging
-                ChangePlayer();
                 return true;
             }
             return false;
@@ -88,7 +88,5 @@ namespace Chess
 
             return FEN;
         }
-
-        private void ChangePlayer() => PlayerTurn ^= 0b11000; // changes between 8 and 16
     }
 }

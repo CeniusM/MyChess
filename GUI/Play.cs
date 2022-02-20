@@ -72,18 +72,18 @@ namespace MyChessGUI
             {
                 _selecktedSquare = -1;
             }
-            else if (chessGame.GetBoard().board[squareX + (squareY * 8)] != 0 && Board.IsPiecesSameColor(chessGame.GetBoard().board[squareX + (squareY * 8)], chessGame.PlayerTurn)) // first click
+            else if (chessGame.GetBoard().board[squareX + (squareY * 8)] != 0 && Board.IsPiecesSameColor(chessGame.GetBoard().board[squareX + (squareY * 8)], chessGame._board.PlayerTurn)) // first click
             {
                 _selecktedSquare = squareX + (squareY * 8);
             }
 
 
-            if (chessGame.PlayerTurn == Piece.Black) // play vs completly random ai
+            if (chessGame._board.PlayerTurn == Piece.Black) // play vs completly random ai
             {
                 while (true) // the shitiest way imagineble
                 {
                     chessGame.MakeMove(new PossibleMoves.Move(rnd.Next(0, 64), rnd.Next(0, 64)));
-                    if (chessGame.PlayerTurn == Piece.White)
+                    if (chessGame._board.PlayerTurn == Piece.White)
                         break;
                 }
             }

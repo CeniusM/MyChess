@@ -11,7 +11,7 @@ namespace Chess.Moves.PieceMovment
         but for now i just check if it is on the right row
         */
 
-        public static bool IsMovePossible(Board board, PossibleMoves.Move move, List<int> enpasantPieces)
+        public static bool IsMovePossible(Board board, PossibleMoves.Move move, int[] enpasantPieces)
         {
             if (Board.IsPieceWhite(board.board[move.StartSquare]))
             {
@@ -41,7 +41,7 @@ namespace Chess.Moves.PieceMovment
                     if (Board.IsPieceBlack(board.board[move.TargetSquare]))
                         return true;
                 }
-                
+
                 //else if (enpasant left)
                 //else if (enpasant right)
             }
@@ -106,5 +106,13 @@ namespace Chess.Moves.PieceMovment
         //     }
         //     return false;
         // }
+
+        public static List<PossibleMoves.Move> GetPossibleMoves(Board board)
+        {
+            int playerTurn = board.PlayerTurn; // so i dont need to get it each time
+            List<PossibleMoves.Move> posssibleMoves = new List<PossibleMoves.Move>();
+
+            return posssibleMoves;
+        }
     }
 }

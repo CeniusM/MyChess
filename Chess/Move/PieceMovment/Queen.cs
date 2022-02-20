@@ -3,9 +3,9 @@ using Chess.Moves;
 
 namespace Chess.Moves.PieceMovment
 {
-    class King
+    class Queen
     {
-        private static int[] KingMoves =
+        private static int[] directionValues =
         {
             DirectionValues.North,
             DirectionValues.South,
@@ -16,13 +16,12 @@ namespace Chess.Moves.PieceMovment
             DirectionValues.SouthWest,
             DirectionValues.NothWest
         };
-        
+
         public static bool IsMovePossible(Board board, PossibleMoves.Move move)
         {
-            if (KingMoves.Contains((move.StartSquare - move.TargetSquare)))
-                if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
-                    return true;
-            return false;
+            bool IsMovePossible = true;
+
+            return IsMovePossible;
         }
 
         public static List<PossibleMoves.Move> GetPossibleMoves(Board board)

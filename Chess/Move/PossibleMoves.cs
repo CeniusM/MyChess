@@ -36,6 +36,9 @@ namespace Chess.Moves
 
         public bool IsMovePossible(Move move) // checks one move and returns true if its Possible
         {
+            if (!Board.IsPiecesSameColor(_board.board[move.StartSquare], _board.PlayerTurn))
+                return false;
+
             bool isMovePossible = false;
 
             if (Board.IsPiecesSameColor(_board.board[move.StartSquare], _board.board[move.TargetSquare]))
