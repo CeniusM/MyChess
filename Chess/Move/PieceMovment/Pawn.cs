@@ -41,6 +41,9 @@ namespace Chess.Moves.PieceMovment
                     if (Board.IsPieceBlack(board.board[move.TargetSquare]))
                         return true;
                 }
+                
+                //else if (enpasant left)
+                //else if (enpasant right)
             }
             else if (Board.IsPieceBlack(board.board[move.StartSquare]))
             {
@@ -70,6 +73,9 @@ namespace Chess.Moves.PieceMovment
                     if (Board.IsPieceWhite(board.board[move.TargetSquare]))
                         return true;
                 }
+
+                //else if (enpasant left)
+                //else if (enpasant right)
             }
             return false;
         }
