@@ -47,6 +47,7 @@ namespace Chess.Moves.V2 // V2 neededs to be removed
                     // DirectionValuesArr[(i + (j * 8)), DirectionNames.West] = West;
                 }
             }
+CS_MyConsole.MyConsole.WriteLine("I ran");
         }
     }
 }
