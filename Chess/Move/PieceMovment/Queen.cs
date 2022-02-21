@@ -19,7 +19,7 @@ namespace Chess.Moves.PieceMovment
 
         public static bool IsMovePossible(Board board, PossibleMoves.Move move)
         {
-            bool IsMovePossible = true;
+            bool IsMovePossible = true; // note, 3 - 31 should not work
             int queenDirection;
 
             if (((move.StartSquare - move.TargetSquare) % 8) == 0)
