@@ -25,11 +25,19 @@ namespace Chess.Moves.PieceMovment
             return false;
         }
 
-        public static List<PossibleMoves.Move> GetPossibleMoves(Board board)
+        public static List<PossibleMoves.Move> GetPossibleMoves(Board board, int[] pos)
         {
             int playerTurn = board.PlayerTurn; // so i dont need to get it each time
             List<PossibleMoves.Move> posssibleMoves = new List<PossibleMoves.Move>();
 
+            for (int i = 0; i < pos.Length; i++)
+            {
+                for (int j = 0; j < KnightMoves.Count(); j++)
+                {
+                    if (Board.IsPieceOppositeOrNone(board.board[pos[i]], board.board[pos[i] + KnightMoves[i]]))
+                        posssibleMoves.Add(new PossibleMoves.Move(pos[i], KnightMoves[i]));
+                }
+            }
             return posssibleMoves;
         }
     }

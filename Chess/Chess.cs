@@ -82,11 +82,14 @@ namespace Chess
             return _board;
         }
 
+        public void LoadFENString(string FEN)
+        {
+            _board = MyFEN.GetBoardFromFEN(FEN);
+        }
+
         public string GetFENBoard()
         {
-            string FEN = ""; // returns a FEN string
-
-            return FEN;
+            return MyFEN.GetFENBoard(_board);
         }
     }
 }

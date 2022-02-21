@@ -11,7 +11,7 @@ namespace Chess.Moves.PieceMovment
         but for now i just check if it is on the right row
         */
 
-        public static bool IsMovePossible(Board board, PossibleMoves.Move move, int[] enpasantPieces)
+        public static bool IsMovePossible(Board board, PossibleMoves.Move move, int enpasantPieces)
         {
             if (Board.IsPieceWhite(board.board[move.StartSquare]))
             {

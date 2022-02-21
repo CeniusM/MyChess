@@ -7,7 +7,7 @@ namespace MyChessGUI
 {
     class GameOfChess // is used to get inputs from the user and use them to make moves in the chess game
     {
-        private ChessGame chessGame = new ChessGame();
+        private ChessGame chessGame = new ChessGame(MyFEN.GetBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
         private ChessAPI chessAPI;
         private int[] _squareDimensions = new int[2];
         private int _selecktedSquare;
@@ -52,6 +52,24 @@ namespace MyChessGUI
                 chessGame.StartOver();
                 chessAPI.PrintBoard();
                 _selecktedSquare = -1;
+            }
+            else if (e.KeyChar == '1')
+            {
+                chessGame = new ChessGame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+                chessAPI = new ChessAPI(_form, chessGame.GetBoard());
+                chessAPI.PrintBoard();
+            }
+            else if (e.KeyChar == '2')
+            {
+                chessGame = new ChessGame("rnb1kbnr/ppp1pppp/8/q7/8/2N5/PPPP1PPP/R1BQKBNR b KQ - 0 1");
+                chessAPI = new ChessAPI(_form, chessGame.GetBoard());
+                chessAPI.PrintBoard();
+            }
+            else if (e.KeyChar == '3')
+            {
+                chessGame = new ChessGame("1k2r3/1p3r2/pN4p1/3p4/1R2n2P/4Q1q1/PPP3P1/2K1R3 b - - 1 1");
+                chessAPI = new ChessAPI(_form, chessGame.GetBoard());
+                chessAPI.PrintBoard();
             }
         }
 

@@ -1,16 +1,5 @@
 namespace Chess.Moves
 {
-    public static class DirectionNames
-    {
-        public const int North = 0;
-        public const int East = 1;
-        public const int South = 2;
-        public const int West = 3;
-        public const int NorthEast = 4;
-        public const int SouthEast = 5;
-        public const int SouthWest = 6;
-        public const int NothWest = 7;
-    }
     public static class DirectionValues
     {
         public const int North = -8;
@@ -51,10 +40,10 @@ namespace Chess.Moves
                     int West = i;
                     int East = 7 - i;
 
-                    DirectionValuesArr[(i + (j * 8)), DirectionNames.North] = North;
-                    DirectionValuesArr[(i + (j * 8)), DirectionNames.East] = East;
-                    DirectionValuesArr[(i + (j * 8)), DirectionNames.South] = South;
-                    DirectionValuesArr[(i + (j * 8)), DirectionNames.West] = West;
+                    DirectionValuesArr[(i + (j * 8)), 0] = North;
+                    DirectionValuesArr[(i + (j * 8)), 1] = East;
+                    DirectionValuesArr[(i + (j * 8)), 2] = South;
+                    DirectionValuesArr[(i + (j * 8)), 3] = West;
                     directions[i + (j * 8)] = new DirectionValues(North, South, West, East);
                 }
             }

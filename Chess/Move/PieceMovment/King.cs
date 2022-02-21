@@ -16,7 +16,7 @@ namespace Chess.Moves.PieceMovment
             DirectionValues.SouthWest,
             DirectionValues.NothWest
         };
-        
+
         public static bool IsMovePossible(Board board, PossibleMoves.Move move)
         {
             if (KingMoves.Contains((move.StartSquare - move.TargetSquare)))
@@ -25,11 +25,19 @@ namespace Chess.Moves.PieceMovment
             return false;
         }
 
-        public static List<PossibleMoves.Move> GetPossibleMoves(Board board)
+        public static List<PossibleMoves.Move> GetPossibleMoves(Board board, int[] pos)
         {
             int playerTurn = board.PlayerTurn; // so i dont need to get it each time
             List<PossibleMoves.Move> posssibleMoves = new List<PossibleMoves.Move>();
 
+            for (int i = 0; i < pos.Length; i++)
+            {
+                for (int j = 0; j < KingMoves.Count(); j++)
+                {
+                    if (Board.IsPieceOppositeOrNone(board.board[pos[i]], board.board[pos[i] + KingMoves[j]]))
+                        posssibleMoves.Add(new PossibleMoves.Move(pos[i], KingMoves[j]));
+                }
+            }
             return posssibleMoves;
         }
     }

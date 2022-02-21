@@ -30,7 +30,7 @@ namespace Chess.ChessBoard
     class Board
     {
         public int[] board = new int[64];
-        public int[] EnpasantPieces = new int[2]; // 0 index is whites piece and 1 is blacks pieces
+        public int enPassantPiece = -1; // 0 index is whites piece and 1 is blacks pieces
         public int castle = 0;
         public int PlayerTurn { get; private set; } = 8; // 8 = white, 16 = black
         public Board()
@@ -39,11 +39,15 @@ namespace Chess.ChessBoard
         }
         public Board(int[] board, int castle)
         {
-
+            this.board = board;
+            this.castle = castle;
         }
-        public Board(string FENboard)
+        public Board(string FEN)
         {
-
+            Board newBoard = MyFEN.GetBoardFromFEN(FEN);
+            board = newBoard.board;
+            castle = newBoard.castle;
+            PlayerTurn = newBoard.PlayerTurn;
         }
 
         public void SetUpToStanderd()
@@ -122,6 +126,12 @@ int = 137, tror jeg
 
 The castle works so the bits say if you can castle or not... will be implementet later
 0000
+
+1000 = White KingSite  = (O-O)
+0100 = White QueenSite = (O-O-O)
+0010 = Black KingSite  = (O-O)
+0001 = Black QueenSite = (O-O-O)
+
 
 pawn   = 1, 001
 rook   = 2, 010

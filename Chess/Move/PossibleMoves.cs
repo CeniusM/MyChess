@@ -45,11 +45,13 @@ namespace Chess.Moves
                 return false;
 
             if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm))
-                isMovePossible = Pawn.IsMovePossible(_board, move, _board.EnpasantPieces);
+                isMovePossible = Pawn.IsMovePossible(_board, move, _board.enPassantPiece);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Knight))
                 isMovePossible = Knight.IsMovePossible(_board, move);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Rook))
                 isMovePossible = Rook.IsMovePossible(_board, move);
+            else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Queen))
+                isMovePossible = Queen.IsMovePossible(_board, move);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.King))
                 isMovePossible = King.IsMovePossible(_board, move);
             else
