@@ -15,9 +15,17 @@ namespace Chess.Moves.PieceMovment
         
         public static bool IsMovePossible(Board board, PossibleMoves.Move move)
         {
-            bool IsMovePossible = true;
+            int start = move.StartSquare;
+            int target = move.TargetSquare;
+            int diff = start - target;
+            int xDiff = Math.Abs(start % 8 - target % 8);
+            int yDiff = Math.Abs(start / 8 - target / 8);
+            bool isDiagonal = xDiff == yDiff;
 
-            return IsMovePossible;
+            if (isDiagonal)
+                return true;
+
+            return false;
         }
 
         public static List<PossibleMoves.Move> GetPossibleMoves(Board board)

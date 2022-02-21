@@ -2,7 +2,7 @@ namespace CS_MyConsole
 {
     class MyConsole
     {
-        private static string _path = @"C:\GitHub\MyChess\MyConsole\Console.txt";
+        private static string _path = @"MyConsole\Console.txt";
         public static void WriteLine(string text)
         {
             List<string> lines = new List<string>();
@@ -28,7 +28,7 @@ namespace CS_MyConsole
 
 
 
-        public string path = @"C:\GitHub\MyChess\MyConsole\Console";
+        public string path = @"MyConsole\Console";
         public MyConsole(string path)
         {
             this.path = path;
