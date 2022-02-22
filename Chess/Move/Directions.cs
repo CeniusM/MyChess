@@ -24,10 +24,10 @@ namespace Chess.Moves.V2 // V2 neededs to be removed
                     int South = 7 - j;
                     int East = 7 - i;
                     int West = i;
-                    int NorthEast = North > East ? North : East;
-                    int SouthEast = South > East ? South : East;
-                    int SouthWest = South > West ? South : West;
-                    int NothWest = North > West ? North : West;
+                    int NorthEast = North < East ? North : East;
+                    int SouthEast = South < East ? South : East;
+                    int SouthWest = South < West ? South : West;
+                    int NothWest = North < West ? North : West;
 
                     DirectionValues[i + (j << 3), 0] = North;
                     DirectionValues[i + (j << 3), 1] = South;

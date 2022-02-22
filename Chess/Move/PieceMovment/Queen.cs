@@ -35,9 +35,10 @@ namespace Chess.Moves.PieceMovment
 
             if ((move.StartSquare - move.TargetSquare) > 0)
                 queenDirection *= -1;
-
+                
             int startSquareToSide = V2.Directions.DirectionValues[move.StartSquare, Array.IndexOf(directionValues, queenDirection)];
             int targetSquareToSide = V2.Directions.DirectionValues[move.TargetSquare, Array.IndexOf(directionValues, queenDirection)];
+
 
             for (int i = 1; i < (startSquareToSide - targetSquareToSide); i++)
             {
