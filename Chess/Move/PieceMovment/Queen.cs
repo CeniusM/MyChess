@@ -26,19 +26,21 @@ namespace Chess.Moves.PieceMovment
                 queenDirection = 8;
             else if (((move.StartSquare >> 3) == move.TargetSquare >> 3))
                 queenDirection = 1;
-            else if (((move.StartSquare - move.TargetSquare) % 7) == 0)
-                queenDirection = 7;
             else if (((move.StartSquare - move.TargetSquare) % 9) == 0)
                 queenDirection = 9;
+            else if (((move.StartSquare - move.TargetSquare) % 7) == 0)
+                queenDirection = 7;
             else
                 return false;
 
             if ((move.StartSquare - move.TargetSquare) > 0)
                 queenDirection *= -1;
-                
+
             int startSquareToSide = V2.Directions.DirectionValues[move.StartSquare, Array.IndexOf(directionValues, queenDirection)];
             int targetSquareToSide = V2.Directions.DirectionValues[move.TargetSquare, Array.IndexOf(directionValues, queenDirection)];
 
+            if (startSquareToSide <= targetSquareToSide)
+                return false;
 
             for (int i = 1; i < (startSquareToSide - targetSquareToSide); i++)
             {
