@@ -14,11 +14,6 @@ namespace Chess.Moves
         {
             public int StartSquare;
             public int TargetSquare;
-            public Move()
-            {
-                StartSquare = 64;
-                TargetSquare = 64;
-            }
             public Move(int StartSquare, int TargetSquare)
             {
                 this.StartSquare = StartSquare;
@@ -48,6 +43,8 @@ namespace Chess.Moves
                 isMovePossible = Pawn.IsMovePossible(_board, move, _board.enPassantPiece);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Knight))
                 isMovePossible = Knight.IsMovePossible(_board, move);
+            else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Bishop))
+                isMovePossible = Bishop.IsMovePossible(_board, move);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Rook))
                 isMovePossible = Rook.IsMovePossible(_board, move);
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Queen))
@@ -55,7 +52,7 @@ namespace Chess.Moves
             else if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.King))
                 isMovePossible = King.IsMovePossible(_board, move);
             else
-                isMovePossible = true;
+                isMovePossible = false;
 
             if (IsKingInCheck())
                 isMovePossible = false;
