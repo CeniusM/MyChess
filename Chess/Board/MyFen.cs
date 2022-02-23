@@ -159,6 +159,18 @@ namespace Chess.ChessBoard
                 FEN[FENIndexer] = 'q';
                 FENIndexer++;
             }
+            FENIndexer++;
+
+            if (board.enPassantPiece == -1)
+            {
+                FEN[FENIndexer] = '-';
+                FENIndexer += 2;
+            }
+            // else if () // do the letter+num
+            // {
+
+            // }
+
 
 
 
@@ -257,13 +269,36 @@ namespace Chess.ChessBoard
                 else if (FEN[FENIndex + i] == ' ')
                     break;
             }
-            FENIndex += addedNextTime;
+            FENIndex += addedNextTime + 1;
 
+            if (FEN[FENIndex] == '-')
+            {
+                FENIndex += 2;
+            }
+            else
+            {
+                int enPassantPiecePlacement = (8 - FEN[FENIndex + 1]) * 8; // the number
+                if (FEN[FENIndex] == 'a')
+                    enPassantPiecePlacement += 1;
+                else if (FEN[FENIndex] == 'b')
+                    enPassantPiecePlacement += 2;
+                else if (FEN[FENIndex] == 'c')
+                    enPassantPiecePlacement += 3;
+                else if (FEN[FENIndex] == 'd')
+                    enPassantPiecePlacement += 4;
+                else if (FEN[FENIndex] == 'e')
+                    enPassantPiecePlacement += 5;
+                else if (FEN[FENIndex] == 'f')
+                    enPassantPiecePlacement += 6;
+                else if (FEN[FENIndex] == 'g')
+                    enPassantPiecePlacement += 7;
+                else if (FEN[FENIndex] == 'h')
+                    enPassantPiecePlacement += 8;
 
+                board.enPassantPiece = enPassantPiecePlacement;
 
-
-
-
+                FENIndex += 3;
+            }
 
             return board;
         }
