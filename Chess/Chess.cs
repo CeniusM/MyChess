@@ -66,7 +66,7 @@ namespace Chess
                 _board.board[move.TargetSquare] = _board.board[move.StartSquare];
                 _board.board[move.StartSquare] = Piece.None;
                 _board.ChangePlayer();
-                CS_MyConsole.MyConsole.WriteLine(move.StartSquare + "." + move.TargetSquare + ". piece = " + (_board.board[move.StartSquare] & Piece.PieceBits)); // debuging
+                // CS_MyConsole.MyConsole.WriteLine(move.StartSquare + "." + move.TargetSquare + ". piece = " + (_board.board[move.TargetSquare] & Piece.PieceBits)); // debuging
                 return true;
             }
             return false;

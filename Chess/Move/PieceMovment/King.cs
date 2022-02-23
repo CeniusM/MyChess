@@ -17,11 +17,81 @@ namespace Chess.Moves.PieceMovment
             DirectionValues.NothWest
         };
 
+        // public static bool IsMovePossible(Board board, PossibleMoves.Move move) // old
+        // {
+        //     if (KingMoves.Contains((move.StartSquare - move.TargetSquare)))
+        //         if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
+        //             return true;
+        //     return false;
+        // }
+
         public static bool IsMovePossible(Board board, PossibleMoves.Move move)
         {
-            if (KingMoves.Contains((move.StartSquare - move.TargetSquare)))
+            int diffAmount = move.TargetSquare - move.StartSquare;
+
+            if (diffAmount == -8) // north
+            {
                 if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
+                {
                     return true;
+                }
+            }
+            else if (diffAmount == -7) // NorthEast
+            {
+                if (diffAmount % 8 == 1)
+                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
+                    {
+                        return true;
+                    }
+            }
+            else if (diffAmount == 1) // East
+            {
+                if ((move.StartSquare >> 3 == move.TargetSquare >> 3))
+                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
+                    {
+                        return true;
+                    }
+            }
+            else if (diffAmount == 9) // SouthEast
+            {
+                if (((move.StartSquare - move.TargetSquare) % 8) == 1)
+                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
+                    {
+                        return true;
+                    }
+            }
+            else if (diffAmount == 8) // South
+            {
+                if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
+                {
+                    return true;
+                }
+            }
+            else if (diffAmount == 7) // SouthWest
+            {
+                if (((move.StartSquare - move.TargetSquare) % 8) == 1)
+                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
+                    {
+                        return true;
+                    }
+            }
+            else if (diffAmount == -1) // West
+            {
+                if ((move.StartSquare >> 3 == move.TargetSquare >> 3))
+                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
+                    {
+                        return true;
+                    }
+            }
+            else if (diffAmount == -9) // NorthWest
+            {
+                if (((move.StartSquare - move.TargetSquare) % 8) == 1)
+                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
+                    {
+                        return true;
+                    }
+            }
+
             return false;
         }
 
