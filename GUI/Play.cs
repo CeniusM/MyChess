@@ -31,6 +31,9 @@ namespace MyChessGUI
 
         public void Play()
         {
+            // just to run the static method in the new directions
+            int foo = Chess.Moves.V2.Directions.DirectionValues[0, 0];
+
             _isRunning = true;
 
             chessAPI.PrintBoard();
@@ -53,6 +56,10 @@ namespace MyChessGUI
                 chessAPI.PrintBoard();
                 _selecktedSquare = -1;
             }
+            else if (e.KeyChar == 's') // Saves board
+            {
+                CS_MyConsole.MyConsole.WriteLine(MyFEN.GetFENFromBoard(chessGame._board));
+            }
             else if (e.KeyChar == '1')
             {
                 chessGame = new ChessGame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
@@ -68,6 +75,13 @@ namespace MyChessGUI
             else if (e.KeyChar == '3')
             {
                 chessGame = new ChessGame("1k2r3/1p3r2/pN4p1/3p4/1R2n2P/4Q1q1/PPP3P1/2K1R3 b - - 1 1");
+                chessAPI = new ChessAPI(_form, chessGame.GetBoard());
+                chessAPI.PrintBoard();
+            }
+
+            else if (e.KeyChar == '0') // reads the last line in MyConsole and takes it in as a fen string
+            {
+                chessGame = new ChessGame(CS_MyConsole.MyConsole.ReadLastLine());
                 chessAPI = new ChessAPI(_form, chessGame.GetBoard());
                 chessAPI.PrintBoard();
             }

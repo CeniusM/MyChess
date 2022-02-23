@@ -22,8 +22,14 @@ namespace Chess.Moves.PieceMovment
             int yDiff = Math.Abs(start / 8 - target / 8);
             bool isDiagonal = xDiff == yDiff;
 
-            if (isDiagonal)
-                return true;
+
+            // my code
+            // for (int i = 0; i < ; i++)
+            // {
+                
+            // }
+
+            
 
             return false;
         }

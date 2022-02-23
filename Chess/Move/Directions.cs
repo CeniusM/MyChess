@@ -13,7 +13,7 @@ namespace Chess.Moves.V2 // V2 neededs to be removed
             public const int SouthWest = 7;
             public const int NothWest = -9;
         }
-        public static readonly int[,] DirectionValues = new int[64, 8]; // HUUUUUUUUUUHH?????????
+        public static readonly int[,] DirectionValues = new int[64, 8];
         static Directions()
         {
             for (int i = 0; i < 8; i++)
@@ -37,14 +37,8 @@ namespace Chess.Moves.V2 // V2 neededs to be removed
                     DirectionValues[i + (j << 3), 5] = SouthEast;
                     DirectionValues[i + (j << 3), 6] = SouthWest;
                     DirectionValues[i + (j << 3), 7] = NothWest;
-
-                    // DirectionValuesArr[(i + (j * 8)), DirectionNames.North] = North;
-                    // DirectionValuesArr[(i + (j * 8)), DirectionNames.East] = East;
-                    // DirectionValuesArr[(i + (j * 8)), DirectionNames.South] = South;
-                    // DirectionValuesArr[(i + (j * 8)), DirectionNames.West] = West;
                 }
             }
-            CS_MyConsole.MyConsole.WriteLine("I ran");
         }
     }
 }

@@ -24,6 +24,12 @@ namespace CS_MyConsole
             lines[lines.Count() - 1] = lines[lines.Count() - 1] + text;
             File.WriteAllLines(_path, lines);
         }
+        public static string ReadLastLine()
+        {
+            List<string> lines = new List<string>();
+            lines = File.ReadAllLines(_path).ToList();
+            return lines[lines.Count - 1];
+        }
 
 
 

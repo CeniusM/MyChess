@@ -29,14 +29,14 @@ namespace Chess.Moves.PieceMovment
                 }
                 else if ((move.StartSquare - 7) == move.TargetSquare)
                 {
-                    if (((move.StartSquare - move.TargetSquare) % 8) != 1)
+                    if (((move.StartSquare - move.TargetSquare) % 8) == 1)
                         return false;
                     else if (Board.IsPieceBlack(board.board[move.TargetSquare]))
                         return true;
                 }
                 else if ((move.StartSquare - 9) == move.TargetSquare)
                 {
-                    if (((move.StartSquare - move.TargetSquare) % 8) != 1)
+                    if (((move.StartSquare - move.TargetSquare) % 8) == 1)
                         return false;
                     if (Board.IsPieceBlack(board.board[move.TargetSquare]))
                         return true;
@@ -61,14 +61,14 @@ namespace Chess.Moves.PieceMovment
                 }
                 else if ((move.StartSquare + 7) == move.TargetSquare)
                 {
-                    if (((move.StartSquare - move.TargetSquare) % 8) != 1)
+                    if (((move.StartSquare - move.TargetSquare) % 8) == 1)
                         return false;
                     else if (Board.IsPieceWhite(board.board[move.TargetSquare]))
                         return true;
                 }
                 else if ((move.StartSquare + 9) == move.TargetSquare)
                 {
-                    if (((move.StartSquare - move.TargetSquare) % 8) != 1)
+                    if (((move.StartSquare - move.TargetSquare) % 8) == 1)
                         return false;
                     if (Board.IsPieceWhite(board.board[move.TargetSquare]))
                         return true;

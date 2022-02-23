@@ -26,12 +26,26 @@ namespace Chess.Moves.PieceMovment
                 queenDirection = 8;
             else if (((move.StartSquare >> 3) == move.TargetSquare >> 3))
                 queenDirection = 1;
-            else if (((move.StartSquare - move.TargetSquare) % 9) == 0)
-                queenDirection = 9;
-            else if (((move.StartSquare - move.TargetSquare) % 7) == 0)
-                queenDirection = 7;
             else
-                return false;
+            {
+                int start = move.StartSquare;
+                int target = move.TargetSquare;
+                int diff = start - target;
+                int xDiff = Math.Abs(start % 8 - target % 8);
+                int yDiff = Math.Abs(start / 8 - target / 8);
+                bool isDiagonal = xDiff == yDiff;
+                if (isDiagonal)
+                {
+                    if (((move.StartSquare - move.TargetSquare) % 9) == 0)
+                        queenDirection = 9;
+                    else if (((move.StartSquare - move.TargetSquare) % 7) == 0)
+                        queenDirection = 7;
+                    else
+                        return false;
+                }
+                else
+                    return false;
+            }
 
             if ((move.StartSquare - move.TargetSquare) > 0)
                 queenDirection *= -1;

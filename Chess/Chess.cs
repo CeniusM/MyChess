@@ -89,7 +89,7 @@ namespace Chess
 
         public string GetFENBoard()
         {
-            return MyFEN.GetFENBoard(_board);
+            return MyFEN.GetFENFromBoard(_board);
         }
     }
 }
