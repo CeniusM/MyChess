@@ -1,18 +1,18 @@
-namespace Chess.Moves.V2 // V2 neededs to be removed
+namespace Chess.Moves // V2 neededs to be removed
 {
+    public static class DirectionOffSets
+    {
+        public const int North = -8;
+        public const int East = 1;
+        public const int South = 8;
+        public const int West = -1;
+        public const int NorthEast = -7;
+        public const int SouthEast = 9;
+        public const int SouthWest = 7;
+        public const int NothWest = -9;
+    }
     class Directions
     {
-        public static class DirectionOffSets
-        {
-            public const int North = -8;
-            public const int East = 1;
-            public const int South = 8;
-            public const int West = -1;
-            public const int NorthEast = -7;
-            public const int SouthEast = 9;
-            public const int SouthWest = 7;
-            public const int NothWest = -9;
-        }
         public static readonly int[,] DirectionValues = new int[64, 8];
         static Directions()
         {

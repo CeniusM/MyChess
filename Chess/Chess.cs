@@ -33,7 +33,7 @@ namespace Chess
         /// <summary>
         /// This returnes a list of the Possible moves
         /// </summary>
-        public List<PossibleMoves.Move> StartSquare(int StartSquare)
+        public List<Move> GetPossibleMoves(int StartSquare)
         {
             return _PossibleMoves.ReturnPossibleMoves(StartSquare);
         }
@@ -41,7 +41,7 @@ namespace Chess
         /// <summary>
         /// This takes a move and returns if it was valid
         /// </summary>
-        public bool MakeMove(PossibleMoves.Move move)
+        public bool MakeMove(Move move)
         {
             if ((_board.board[move.StartSquare] & Piece.ColorBits) != _board.PlayerTurn)
                 return false;
@@ -70,6 +70,12 @@ namespace Chess
                 return true;
             }
             return false;
+        }
+
+        public void UnmakeMove(Move move, int capturedPiece)
+        {
+            _board.board[move.StartSquare] = _board.board[move.TargetSquare];
+            _board.board[move.TargetSquare] = capturedPiece;
         }
 
         public void StartOver()

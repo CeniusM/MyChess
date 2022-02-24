@@ -88,24 +88,24 @@ namespace MyChessGUI
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    int num = Directions.directions[i + (j * 8)].North;
+                    int num = Directions.DirectionValues[i + (j * 8), 0 /*North*/];
 
                     if (num == 0)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.Green);
+                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
                     if (num == 1)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.GreenYellow);
+                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
                     if (num == 2)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.DarkGreen);
+                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
                     if (num == 3)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.Gray);
+                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
                     if (num == 4)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.Black);
+                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
                     if (num == 5)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.Red);
+                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
                     if (num == 6)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.OrangeRed);
+                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
                     if (num == 7)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.Blue);
+                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
                 }
             }
             _formGUI.Print();

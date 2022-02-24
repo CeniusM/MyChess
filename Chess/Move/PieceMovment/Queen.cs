@@ -7,17 +7,17 @@ namespace Chess.Moves.PieceMovment
     {
         private static int[] directionValues =
         {
-            DirectionValues.North,
-            DirectionValues.South,
-            DirectionValues.East,
-            DirectionValues.West,
-            DirectionValues.NorthEast,
-            DirectionValues.SouthEast,
-            DirectionValues.SouthWest,
-            DirectionValues.NothWest
+            DirectionOffSets.North,
+            DirectionOffSets.South,
+            DirectionOffSets.East,
+            DirectionOffSets.West,
+            DirectionOffSets.NorthEast,
+            DirectionOffSets.SouthEast,
+            DirectionOffSets.SouthWest,
+            DirectionOffSets.NothWest
         };
 
-        public static bool IsMovePossible(Board board, PossibleMoves.Move move)
+        public static bool IsMovePossible(Board board, Move move)
         {
             bool IsMovePossible = true; // note, 3 - 31 should not work
             int queenDirection;
@@ -50,9 +50,8 @@ namespace Chess.Moves.PieceMovment
             if ((move.StartSquare - move.TargetSquare) > 0)
                 queenDirection *= -1;
 
-            int startSquareToSide = V2.Directions.DirectionValues[move.StartSquare, Array.IndexOf(directionValues, queenDirection)];
-            int targetSquareToSide = V2.Directions.DirectionValues[move.TargetSquare, Array.IndexOf(directionValues, queenDirection)];
-
+            int startSquareToSide = Directions.DirectionValues[move.StartSquare, Array.IndexOf(directionValues, queenDirection)];
+            int targetSquareToSide = Directions.DirectionValues[move.TargetSquare, Array.IndexOf(directionValues, queenDirection)];
             if (startSquareToSide <= targetSquareToSide)
                 return false;
 
@@ -76,10 +75,10 @@ namespace Chess.Moves.PieceMovment
             return IsMovePossible;
         }
 
-        public static List<PossibleMoves.Move> GetPossibleMoves(Board board)
+        public static List<Move> GetPossibleMoves(Board board)
         {
             int playerTurn = board.PlayerTurn; // so i dont need to get it each time
-            List<PossibleMoves.Move> posssibleMoves = new List<PossibleMoves.Move>();
+            List<Move> posssibleMoves = new List<Move>();
 
             return posssibleMoves;
         }

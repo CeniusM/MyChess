@@ -7,13 +7,13 @@ namespace Chess.Moves.PieceMovment
     {
         private static int[] directionValues =
         {
-            DirectionValues.NorthEast,
-            DirectionValues.SouthEast,
-            DirectionValues.SouthWest,
-            DirectionValues.NothWest
+            DirectionOffSets.NorthEast,
+            DirectionOffSets.SouthEast,
+            DirectionOffSets.SouthWest,
+            DirectionOffSets.NothWest
         };
 
-        public static bool IsMovePossible(Board board, PossibleMoves.Move move)
+        public static bool IsMovePossible(Board board, Move move)
         {
             int start = move.StartSquare;
             int target = move.TargetSquare;
@@ -34,8 +34,8 @@ namespace Chess.Moves.PieceMovment
                 if ((move.StartSquare - move.TargetSquare) > 0)
                     bishopDirection *= -1;
 
-                int startSquareToSide = V2.Directions.DirectionValues[move.StartSquare, Array.IndexOf(directionValues, bishopDirection)];
-                int targetSquareToSide = V2.Directions.DirectionValues[move.TargetSquare, Array.IndexOf(directionValues, bishopDirection)];
+                int startSquareToSide = Directions.DirectionValues[move.StartSquare, Array.IndexOf(directionValues, bishopDirection)];
+                int targetSquareToSide = Directions.DirectionValues[move.TargetSquare, Array.IndexOf(directionValues, bishopDirection)];
                 if (startSquareToSide <= targetSquareToSide)
                     return false;
 
@@ -53,10 +53,10 @@ namespace Chess.Moves.PieceMovment
                 return false;
         }
 
-        public static List<PossibleMoves.Move> GetPossibleMoves(Board board)
+        public static List<Move> GetPossibleMoves(Board board)
         {
             int playerTurn = board.PlayerTurn; // so i dont need to get it each time
-            List<PossibleMoves.Move> posssibleMoves = new List<PossibleMoves.Move>();
+            List<Move> posssibleMoves = new List<Move>();
 
             return posssibleMoves;
         }

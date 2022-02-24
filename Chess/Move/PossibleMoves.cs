@@ -3,22 +3,22 @@ using Chess.Moves.PieceMovment;
 
 namespace Chess.Moves
 {
+    public struct Move
+    {
+        public int StartSquare;
+        public int TargetSquare;
+        public Move(int StartSquare, int TargetSquare)
+        {
+            this.StartSquare = StartSquare;
+            this.TargetSquare = TargetSquare;
+        }
+    }
     class PossibleMoves
     {
         private Board _board;
         public PossibleMoves(Board board)
         {
             _board = board;
-        }
-        public struct Move
-        {
-            public int StartSquare;
-            public int TargetSquare;
-            public Move(int StartSquare, int TargetSquare)
-            {
-                this.StartSquare = StartSquare;
-                this.TargetSquare = TargetSquare;
-            }
         }
         public List<Move> ReturnPossibleMoves(int StartSquare)
         {
@@ -40,8 +40,6 @@ namespace Chess.Moves
             if (Board.IsPiecesSameColor(_board.board[move.StartSquare], _board.board[move.TargetSquare]))
                 return false;
 
-
-
             bool isMovePossible = false;
 
             if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm))
@@ -61,19 +59,20 @@ namespace Chess.Moves
 
             if (!isMovePossible) // if the move isent valid no need to check for check
                 return false;
-            else if (IsKingInCheck())
+            else if (IsKingInCheck(_board, move))
                 isMovePossible = false;
+
+            _board.enPassantPiece = 64;
+            if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm) && isMovePossible == true) // enpassant
+                if (Math.Abs(move.StartSquare - move.TargetSquare) == 16)
+                    _board.enPassantPiece = move.TargetSquare;
 
             return isMovePossible;
         }
 
-        private bool IsKingInCheck()
+        private bool IsKingInCheck(Board board, Move move)
         {
-            bool isKingInCheck = false;
-
-            // check if any of the kings is in check
-
-            return isKingInCheck;
+            return Check.IsKingInCheck(board, move);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Chess.Moves.PieceMovment
             -1, // west
         };
 
-        public static bool IsMovePossible(Board board, PossibleMoves.Move move)
+        public static bool IsMovePossible(Board board, Move move)
         {
             bool IsMovePossible = true;
 
@@ -28,8 +28,8 @@ namespace Chess.Moves.PieceMovment
             if ((move.StartSquare - move.TargetSquare) > 0)
                 rookDirection *= -1;
 
-            int startSquareToSide = Directions.DirectionValuesArr[move.StartSquare, Array.IndexOf(directionValues, rookDirection)];
-            int targetSquareToSide = Directions.DirectionValuesArr[move.TargetSquare, Array.IndexOf(directionValues, rookDirection)];
+            int startSquareToSide = Directions.DirectionValues[move.StartSquare, Array.IndexOf(directionValues, rookDirection)];
+            int targetSquareToSide = Directions.DirectionValues[move.TargetSquare, Array.IndexOf(directionValues, rookDirection)];
 
             for (int i = 1; i < (startSquareToSide - targetSquareToSide); i++)
             {
@@ -51,10 +51,10 @@ namespace Chess.Moves.PieceMovment
             return IsMovePossible;
         }
 
-        public static List<PossibleMoves.Move> GetPossibleMoves(Board board)
+        public static List<Move> GetPossibleMoves(Board board)
         {
             int playerTurn = board.PlayerTurn; // so i dont need to get it each time
-            List<PossibleMoves.Move> posssibleMoves = new List<PossibleMoves.Move>();
+            List<Move> posssibleMoves = new List<Move>();
 
             return posssibleMoves;
         }

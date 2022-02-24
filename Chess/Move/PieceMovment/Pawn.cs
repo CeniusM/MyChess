@@ -11,7 +11,7 @@ namespace Chess.Moves.PieceMovment
         but for now i just check if it is on the right row
         */
 
-        public static bool IsMovePossible(Board board, PossibleMoves.Move move, int enpasantPieces)
+        public static bool IsMovePossible(Board board, Move move, int enpasantPieces)
         {
             if (Board.IsPieceWhite(board.board[move.StartSquare]))
             {
@@ -36,14 +36,14 @@ namespace Chess.Moves.PieceMovment
                 }
                 else if ((move.StartSquare - 9) == move.TargetSquare)
                 {
-                    if (((move.StartSquare - move.TargetSquare) % 8) == 1)
+                    if (((move.StartSquare - move.TargetSquare) % 8) != 1)
                         return false;
-                    if (Board.IsPieceBlack(board.board[move.TargetSquare]))
+                    else if (Board.IsPieceBlack(board.board[move.TargetSquare]))
                         return true;
+                    else if ((move.TargetSquare + 8) == enpasantPieces) // endpasant
+                        if (Board.IsPieceBlack(board.board[enpasantPieces]))
+                            return true;
                 }
-
-                //else if (enpasant left)
-                //else if (enpasant right)
             }
             else if (Board.IsPieceBlack(board.board[move.StartSquare]))
             {
@@ -68,19 +68,19 @@ namespace Chess.Moves.PieceMovment
                 }
                 else if ((move.StartSquare + 9) == move.TargetSquare)
                 {
-                    if (((move.StartSquare - move.TargetSquare) % 8) == 1)
+                    if (((move.StartSquare - move.TargetSquare) % 8) != 1)
                         return false;
-                    if (Board.IsPieceWhite(board.board[move.TargetSquare]))
+                    else if (Board.IsPieceWhite(board.board[move.TargetSquare]))
                         return true;
+                    else if ((move.TargetSquare - 8) == enpasantPieces) // endpasant
+                        if (Board.IsPieceWhite(board.board[enpasantPieces]))
+                            return true;
                 }
-
-                //else if (enpasant left)
-                //else if (enpasant right)
             }
             return false;
         }
 
-        // public static bool IsMovePossibleNewTry(Board board, PossibleMoves.Move move)
+        // public static bool IsMovePossibleNewTry(Board board, Move move)
         // {
         //     if ((move.StartSquare - 8) == move.TargetSquare)
         //     {
@@ -107,10 +107,10 @@ namespace Chess.Moves.PieceMovment
         //     return false;
         // }
 
-        public static List<PossibleMoves.Move> GetPossibleMoves(Board board)
+        public static List<Move> GetPossibleMoves(Board board)
         {
             int playerTurn = board.PlayerTurn; // so i dont need to get it each time
-            List<PossibleMoves.Move> posssibleMoves = new List<PossibleMoves.Move>();
+            List<Move> posssibleMoves = new List<Move>();
 
             return posssibleMoves;
         }

@@ -17,7 +17,7 @@ namespace Chess.Moves.PieceMovment
             17
         };
 
-        // public static bool IsMovePossible(Board board, PossibleMoves.Move move) // dosnet WORK, if the peice is on the right side it can just move to the left side, by doing -6
+        // public static bool IsMovePossible(Board board, Move move) // dosnet WORK, if the peice is on the right side it can just move to the left side, by doing -6
         // {
         //     if (KnightMoves.Contains((move.StartSquare - move.TargetSquare)))
         //         if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
@@ -25,7 +25,7 @@ namespace Chess.Moves.PieceMovment
         //     return false;
         // }
 
-        public static bool IsMovePossible(Board board, PossibleMoves.Move move)
+        public static bool IsMovePossible(Board board, Move move)
         {
             int start = move.StartSquare;
             int target = move.TargetSquare;
@@ -84,17 +84,17 @@ namespace Chess.Moves.PieceMovment
             return false;
         }
 
-        public static List<PossibleMoves.Move> GetPossibleMoves(Board board, int[] pos)
+        public static List<Move> GetPossibleMoves(Board board, int[] pos)
         {
             int playerTurn = board.PlayerTurn; // so i dont need to get it each time
-            List<PossibleMoves.Move> posssibleMoves = new List<PossibleMoves.Move>();
+            List<Move> posssibleMoves = new List<Move>();
 
             for (int i = 0; i < pos.Length; i++)
             {
                 for (int j = 0; j < KnightMoves.Count(); j++)
                 {
                     if (Board.IsPieceOppositeOrNone(board.board[pos[i]], board.board[pos[i] + KnightMoves[i]]))
-                        posssibleMoves.Add(new PossibleMoves.Move(pos[i], KnightMoves[i]));
+                        posssibleMoves.Add(new Move(pos[i], KnightMoves[i]));
                 }
             }
             return posssibleMoves;

@@ -23,7 +23,7 @@ namespace MyChessGUI
             _squareDimensions[1] = form.Width / 8;
             _selecktedSquare = -1;
 
-            int renderDirections = Directions.directions[0].North; // just makes it so its loaded
+            int renderDirections = Directions.DirectionValues[0, 0]; // just makes it so its loaded
 
             _form.MouseClick += MouseClick;
             _form.KeyPress += KeyPress;
@@ -32,7 +32,7 @@ namespace MyChessGUI
         public void Play()
         {
             // just to run the static method in the new directions
-            int foo = Chess.Moves.V2.Directions.DirectionValues[0, 0];
+            int foo = Chess.Moves.Directions.DirectionValues[0, 0];
 
             _isRunning = true;
 
@@ -97,7 +97,7 @@ namespace MyChessGUI
             if (_selecktedSquare != -1 && (chessGame.GetBoard().board[squareX + (squareY * 8)] == 0 || (chessGame.GetBoard().board[squareX + (squareY * 8)] & Piece.White + Piece.Black) != (chessGame.GetBoard().board[_selecktedSquare] & Piece.White + Piece.Black))) // second click
             {
                 // checks of the first piece is moving to either another colored piece or or nothing
-                chessGame.MakeMove(new PossibleMoves.Move(_selecktedSquare, squareX + (squareY * 8)));
+                chessGame.MakeMove(new Move(_selecktedSquare, squareX + (squareY * 8)));
                 _selecktedSquare = -1;
             }
             else if (squareX + (squareY * 8) == _selecktedSquare) // checks if you click the same square
@@ -110,15 +110,15 @@ namespace MyChessGUI
             }
 
 
-            if (chessGame._board.PlayerTurn == Piece.Black) // play vs completly random ai
-            {
-                while (true) // the shitiest way imagineble
-                {
-                    chessGame.MakeMove(new PossibleMoves.Move(rnd.Next(0, 64), rnd.Next(0, 64)));
-                    if (chessGame._board.PlayerTurn == Piece.White)
-                        break;
-                }
-            }
+            // if (chessGame._board.PlayerTurn == Piece.Black) // play vs completly random ai
+            // {
+            //     while (true) // the shitiest way imagineble
+            //     {
+            //         chessGame.MakeMove(new Move(rnd.Next(0, 64), rnd.Next(0, 64)));
+            //         if (chessGame._board.PlayerTurn == Piece.White)
+            //             break;
+            //     }
+            // }
 
             // later on only print the square that is changed, make a method that takes a list of moves
             chessAPI.PrintBoard(_selecktedSquare);
