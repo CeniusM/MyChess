@@ -98,6 +98,7 @@ namespace Chess.ChessBoard
 
         public void ChangePlayer() => PlayerTurn ^= 0b11000; // changes between 8 and 16
 
+        // bools
         public static bool IsPieceOpposite(int piece1, int piece2) // 01 10 00, 101
         { return ((piece1 | piece2) & Piece.ColorBits) == Piece.ColorBits; }
         public static bool IsPieceThisPiece(int piece1, int piece2)
@@ -110,6 +111,12 @@ namespace Chess.ChessBoard
         { return (piece1 & Piece.ColorBits) == (piece2 & Piece.ColorBits); }
         public static bool IsPieceOppositeOrNone(int piece1, int piece2)
         { return (piece1 & piece2 & Piece.PieceBits) != piece1; }
+        public static bool IsPieceOnSameLine(int start, int target)
+        { return (start >> 3) == (target >> 3); }
+
+        // ints
+        public static int LineDifrence(int start, int target) // start line to target line
+        { return (target >> 3) - (start >> 3); }
     }
 }
 /*

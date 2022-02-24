@@ -31,13 +31,18 @@ namespace Chess.Moves
 
         public bool IsMovePossible(Move move) // checks one move and returns true if its Possible
         {
-            if (!Board.IsPiecesSameColor(_board.board[move.StartSquare], _board.PlayerTurn))
+            if (move.StartSquare > 63 || move.StartSquare < 0)
                 return false;
-
-            bool isMovePossible = false;
-
+            if (move.TargetSquare > 63 || move.TargetSquare < 0)
+                return false;
+            if (!Board.IsPiecesSameColor(_board.board[move.StartSquare], _board.PlayerTurn)) // check player turn
+                return false;
             if (Board.IsPiecesSameColor(_board.board[move.StartSquare], _board.board[move.TargetSquare]))
                 return false;
+
+
+
+            bool isMovePossible = false;
 
             if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm))
                 isMovePossible = Pawn.IsMovePossible(_board, move, _board.enPassantPiece);
@@ -54,7 +59,9 @@ namespace Chess.Moves
             else
                 isMovePossible = false;
 
-            if (IsKingInCheck())
+            if (!isMovePossible) // if the move isent valid no need to check for check
+                return false;
+            else if (IsKingInCheck())
                 isMovePossible = false;
 
             return isMovePossible;
