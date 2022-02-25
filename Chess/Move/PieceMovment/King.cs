@@ -40,7 +40,6 @@ namespace Chess.Moves.PieceMovment
             if (diffAmount == -8) // north
                 if (IsMoveValid(-1))
                     return true;
-
             if (diffAmount == -7) // NorthEast
             {
                 if (IsMoveValid(-1))
