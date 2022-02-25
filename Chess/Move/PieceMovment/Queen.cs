@@ -8,8 +8,8 @@ namespace Chess.Moves.PieceMovment
         private static int[] directionValues =
         {
             DirectionOffSets.North,
-            DirectionOffSets.South,
             DirectionOffSets.East,
+            DirectionOffSets.South,
             DirectionOffSets.West,
             DirectionOffSets.NorthEast,
             DirectionOffSets.SouthEast,
@@ -90,13 +90,13 @@ namespace Chess.Moves.PieceMovment
                 {
                     for (int toEdge = 1; toEdge < (Directions.DirectionValues[square, direction] + 1); toEdge++)
                     {
-                        if (board.board[square + (direction * toEdge)] == 0)
+                        if (board.board[square + (directionValues[direction] * toEdge)] == 0)
                         {
-                            posssibleMoves.Add(new Move(square, square + (direction * toEdge)));
+                            posssibleMoves.Add(new Move(square, square + (directionValues[direction] * toEdge)));
                         }
-                        else if (Board.IsPieceOpposite(board.board[square + (direction * toEdge)], playerTurn))
+                        else if (Board.IsPieceOpposite(board.board[square + (directionValues[direction] * toEdge)], playerTurn))
                         {
-                            posssibleMoves.Add(new Move(square, square + (direction * toEdge)));
+                            posssibleMoves.Add(new Move(square, square + (directionValues[direction] * toEdge)));
                             break;
                         }
                         else

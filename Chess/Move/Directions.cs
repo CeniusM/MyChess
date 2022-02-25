@@ -21,8 +21,8 @@ namespace Chess.Moves // V2 neededs to be removed
                 for (int j = 0; j < 8; j++)
                 {
                     int North = j;
-                    int South = 7 - j;
                     int East = 7 - i;
+                    int South = 7 - j;
                     int West = i;
                     int NorthEast = North < East ? North : East;
                     int SouthEast = South < East ? South : East;
@@ -30,8 +30,8 @@ namespace Chess.Moves // V2 neededs to be removed
                     int NothWest = North < West ? North : West;
 
                     DirectionValues[i + (j << 3), 0] = North;
-                    DirectionValues[i + (j << 3), 1] = South;
-                    DirectionValues[i + (j << 3), 2] = East;
+                    DirectionValues[i + (j << 3), 1] = East;
+                    DirectionValues[i + (j << 3), 2] = South;
                     DirectionValues[i + (j << 3), 3] = West;
                     DirectionValues[i + (j << 3), 4] = NorthEast;
                     DirectionValues[i + (j << 3), 5] = SouthEast;

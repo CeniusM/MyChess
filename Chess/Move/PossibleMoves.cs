@@ -20,11 +20,16 @@ namespace Chess.Moves
         {
             _board = board;
         }
-        public List<Move> ReturnPossibleMoves(int StartSquare)
+        public List<Move> ReturnPossibleMoves(int startSquare)
         {
             List<Move> PossibleMoves = new List<Move>();
 
-
+            PossibleMoves.AddRange(Pawn.GetPossibleMoves(_board));
+            PossibleMoves.AddRange(Knight.GetPossibleMoves(_board));
+            PossibleMoves.AddRange(Bishop.GetPossibleMoves(_board));
+            PossibleMoves.AddRange(Rook.GetPossibleMoves(_board));
+            PossibleMoves.AddRange(Queen.GetPossibleMoves(_board));
+            PossibleMoves.AddRange(King.GetPossibleMoves(_board));
 
             return PossibleMoves;
         }

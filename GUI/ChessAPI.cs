@@ -1,6 +1,7 @@
 using Chess.ChessBoard;
 using Chess.Moves;
 using winForm;
+using Chess;
 
 namespace MyChessGUI
 {
@@ -8,13 +9,13 @@ namespace MyChessGUI
     {
         private FormGUI _formGUI;
         private List<Bitmap> _sprites;
-        private Board _board;
+        private ChessGame chessGame;
         private Form1 _form;
         private bool _isPrinting = false;
-        public ChessAPI(Form1 form, Board board)
+        public ChessAPI(Form1 form, ChessGame chessGame)
         {
             _formGUI = new FormGUI(form);
-            _board = board;
+            this.chessGame = chessGame;
             _sprites = Sprites.SpriteFetcher.GetSprites(); // learn relativ path
             _form = form;
             form.Paint += (s, e) => PrintBoard();
@@ -46,14 +47,52 @@ namespace MyChessGUI
                         _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.LimeGreen);
                     }
 
-                    if ((_board.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
-                        PrintPeice(i, j, _board.board[i + (j * 8)]);
+                    if ((chessGame._board.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
+                        PrintPeice(i, j, chessGame._board.board[i + (j * 8)]);
                 }
             }
+
+            PrintPosebleSquareForSelecktedSquare(selecktedPiece);
 
             _formGUI.Print();
 
             _isPrinting = false;
+        }
+
+        public void PrintPosebleSquareForSelecktedSquare(int selecktedPiece) // like the name?
+        {
+            List<Move> listOfMoves = chessGame.GetPossibleMoves(selecktedPiece);
+            List<Move> moves = new List<Move>();
+            for (int i = 0; i < listOfMoves.Count; i++)
+            {
+                if (listOfMoves[i].StartSquare == selecktedPiece)
+                    moves.Add(listOfMoves[i]);
+            }
+
+            for (int moveIndex = 0; moveIndex < moves.Count; moveIndex++)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        if (i + (j * 8) == selecktedPiece)
+                        {
+                            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, 100, 255, 0));
+                        }
+                        else if ((i + j) % 2 == 0 && moves[moveIndex].TargetSquare == i + (j * 8)) // white squares, mnake it its own method
+                        {
+                            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.Orange);
+                        }
+                        else if (moves[moveIndex].TargetSquare == i + (j * 8))
+                        {
+                            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.Red);
+                        }
+
+                        if ((chessGame._board.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
+                            PrintPeice(i, j, chessGame._board.board[i + (j * 8)]);
+                    }
+                }
+            }
         }
 
         public void PrintBoard()

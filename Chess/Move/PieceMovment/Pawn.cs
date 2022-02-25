@@ -86,37 +86,55 @@ namespace Chess.Moves.PieceMovment
             return false;
         }
 
-        // public static bool IsMovePossibleNewTry(Board board, Move move)
-        // {
-        //     if ((move.StartSquare - 8) == move.TargetSquare)
-        //     {
-        //         if (board.board[move.TargetSquare] == 0)
-        //             return true;
-        //     }
-        //     else if ((move.StartSquare - 16) == move.TargetSquare)
-        //     {
-        //         if (move.StartSquare < 56 && move.StartSquare > 47)
-        //             if (board.board[move.TargetSquare] == 0)
-        //                 if (board.board[move.TargetSquare + 8] == 0)
-        //                     return true;
-        //     }
-        //     else if ((move.StartSquare - 7) == move.TargetSquare)
-        //     {
-        //         if (Board.IsPieceOpposite(board.board[move.StartSquare], board.board[move.TargetSquare]))
-        //             return true;
-        //     }
-        //     else if ((move.StartSquare - 9) == move.TargetSquare)
-        //     {
-        //         if (Board.IsPieceOpposite(board.board[move.StartSquare], board.board[move.TargetSquare]))
-        //             return true;
-        //     }
-        //     return false;
-        // }
-
         public static List<Move> GetPossibleMoves(Board board)
         {
             int playerTurn = board.PlayerTurn; // so i dont need to get it each time
             List<Move> posssibleMoves = new List<Move>();
+
+            for (int square = 0; square < 64; square++)
+            {
+                if (!(board.board[square] == Piece.Pawm + playerTurn))
+                    continue;
+
+
+                if (playerTurn == Piece.White) // white
+                {
+                    if (square >> 3 == 6)
+                        if (board.board[square - 8] == 0)
+                            if (board.board[square - 16] == 0)
+                                posssibleMoves.Add(new Move(square, square - 16));
+
+                    if (board.board[square - 8] == 0)
+                        posssibleMoves.Add(new Move(square, square - 8));
+
+                    if ((square - 7) >> 3 == square >> 3)
+                        if (Board.IsPieceOpposite(board.board[square], board.board[square - 7]))
+                            posssibleMoves.Add(new Move(square, square - 7));
+
+                    if ((square - 9) >> 3 == square >> 3)
+                        if (Board.IsPieceOpposite(board.board[square], board.board[square - 9]))
+                            posssibleMoves.Add(new Move(square, square - 9));
+                }
+
+                else    // black
+                {
+                    if (square >> 3 == 1)
+                        if (board.board[square + 8] == 0)
+                            if (board.board[square + 16] == 0)
+                                posssibleMoves.Add(new Move(square, square + 16));
+
+                    if (board.board[square + 8] == 0)
+                        posssibleMoves.Add(new Move(square, square + 8));
+
+                    if ((square + 7) >> 3 == square >> 3)
+                        if (Board.IsPieceOpposite(board.board[square], board.board[square + 7]))
+                            posssibleMoves.Add(new Move(square, square + 7));
+
+                    if ((square + 9) >> 3 == square >> 3)
+                        if (Board.IsPieceOpposite(board.board[square], board.board[square + 9]))
+                            posssibleMoves.Add(new Move(square, square + 9));
+                }
+            }
 
             return posssibleMoves;
         }

@@ -86,13 +86,14 @@ namespace Chess.Moves.PieceMovment
 
             void TryMove(int square, int move, int lineDiff)
             {
-                if (((square - 6) >> 3) - (square >> 3) == lineDiff) // -6
-                    if (Board.IsPieceOppositeOrNone(board.board[square >> 3], (board.board[(square - 6) >> 3])))
-                        posssibleMoves.Add(new Move(square >> 3, (square - 6) >> 3));
+                if (square + move < 64 && square + move > -1)
+                    if (((square + move) >> 3) - (square >> 3) == lineDiff)
+                        if (Board.IsPieceOppositeOrNone(board.board[square], (board.board[square + move])))
+                            posssibleMoves.Add(new Move(square, square + move));
             };
             for (int square = 0; square < 64; square++)
             {
-                if (!(board.board[square] == Piece.Bishop + playerTurn))
+                if (!(board.board[square] == Piece.King + playerTurn))
                     continue;
 
                 TryMove(square, -8, -1);
