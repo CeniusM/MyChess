@@ -31,7 +31,7 @@ namespace Chess.ChessBoard
     {
         public int[] board = new int[64];
         public int enPassantPiece = 64; // 0 index is whites piece and 1 is blacks pieces
-        public int castle = 0;
+        public int castle = 0b1111;
         public int PlayerTurn { get; private set; } = 8; // 8 = white, 16 = black
         public Board()
         {

@@ -29,14 +29,17 @@ namespace Chess.Moves.PieceMovment
                 }
                 else if ((move.StartSquare - 7) == move.TargetSquare)
                 {
-                    if (((move.StartSquare - move.TargetSquare) % 8) == 1)
+                    if ((move.StartSquare >> 3) - (move.TargetSquare >> 3) == -1)
                         return false;
                     else if (Board.IsPieceBlack(board.board[move.TargetSquare]))
                         return true;
+                    else if ((move.TargetSquare + 8) == enpasantPieces) // endpasant
+                        if (Board.IsPieceBlack(board.board[enpasantPieces]))
+                            return true;
                 }
                 else if ((move.StartSquare - 9) == move.TargetSquare)
                 {
-                    if (((move.StartSquare - move.TargetSquare) % 8) != 1)
+                    if ((move.StartSquare >> 3) - (move.TargetSquare >> 3) == -1)
                         return false;
                     else if (Board.IsPieceBlack(board.board[move.TargetSquare]))
                         return true;
@@ -45,7 +48,7 @@ namespace Chess.Moves.PieceMovment
                             return true;
                 }
             }
-            else if (Board.IsPieceBlack(board.board[move.StartSquare]))
+            else
             {
                 if ((move.StartSquare + 8) == move.TargetSquare)
                 {
@@ -61,14 +64,17 @@ namespace Chess.Moves.PieceMovment
                 }
                 else if ((move.StartSquare + 7) == move.TargetSquare)
                 {
-                    if (((move.StartSquare - move.TargetSquare) % 8) == 1)
+                    if ((move.StartSquare >> 3) - (move.TargetSquare >> 3) == 1)
                         return false;
                     else if (Board.IsPieceWhite(board.board[move.TargetSquare]))
                         return true;
+                    else if ((move.TargetSquare - 8) == enpasantPieces) // endpasant
+                        if (Board.IsPieceWhite(board.board[enpasantPieces]))
+                            return true;
                 }
                 else if ((move.StartSquare + 9) == move.TargetSquare)
                 {
-                    if (((move.StartSquare - move.TargetSquare) % 8) != 1)
+                    if ((move.StartSquare >> 3) - (move.TargetSquare >> 3) == 1)
                         return false;
                     else if (Board.IsPieceWhite(board.board[move.TargetSquare]))
                         return true;
