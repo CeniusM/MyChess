@@ -53,7 +53,7 @@ namespace Chess.ChessBoard
         public static bool IsPiecesSameColor(int piece1, int piece2)
         { return (piece1 & Piece.ColorBits) == (piece2 & Piece.ColorBits); }
         public static bool IsPieceOppositeOrNone(int piece1, int piece2)
-        { return (piece1 & piece2 & Piece.PieceBits) != piece1 & Piece.PieceBits; }
+        { return (piece1 & piece2 & Piece.ColorBits) != piece1 & Piece.ColorBits; }
         public static bool IsPieceOnSameLine(int start, int target)
         { return (start >> 3) == (target >> 3); }
 
