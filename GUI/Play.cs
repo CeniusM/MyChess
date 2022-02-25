@@ -7,7 +7,8 @@ namespace MyChessGUI
 {
     class GameOfChess // is used to get inputs from the user and use them to make moves in the chess game
     {
-        private ChessGame chessGame = new ChessGame(MyFEN.GetBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
+        // private ChessGame chessGame = new ChessGame(MyFEN.GetBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
+        private ChessGame chessGame = new ChessGame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         private ChessAPI chessAPI;
         private int[] _squareDimensions = new int[2];
         private int _selecktedSquare;
@@ -19,8 +20,8 @@ namespace MyChessGUI
             chessAPI = new ChessAPI(form, chessGame.GetBoard());
             _form = form;
 
-            _squareDimensions[0] = form.Height / 8;
-            _squareDimensions[1] = form.Width / 8;
+            _squareDimensions[0] = 100;//form.Height / 8;
+            _squareDimensions[1] = 100;//form.Width / 8;
             _selecktedSquare = -1;
 
             int renderDirections = Directions.DirectionValues[0, 0]; // just makes it so its loaded

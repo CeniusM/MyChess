@@ -1,43 +1,18 @@
 namespace Chess.ChessBoard
 {
-    public static class Piece
-    {
-        public const int ColorBits = 24;
-        public const int PieceBits = 7;
-        public const int None = 0;
-        public const int Pawm = 1;
-        public const int Rook = 2;
-        public const int Knight = 3;
-        public const int Bishop = 4;
-        public const int Queen = 5;
-        public const int King = 6;
-        public const int White = 8;
-        public const int Black = 16;
-        public const int BPawm = 1 + Black;
-        public const int BRook = 2 + Black;
-        public const int BKnight = 3 + Black;
-        public const int BBishop = 4 + Black;
-        public const int BQueen = 5 + Black;
-        public const int BKing = 6 + Black;
-        public const int WPawm = 1 + White;
-        public const int WRook = 2 + White;
-        public const int WKnight = 3 + White;
-        public const int WBishop = 4 + White;
-        public const int WQueen = 5 + White;
-        public const int WKing = 6 + White;
-    }
-
     class Board
     {
         public int[] board = new int[64];
         public int enPassantPiece = 64; // 0 index is whites piece and 1 is blacks pieces
         public int castle = 0b1111;
+        public int halfMoveClock = 0;
+        public int fullmoveNumber = 1;
         public int PlayerTurn { get; private set; } = 8; // 8 = white, 16 = black
         public Board()
         {
 
         }
-        public Board(int[] board, int castle)
+        public Board(int[] board, int castle, int playerTurn, int enPassantPiece, int halfMoveClock, int fullmoveNumber)
         {
             this.board = board;
             this.castle = castle;
@@ -45,55 +20,23 @@ namespace Chess.ChessBoard
         public Board(string FEN)
         {
             Board newBoard = MyFEN.GetBoardFromFEN(FEN);
-            board = newBoard.board;
-            castle = newBoard.castle;
-            PlayerTurn = newBoard.PlayerTurn;
+            this.board = newBoard.board;
+            this.enPassantPiece = newBoard.enPassantPiece;
+            this.castle = newBoard.castle;
+            this.PlayerTurn = newBoard.PlayerTurn;
+            this.halfMoveClock = newBoard.halfMoveClock;
+            this.fullmoveNumber = newBoard.fullmoveNumber;
         }
 
-        public void SetUpToStanderd()
+        public void Reset()
         {
-            board[0] = Piece.Rook + Piece.Black;
-            board[1] = Piece.Knight + Piece.Black;
-            board[2] = Piece.Bishop + Piece.Black;
-            board[3] = Piece.Queen + Piece.Black;
-            board[4] = Piece.King + Piece.Black;
-            board[5] = Piece.Bishop + Piece.Black;
-            board[6] = Piece.Knight + Piece.Black;
-            board[7] = Piece.Rook + Piece.Black;
-
-            board[8] = Piece.Pawm + Piece.Black;
-            board[9] = Piece.BPawm;
-            board[10] = Piece.BPawm;
-            board[11] = Piece.BPawm;
-            board[12] = Piece.BPawm;
-            board[13] = Piece.BPawm;
-            board[14] = Piece.BPawm;
-            board[15] = Piece.BPawm;
-
-            board[63] = Piece.WRook;
-            board[62] = Piece.WKnight;
-            board[61] = Piece.WBishop;
-            board[60] = Piece.WKing;
-            board[59] = Piece.WQueen;
-            board[58] = Piece.WBishop;
-            board[57] = Piece.WKnight;
-            board[56] = Piece.WRook;
-
-            board[55] = Piece.WPawm;
-            board[54] = Piece.WPawm;
-            board[53] = Piece.WPawm;
-            board[52] = Piece.WPawm;
-            board[51] = Piece.WPawm;
-            board[50] = Piece.WPawm;
-            board[49] = Piece.WPawm;
-            board[48] = Piece.WPawm;
-
-            for (int i = 16; i < 48; i++)
-            {
-                board[i] = Piece.None;
-            }
-
-            PlayerTurn = 0b1000;
+            Board newBoard = MyFEN.GetBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            this.board = newBoard.board;
+            this.enPassantPiece = newBoard.enPassantPiece;
+            this.castle = newBoard.castle;
+            this.PlayerTurn = newBoard.PlayerTurn;
+            this.halfMoveClock = newBoard.halfMoveClock;
+            this.fullmoveNumber = newBoard.fullmoveNumber;
         }
 
         public void ChangePlayer() => PlayerTurn ^= 0b11000; // changes between 8 and 16
@@ -149,4 +92,57 @@ king   = 6, 110
 
 white  = 8, 01 000
 black  = 16,10 000
-*/ 
+*/
+
+
+
+
+
+
+
+
+/*
+            board[0] = Piece.Rook + Piece.Black;
+            board[1] = Piece.Knight + Piece.Black;
+            board[2] = Piece.Bishop + Piece.Black;
+            board[3] = Piece.Queen + Piece.Black;
+            board[4] = Piece.King + Piece.Black;
+            board[5] = Piece.Bishop + Piece.Black;
+            board[6] = Piece.Knight + Piece.Black;
+            board[7] = Piece.Rook + Piece.Black;
+
+            board[8] = Piece.Pawm + Piece.Black;
+            board[9] = Piece.BPawm;
+            board[10] = Piece.BPawm;
+            board[11] = Piece.BPawm;
+            board[12] = Piece.BPawm;
+            board[13] = Piece.BPawm;
+            board[14] = Piece.BPawm;
+            board[15] = Piece.BPawm;
+
+            board[63] = Piece.WRook;
+            board[62] = Piece.WKnight;
+            board[61] = Piece.WBishop;
+            board[60] = Piece.WKing;
+            board[59] = Piece.WQueen;
+            board[58] = Piece.WBishop;
+            board[57] = Piece.WKnight;
+            board[56] = Piece.WRook;
+
+            board[55] = Piece.WPawm;
+            board[54] = Piece.WPawm;
+            board[53] = Piece.WPawm;
+            board[52] = Piece.WPawm;
+            board[51] = Piece.WPawm;
+            board[50] = Piece.WPawm;
+            board[49] = Piece.WPawm;
+            board[48] = Piece.WPawm;
+
+            for (int i = 16; i < 48; i++)
+            {
+                board[i] = Piece.None;
+            }
+
+            PlayerTurn = 0b1000;
+            castle = 0b1111;
+*/

@@ -14,16 +14,16 @@ namespace Chess
             _board = new Board();
             _PossibleMoves = new PossibleMoves(_board);
         }
-        public ChessGame(int[] board, int castle)
-        {
-            _board = new Board(board, castle);
-            _PossibleMoves = new PossibleMoves(_board);
-        }
-        public ChessGame(Board board)
-        {
-            _board = new Board(board.board, board.castle);
-            _PossibleMoves = new PossibleMoves(_board);
-        }
+        // public ChessGame(int[] board, int castle)
+        // {
+        //     _board = new Board(board, castle);
+        //     _PossibleMoves = new PossibleMoves(_board);
+        // }
+        // public ChessGame(Board board)
+        // {
+        //     _board = new Board(board.board, board.castle);
+        //     _PossibleMoves = new PossibleMoves(_board);
+        // }
         public ChessGame(string FENboard)
         {
             _board = new Board(FENboard);
@@ -80,7 +80,7 @@ namespace Chess
 
         public void StartOver()
         {
-            _board.SetUpToStanderd();
+            _board.Reset();
         }
 
         public Board GetBoard()

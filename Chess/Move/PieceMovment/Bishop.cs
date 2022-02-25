@@ -58,6 +58,32 @@ namespace Chess.Moves.PieceMovment
             int playerTurn = board.PlayerTurn; // so i dont need to get it each time
             List<Move> posssibleMoves = new List<Move>();
 
+            // clean :D
+            for (int square = 0; square < 64; square++)
+            {
+                if (!(board.board[square] == Piece.Bishop + playerTurn))
+                    continue;
+
+                for (int direction = 0; direction < directionValues.Length; direction++)
+                {
+                    for (int toEdge = 1; toEdge < (Directions.DirectionValues[square, direction] + 1); toEdge++)
+                    {
+                        if (board.board[square + (direction * toEdge)] == 0)
+                        {
+                            posssibleMoves.Add(new Move(square, square + (direction * toEdge)));
+                        }
+                        else if (Board.IsPieceOpposite(board.board[square + (direction * toEdge)], playerTurn))
+                        {
+                            posssibleMoves.Add(new Move(square, square + (direction * toEdge)));
+                            break;
+                        }
+                        else
+                            break;
+                    }
+                }
+            }
+
+
             return posssibleMoves;
         }
     }

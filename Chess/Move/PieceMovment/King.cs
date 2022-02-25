@@ -29,87 +29,83 @@ namespace Chess.Moves.PieceMovment
         {
             int diffAmount = move.TargetSquare - move.StartSquare;
 
+            bool IsMoveValid(int lineDiff)
+            {
+                if ((move.TargetSquare >> 3) - (move.StartSquare >> 3) == lineDiff)
+                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
+                        return true;
+                return false;
+            }
+
             if (diffAmount == -8) // north
+                if (IsMoveValid(-1))
+                    return true;
+
+            if (diffAmount == -7) // NorthEast
             {
-                if ((move.TargetSquare >> 3) - (move.StartSquare >> 3) == -1)
-                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
-                    {
-                        return true;
-                    }
+                if (IsMoveValid(-1))
+                    return true;
             }
-            else if (diffAmount == -7) // NorthEast
+            if (diffAmount == 1) // East
             {
-                if ((move.TargetSquare >> 3) - (move.StartSquare >> 3) == -1)
-                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
-                    {
-                        return true;
-                    }
+                if (IsMoveValid(0))
+                    return true;
             }
-            else if (diffAmount == 1) // East
+            if (diffAmount == 9) // SouthEast
             {
-                if ((move.StartSquare >> 3 == move.TargetSquare >> 3))
-                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
-                    {
-                        return true;
-                    }
+                if (IsMoveValid(1))
+                    return true;
             }
-            else if (diffAmount == 9) // SouthEast
+            if (diffAmount == 8) // South
             {
-                if ((move.TargetSquare >> 3) - (move.StartSquare >> 3) == 1)
-                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
-                    {
-                        return true;
-                    }
+                if (IsMoveValid(1))
+                    return true;
             }
-            else if (diffAmount == 8) // South
+            if (diffAmount == 7) // SouthWest
             {
-                if ((move.TargetSquare >> 3) - (move.StartSquare >> 3) == 1)
-                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
-                    {
-                        return true;
-                    }
+                if (IsMoveValid(1))
+                    return true;
             }
-            else if (diffAmount == 7) // SouthWest
+            if (diffAmount == -1) // West
             {
-                if ((move.TargetSquare >> 3) - (move.StartSquare >> 3) == 1)
-                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
-                    {
-                        return true;
-                    }
+                if (IsMoveValid(0))
+                    return true;
             }
-            else if (diffAmount == -1) // West
+            if (diffAmount == -9) // NorthWest
             {
-                if ((move.StartSquare >> 3 == move.TargetSquare >> 3))
-                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
-                    {
-                        return true;
-                    }
-            }
-            else if (diffAmount == -9) // NorthWest
-            {
-                if ((move.TargetSquare >> 3) - (move.StartSquare >> 3) == -1)
-                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
-                    {
-                        return true;
-                    }
+                if (IsMoveValid(-1))
+                    return true;
             }
 
             return false;
         }
 
-        public static List<Move> GetPossibleMoves(Board board, int[] pos)
+        public static List<Move> GetPossibleMoves(Board board)
         {
             int playerTurn = board.PlayerTurn; // so i dont need to get it each time
             List<Move> posssibleMoves = new List<Move>();
 
-            for (int i = 0; i < pos.Length; i++)
+            void TryMove(int square, int move, int lineDiff)
             {
-                for (int j = 0; j < KingMoves.Count(); j++)
-                {
-                    if (Board.IsPieceOppositeOrNone(board.board[pos[i]], board.board[pos[i] + KingMoves[j]]))
-                        posssibleMoves.Add(new Move(pos[i], KingMoves[j]));
-                }
+                if (((square - 6) >> 3) - (square >> 3) == lineDiff) // -6
+                    if (Board.IsPieceOppositeOrNone(board.board[square >> 3], (board.board[(square - 6) >> 3])))
+                        posssibleMoves.Add(new Move(square >> 3, (square - 6) >> 3));
+            };
+            for (int square = 0; square < 64; square++)
+            {
+                if (!(board.board[square] == Piece.Bishop + playerTurn))
+                    continue;
+
+                TryMove(square, -8, -1);
+                TryMove(square, -7, -1);
+                TryMove(square, 1, 0);
+                TryMove(square, 9, 1);
+                TryMove(square, 8, 1);
+                TryMove(square, 7, 1);
+                TryMove(square, -1, 0);
+                TryMove(square, -9, -1);
             }
+
             return posssibleMoves;
         }
     }

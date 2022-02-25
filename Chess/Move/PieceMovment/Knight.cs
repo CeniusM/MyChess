@@ -84,20 +84,44 @@ namespace Chess.Moves.PieceMovment
             return false;
         }
 
-        public static List<Move> GetPossibleMoves(Board board, int[] pos)
+        public static List<Move> GetPossibleMoves(Board board)
         {
             int playerTurn = board.PlayerTurn; // so i dont need to get it each time
             List<Move> posssibleMoves = new List<Move>();
 
-            for (int i = 0; i < pos.Length; i++)
+
+            void TryMove(int square, int move, int lineDiff)
             {
-                for (int j = 0; j < KnightMoves.Count(); j++)
-                {
-                    if (Board.IsPieceOppositeOrNone(board.board[pos[i]], board.board[pos[i] + KnightMoves[i]]))
-                        posssibleMoves.Add(new Move(pos[i], KnightMoves[i]));
-                }
+                if (((square - 6) >> 3) - (square >> 3) == lineDiff) // -6
+                    if (Board.IsPieceOppositeOrNone(board.board[square >> 3], (board.board[(square - 6) >> 3])))
+                        posssibleMoves.Add(new Move(square >> 3, (square - 6) >> 3));
+            };
+            for (int square = 0; square < 64; square++)
+            {
+                if (!(board.board[square] == Piece.Bishop + playerTurn))
+                    continue;
+
+                TryMove(square, -6, -1);
+                TryMove(square, -10, -1);
+                TryMove(square, -15, -2);
+                TryMove(square, -17, -2);
+                TryMove(square, 6, 1);
+                TryMove(square, 10, 1);
+                TryMove(square, 15, 2);
+                TryMove(square, 17, 2);
             }
+
             return posssibleMoves;
         }
     }
 }
+
+
+// for (int i = 0; i < pos.Length; i++)
+// {
+//     for (int j = 0; j < KnightMoves.Count(); j++)
+//     {
+//         if (Board.IsPieceOppositeOrNone(board.board[pos[i]], board.board[pos[i] + KnightMoves[i]]))
+//             posssibleMoves.Add(new Move(pos[i], KnightMoves[i]));
+//     }
+// }

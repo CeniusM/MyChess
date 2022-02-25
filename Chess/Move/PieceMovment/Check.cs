@@ -7,6 +7,12 @@ namespace Chess.Moves.PieceMovment
     {
         public static bool IsKingInCheck(Board board, Move move)
         {
+            // the worst way
+            int kingColor = board.PlayerTurn;
+
+            
+
+
             return false;
         }
     }
