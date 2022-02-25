@@ -66,7 +66,7 @@ namespace Chess.Moves.PieceMovment
 
                 for (int direction = 0; direction < directionValues.Length; direction++)
                 {
-                    for (int toEdge = 1; toEdge < (Directions.DirectionValues[square, direction + 4]); toEdge++)
+                    for (int toEdge = 1; toEdge < (Directions.DirectionValues[square, direction + 4]) + 1; toEdge++)
                     {
                         if (board.board[square + (directionValues[direction] * toEdge)] == 0)
                         {
