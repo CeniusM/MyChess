@@ -10,19 +10,15 @@ namespace Chess
         private PossibleMoves _PossibleMoves;
         private MyEvaluater myEvaluater;
         public bool isGameOver
-        { get; private set; } = false;
+        { get; private set; }
 
         public ChessGame()
         {
             _board = new Board();
             _PossibleMoves = new PossibleMoves(_board);
             myEvaluater = new MyEvaluater(_board);
+            isGameOver = false;
         }
-        // public ChessGame(int[] board, int castle)
-        // {
-        //     _board = new Board(board, castle);
-        //     _PossibleMoves = new PossibleMoves(_board);
-        // }
         // public ChessGame(Board board)
         // {
         //     _board = new Board(board.board, board.castle);
@@ -33,19 +29,14 @@ namespace Chess
             _board = new Board(FENboard);
             _PossibleMoves = new PossibleMoves(_board);
             myEvaluater = new MyEvaluater(_board);
+            isGameOver = false;
         }
 
-        /// <summary>
-        /// This returnes a list of the Possible moves
-        /// </summary>
         public List<Move> GetPossibleMoves(int StartSquare)
         {
             return _PossibleMoves.ReturnPossibleMoves(StartSquare);
         }
 
-        /// <summary>
-        /// This takes a move and returns if it was valid
-        /// </summary>
         public bool MakeMove(Move move)
         {
             if ((_board.board[move.StartSquare] & Piece.ColorBits) != _board.PlayerTurn)
