@@ -1,5 +1,6 @@
 using Chess.Moves;
 using Chess.ChessBoard; // idk how to name
+using Chess.ChessBoard.Evaluation;
 
 namespace Chess
 {
@@ -7,12 +8,15 @@ namespace Chess
     {
         public Board _board { get; private set; }
         private PossibleMoves _PossibleMoves;
-        public bool isGameOver { get; private set; } = false;
+        private MyEvaluater myEvaluater;
+        public bool isGameOver
+        { get; private set; } = false;
 
         public ChessGame()
         {
             _board = new Board();
             _PossibleMoves = new PossibleMoves(_board);
+            myEvaluater = new MyEvaluater(_board);
         }
         // public ChessGame(int[] board, int castle)
         // {
@@ -28,6 +32,7 @@ namespace Chess
         {
             _board = new Board(FENboard);
             _PossibleMoves = new PossibleMoves(_board);
+            myEvaluater = new MyEvaluater(_board);
         }
 
         /// <summary>
@@ -96,6 +101,11 @@ namespace Chess
         public string GetFENBoard()
         {
             return MyFEN.GetFENFromBoard(_board);
+        }
+
+        public int GetEvaluation()
+        {
+            return myEvaluater.Evaluate();
         }
     }
 }

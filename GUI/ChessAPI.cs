@@ -2,6 +2,7 @@ using Chess.ChessBoard;
 using Chess.Moves;
 using winForm;
 using Chess;
+using CS_Math;
 
 namespace MyChessGUI
 {
@@ -54,6 +55,8 @@ namespace MyChessGUI
 
             PrintPosebleSquareForSelecktedSquare(selecktedPiece);
 
+            PrintEvalBar();
+
             _formGUI.Print();
 
             _isPrinting = false;
@@ -95,11 +98,24 @@ namespace MyChessGUI
             }
         }
 
+        public void PrintEvalBar()
+        {
+            _formGUI.DrawSquare(800, 0, 800, 100, Color.White);
+
+            int evaluation = chessGame.GetEvaluation() / 200; // 200, idk ;D
+
+            float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f); // returs a num between -15 and 15
+
+            int evalHeightpx = (int)((-evalHeight / 15f + 1) * 400); // make eval height into a range between 0, 800
+
+            _formGUI.DrawSquare(800, 0, evalHeightpx, 100, Color.Black);
+        }
+
         public void PrintBoard()
         // make it so when it checks for wich peice it needs to print, 
         // make it check if there is an empty square first, then the color, and then do the pawn, rook and so on
         {
-            PrintBoard(-1);
+            PrintBoard(64);
         }
 
         public void PrintBoard(string FENboard)

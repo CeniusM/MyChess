@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 namespace Chess.ChessBoard
 {
     class Board
@@ -10,7 +11,7 @@ namespace Chess.ChessBoard
         public int PlayerTurn { get; private set; } = 8; // 8 = white, 16 = black
         public Board()
         {
-
+            
         }
         public Board(int[] board, int castle, int playerTurn, int enPassantPiece, int halfMoveClock, int fullmoveNumber)
         {
@@ -45,7 +46,7 @@ namespace Chess.ChessBoard
         public static bool IsPieceOpposite(int piece1, int piece2) // 01 10 00, 101
         { return ((piece1 | piece2) & Piece.ColorBits) == Piece.ColorBits; }
         public static bool IsPieceThisPiece(int piece1, int piece2)
-        { return (piece1 & 7) == piece2; }
+        { return (piece1 & Piece.PieceBits) == piece2; }
         public static bool IsPieceWhite(int piece)
         { return (piece & Piece.ColorBits) == Piece.White; }
         public static bool IsPieceBlack(int piece)

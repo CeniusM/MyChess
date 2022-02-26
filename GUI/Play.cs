@@ -110,16 +110,23 @@ namespace MyChessGUI
                 _selecktedSquare = squareX + (squareY * 8);
             }
 
-
-            // if (chessGame._board.PlayerTurn == Piece.Black) // play vs completly random ai
-            // {
-            //     while (true) // the shitiest way imagineble
-            //     {
-            //         chessGame.MakeMove(new Move(rnd.Next(0, 64), rnd.Next(0, 64)));
-            //         if (chessGame._board.PlayerTurn == Piece.White)
-            //             break;
-            //     }
-            // }
+            while (_isRunning && false)
+            {
+                if (chessGame._board.PlayerTurn == Piece.White) // play vs completly random ai
+                {
+                    List<Move> moves = chessGame.GetPossibleMoves(0);
+                    chessGame.MakeMove(moves[rnd.Next(0, moves.Count)]);
+                    chessAPI.PrintBoard(_selecktedSquare);
+                    Thread.Sleep(100);
+                }
+                else if (chessGame._board.PlayerTurn == Piece.Black) // play vs completly random ai
+                {
+                    List<Move> moves = chessGame.GetPossibleMoves(0);
+                    chessGame.MakeMove(moves[rnd.Next(0, moves.Count)]);
+                    chessAPI.PrintBoard(_selecktedSquare);
+                    Thread.Sleep(100);
+                }
+            }
 
             // later on only print the square that is changed, make a method that takes a list of moves
             chessAPI.PrintBoard(_selecktedSquare);
