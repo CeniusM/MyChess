@@ -102,11 +102,11 @@ namespace MyChessGUI
         {
             _formGUI.DrawSquare(800, 0, 800, 100, Color.White);
 
-            int evaluation = chessGame.GetEvaluation() / 200; // 200, idk ;D
+            float evaluation = chessGame.GetEvaluation() / 300f; // idk 
 
             float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f); // returs a num between -15 and 15
 
-            int evalHeightpx = (int)((-evalHeight / 15f + 1) * 400); // make eval height into a range between 0, 800
+            int evalHeightpx = (int)((-evalHeight / 15f + 1) * 400f); // make eval height into a range between 0, 800
 
             _formGUI.DrawSquare(800, 0, evalHeightpx, 100, Color.Black);
         }
