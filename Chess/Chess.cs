@@ -43,7 +43,7 @@ namespace Chess
                 return false;
 
             //for now
-            if (_PossibleMoves.IsMovePossible(move))
+            if (_PossibleMoves.ReturnPossibleMoves(64).Contains(move))
             {
                 if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm)) // pawn promotian check, make it its own method
                 {

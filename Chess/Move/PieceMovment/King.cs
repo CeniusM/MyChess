@@ -17,60 +17,6 @@ namespace Chess.Moves.PieceMovment
             DirectionOffSets.NothWest
         };
 
-        public static bool IsMovePossible(Board board, Move move)
-        {
-            int diffAmount = move.TargetSquare - move.StartSquare;
-
-            bool IsMoveValid(int lineDiff)
-            {
-                if ((move.TargetSquare >> 3) - (move.StartSquare >> 3) == lineDiff)
-                    if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
-                        return true;
-                return false;
-            }
-
-            if (diffAmount == -8) // north
-                if (IsMoveValid(-1))
-                    return true;
-            if (diffAmount == -7) // NorthEast
-            {
-                if (IsMoveValid(-1))
-                    return true;
-            }
-            if (diffAmount == 1) // East
-            {
-                if (IsMoveValid(0))
-                    return true;
-            }
-            if (diffAmount == 9) // SouthEast
-            {
-                if (IsMoveValid(1))
-                    return true;
-            }
-            if (diffAmount == 8) // South
-            {
-                if (IsMoveValid(1))
-                    return true;
-            }
-            if (diffAmount == 7) // SouthWest
-            {
-                if (IsMoveValid(1))
-                    return true;
-            }
-            if (diffAmount == -1) // West
-            {
-                if (IsMoveValid(0))
-                    return true;
-            }
-            if (diffAmount == -9) // NorthWest
-            {
-                if (IsMoveValid(-1))
-                    return true;
-            }
-
-            return false;
-        }
-
         public static List<Move> GetPossibleMoves(Board board)
         {
             int playerTurn = board.PlayerTurn; // so i dont need to get it each time
