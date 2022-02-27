@@ -17,14 +17,6 @@ namespace Chess.Moves.PieceMovment
             DirectionOffSets.NothWest
         };
 
-        // public static bool IsMovePossible(Board board, Move move) // old
-        // {
-        //     if (KingMoves.Contains((move.StartSquare - move.TargetSquare)))
-        //         if (Board.IsPieceOppositeOrNone(board.board[move.StartSquare], board.board[move.TargetSquare]))
-        //             return true;
-        //     return false;
-        // }
-
         public static bool IsMovePossible(Board board, Move move)
         {
             int diffAmount = move.TargetSquare - move.StartSquare;

@@ -8,6 +8,7 @@ namespace Chess.ChessBoard
         public int castle = 0b1111;
         public int halfMoveClock = 0;
         public int fullmoveNumber = 1;
+        public int[] piecePlacements = new int[32];
         public int PlayerTurn { get; private set; } = 8; // 8 = white, 16 = black
         public Board()
         {
