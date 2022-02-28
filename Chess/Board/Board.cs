@@ -12,13 +12,14 @@ namespace Chess.ChessBoard
         public int PlayerTurn { get; private set; } = 8; // 8 = white, 16 = black
         public Board()
         {
-            
+
         }
         public Board(int[] board, int castle, int playerTurn, int enPassantPiece, int halfMoveClock, int fullmoveNumber)
         {
             this.board = board;
             this.castle = castle;
         }
+
         public Board(string FEN)
         {
             Board newBoard = MyFEN.GetBoardFromFEN(FEN);

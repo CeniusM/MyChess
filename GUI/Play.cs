@@ -86,6 +86,16 @@ namespace MyChessGUI
                 chessAPI = new ChessAPI(_form, chessGame);
                 chessAPI.PrintBoard();
             }
+
+            else if (e.KeyChar == 'l') // reads the last line in MyConsole and takes it in as a fen string
+            {
+                if (chessGame.gameMoves.Count != 0)
+                {
+                    chessGame.UnmakeMove();
+                    chessAPI.PrintBoard();
+                }
+
+            }
         }
 
         private void MouseClick(object? sender, MouseEventArgs e)

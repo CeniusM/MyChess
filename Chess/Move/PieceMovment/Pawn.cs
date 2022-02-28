@@ -30,22 +30,12 @@ namespace Chess.Moves.PieceMovment
                     {
                         if (Board.IsPieceOpposite(board.board[square], board.board[square - 7]))
                             posssibleMoves.Add(new Move(square, square - 7));
-
-                        // enpasant
-                        if (board.board[square - 7] == 0)
-                            if (square + 1 == board.enPassantPiece)
-                                posssibleMoves.Add(new Move(square, square - 7));
                     }
 
                     if (((square - 9) >> 3) - (square >> 3) == -1)
                     {
                         if (Board.IsPieceOpposite(board.board[square], board.board[square - 9]))
                             posssibleMoves.Add(new Move(square, square - 9));
-
-                        // enpasant
-                        if (board.board[square - 9] == 0)
-                            if (square - 1 == board.enPassantPiece)
-                                posssibleMoves.Add(new Move(square, square - 9));
                     }
                 }
 
@@ -63,22 +53,12 @@ namespace Chess.Moves.PieceMovment
                     {
                         if (Board.IsPieceOpposite(board.board[square], board.board[square + 7]))
                             posssibleMoves.Add(new Move(square, square + 7));
-
-                        // enpasant
-                        if (board.board[square + 7] == 0)
-                            if (square - 1 == board.enPassantPiece)
-                                posssibleMoves.Add(new Move(square, square + 7));
                     }
 
                     if (((square + 9) >> 3) - (square >> 3) == 1)
                     {
                         if (Board.IsPieceOpposite(board.board[square], board.board[square + 9]))
                             posssibleMoves.Add(new Move(square, square + 9));
-
-                        // enpasant
-                        if (board.board[square + 9] == 0)
-                            if (square + 1 == board.enPassantPiece)
-                                posssibleMoves.Add(new Move(square, square + 9));
                     }
                 }
             }

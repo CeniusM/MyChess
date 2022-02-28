@@ -1,3 +1,5 @@
+using System;
+using System.Net.NetworkInformation;
 using Chess.Moves;
 using Chess.ChessBoard; // idk how to name
 using Chess.ChessBoard.Evaluation;
@@ -9,6 +11,8 @@ namespace Chess
         public Board _board { get; private set; }
         private PossibleMoves _PossibleMoves;
         private MyEvaluater myEvaluater;
+        public List<GameMove> gameMoves
+        { get; private set; }
         public bool isGameOver
         { get; private set; }
 
@@ -17,6 +21,7 @@ namespace Chess
             _board = new Board();
             _PossibleMoves = new PossibleMoves(_board);
             myEvaluater = new MyEvaluater(_board);
+            gameMoves = new List<GameMove>();
             isGameOver = false;
         }
         // public ChessGame(Board board)
@@ -29,6 +34,7 @@ namespace Chess
             _board = new Board(FENboard);
             _PossibleMoves = new PossibleMoves(_board);
             myEvaluater = new MyEvaluater(_board);
+            gameMoves = new List<GameMove>();
             isGameOver = false;
         }
 
@@ -47,31 +53,35 @@ namespace Chess
             {
                 if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm)) // pawn promotian check, make it its own method
                 {
-                    if (Board.IsPieceWhite(_board.board[move.StartSquare]))
-                    {
-                        if (move.TargetSquare > -1 && move.TargetSquare < 9)
-                            _board.board[move.StartSquare] = Piece.WQueen;
-                    }
-                    else
-                    {
-                        if (move.TargetSquare > 57 && move.TargetSquare < 64)
-                            _board.board[move.StartSquare] = Piece.BQueen;
-                    }
+                    _board.enPassantPiece = 64;
+                    if ((_board.board[move.StartSquare] & Piece.PieceBits) == Piece.Pawm)
+                        if (Math.Abs(move.StartSquare - move.TargetSquare) == 16)
+                            _board.enPassantPiece = move.TargetSquare;
+                    // else if (move.TargetSquare )
                 }
+
+                gameMoves.Add(new GameMove(move.StartSquare, move.TargetSquare, move.MoveFlag, _board.board[move.TargetSquare]));
 
                 _board.board[move.TargetSquare] = _board.board[move.StartSquare];
                 _board.board[move.StartSquare] = Piece.None;
                 _board.ChangePlayer();
-                // CS_MyConsole.MyConsole.WriteLine(move.StartSquare + "." + move.TargetSquare + ". piece = " + (_board.board[move.TargetSquare] & Piece.PieceBits)); // debuging
                 return true;
             }
             return false;
         }
 
-        public void UnmakeMove(Move move, int capturedPiece)
+        public void UnmakeMove()
         {
+            GameMove move = gameMoves[gameMoves.Count - 1];
+            gameMoves.RemoveAt(gameMoves.Count - 1);
+
             _board.board[move.StartSquare] = _board.board[move.TargetSquare];
-            _board.board[move.TargetSquare] = capturedPiece;
+            _board.board[move.TargetSquare] = move.CapturedPiece;
+
+            if (move.MoveFlag == Move.Flag.PromoteToQueen)
+                _board.board[move.StartSquare] = Piece.Pawm + _board.PlayerTurn;
+
+            _board.ChangePlayer();
         }
 
         public void StartOver()

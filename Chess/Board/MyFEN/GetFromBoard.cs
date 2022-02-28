@@ -161,7 +161,7 @@ namespace Chess.ChessBoard
             }
             FENIndexer++;
 
-            if (board.enPassantPiece == -1)
+            if (board.enPassantPiece == 64)
             {
                 FEN[FENIndexer] = '-';
                 FENIndexer += 2;

@@ -88,7 +88,7 @@ namespace Chess.ChessBoard
             }
             FENIndex += addedNextTime + 1;
 
-            if (board.enPassantPiece == -1)
+            if (board.enPassantPiece == 64)
             {
                 FEN[FENIndex] = '-';
                 FENIndex += 2;

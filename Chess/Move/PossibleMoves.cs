@@ -3,35 +3,40 @@ using Chess.Moves.PieceMovment;
 
 namespace Chess.Moves
 {
-    public struct Move
-    {
-        public int StartSquare;
-        public int TargetSquare;
-        public Move(int StartSquare, int TargetSquare)
-        {
-            this.StartSquare = StartSquare;
-            this.TargetSquare = TargetSquare;
-        }
-    }
     class PossibleMoves
     {
         private Board _board;
+        public List<Move> possibleMoves
+        { get; private set; }
         public PossibleMoves(Board board)
         {
             _board = board;
+            possibleMoves = ReturnPossibleMoves(64);
         }
-        public List<Move> ReturnPossibleMoves(int startSquare)
+
+        public void GeneratePossibleMoves(int startSquare)
         {
-            List<Move> PossibleMoves = new List<Move>();
+            ReturnPossibleMoves(startSquare);
+        }
 
-            PossibleMoves.AddRange(Pawn.GetPossibleMoves(_board));
-            PossibleMoves.AddRange(Knight.GetPossibleMoves(_board));
-            PossibleMoves.AddRange(Bishop.GetPossibleMoves(_board));
-            PossibleMoves.AddRange(Rook.GetPossibleMoves(_board));
-            PossibleMoves.AddRange(Queen.GetPossibleMoves(_board));
-            PossibleMoves.AddRange(King.GetPossibleMoves(_board));
+        public List<Move> ReturnPossibleMoves(int startSquare) // dont even know what start square is for o.o
+        {
+            possibleMoves = new List<Move>();
 
-            return PossibleMoves;
+            possibleMoves.AddRange(Pawn.GetPossibleMoves(_board)); // make it also clarify what pieces it takes in the Move
+            possibleMoves.AddRange(Knight.GetPossibleMoves(_board));
+            possibleMoves.AddRange(Bishop.GetPossibleMoves(_board));
+            possibleMoves.AddRange(Rook.GetPossibleMoves(_board));
+            possibleMoves.AddRange(Queen.GetPossibleMoves(_board));
+            possibleMoves.AddRange(King.GetPossibleMoves(_board));
+
+            if (_board.castle != 0)
+                possibleMoves.AddRange(Castle.GetPossibleMoves(_board));
+
+            if (_board.enPassantPiece != 64)
+                possibleMoves.AddRange(EnPassant.GetPossibleMoves(_board));
+
+            return possibleMoves;
         }
 
         private bool IsKingInCheck(Board board, Move move)
