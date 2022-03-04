@@ -11,15 +11,15 @@ namespace Chess.Moves
         public PossibleMoves(Board board)
         {
             _board = board;
-            possibleMoves = ReturnPossibleMoves(64);
+            possibleMoves = ReturnPossibleMoves();
         }
 
-        public void GeneratePossibleMoves(int startSquare)
+        public void GeneratePossibleMoves()
         {
-            ReturnPossibleMoves(startSquare);
+            ReturnPossibleMoves();
         }
 
-        public List<Move> ReturnPossibleMoves(int startSquare) // dont even know what start square is for o.o
+        public List<Move> ReturnPossibleMoves()
         {
             possibleMoves = new List<Move>();
 

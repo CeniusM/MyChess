@@ -38,47 +38,56 @@ namespace Chess
             isGameOver = false;
         }
 
-        public List<Move> GetPossibleMoves(int StartSquare)
+        public List<Move> GetPossibleMoves()
         {
-            return _PossibleMoves.ReturnPossibleMoves(StartSquare);
+            return _PossibleMoves.ReturnPossibleMoves();
         }
 
         public bool MakeMove(Move move)
         {
             if ((_board.board[move.StartSquare] & Piece.ColorBits) != _board.PlayerTurn)
                 return false;
+            
 
-            //for now
-            // if (_PossibleMoves.ReturnPossibleMoves(64).Contains(move))
-            if (DoesListContainMove(_PossibleMoves.possibleMoves, move))
-            {
-                if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm)) // pawn promotian check, make it its own method
-                {
-                    _board.enPassantPiece = 64;
-                    if ((_board.board[move.StartSquare] & Piece.PieceBits) == Piece.Pawm)
-                        if (Math.Abs(move.StartSquare - move.TargetSquare) == 16)
-                            _board.enPassantPiece = move.TargetSquare;
-                    // else if (move.TargetSquare )
-                }
-
-                gameMoves.Add(new GameMove(move.StartSquare, move.TargetSquare, move.MoveFlag, _board.board[move.TargetSquare]));
-
-                if (move.MoveFlag == Move.Flag.EnPassantCapture)
-                {
-                    if (Board.IsPieceWhite(_board.board[move.StartSquare]))
-                        _board.board[move.TargetSquare + 8] = 0;
-                    else
-                        _board.board[move.TargetSquare - 8] = 0;
-                }
-
-
-                _board.board[move.TargetSquare] = _board.board[move.StartSquare];
-                _board.board[move.StartSquare] = Piece.None;
-                _board.ChangePlayer();
-                return true;
-            }
             return false;
         }
+
+        // public bool MakeMove(Move move) // old
+        // {
+        //     if ((_board.board[move.StartSquare] & Piece.ColorBits) != _board.PlayerTurn)
+        //         return false;
+
+        //     //for now
+        //     // if (_PossibleMoves.ReturnPossibleMoves(64).Contains(move))
+        //     if (DoesListContainMove(_PossibleMoves.possibleMoves, move))
+        //     {
+        //         if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm)) // pawn promotian check, make it its own method
+        //         {
+        //             _board.enPassantPiece = 64;
+        //             if ((_board.board[move.StartSquare] & Piece.PieceBits) == Piece.Pawm)
+        //                 if (Math.Abs(move.StartSquare - move.TargetSquare) == 16)
+        //                     _board.enPassantPiece = move.TargetSquare;
+        //             // else if (move.TargetSquare )
+        //         }
+
+        //         gameMoves.Add(new GameMove(move.StartSquare, move.TargetSquare, move.MoveFlag, _board.board[move.TargetSquare]));
+
+        //         if (move.MoveFlag == Move.Flag.EnPassantCapture)
+        //         {
+        //             if (Board.IsPieceWhite(_board.board[move.StartSquare]))
+        //                 _board.board[move.TargetSquare + 8] = 0;
+        //             else
+        //                 _board.board[move.TargetSquare - 8] = 0;
+        //         }
+
+
+        //         _board.board[move.TargetSquare] = _board.board[move.StartSquare];
+        //         _board.board[move.StartSquare] = Piece.None;
+        //         _board.ChangePlayer();
+        //         return true;
+        //     }
+        //     return false;
+        // }
 
         public void UnmakeMove()
         {
