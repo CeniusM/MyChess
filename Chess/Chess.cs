@@ -49,7 +49,8 @@ namespace Chess
                 return false;
 
             //for now
-            if (_PossibleMoves.ReturnPossibleMoves(64).Contains(move))
+            // if (_PossibleMoves.ReturnPossibleMoves(64).Contains(move))
+            if (DoesListContainMove(_PossibleMoves.possibleMoves, move))
             {
                 if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm)) // pawn promotian check, make it its own method
                 {
@@ -61,6 +62,15 @@ namespace Chess
                 }
 
                 gameMoves.Add(new GameMove(move.StartSquare, move.TargetSquare, move.MoveFlag, _board.board[move.TargetSquare]));
+
+                if (move.MoveFlag == Move.Flag.EnPassantCapture)
+                {
+                    if (Board.IsPieceWhite(_board.board[move.StartSquare]))
+                        _board.board[move.TargetSquare + 8] = 0;
+                    else
+                        _board.board[move.TargetSquare - 8] = 0;
+                }
+
 
                 _board.board[move.TargetSquare] = _board.board[move.StartSquare];
                 _board.board[move.StartSquare] = Piece.None;
@@ -107,6 +117,21 @@ namespace Chess
         public int GetEvaluation()
         {
             return myEvaluater.Evaluate();
+        }
+
+        private bool DoesListContainMove(List<Move> moves, Move move)
+        {
+            int startSquare = move.StartSquare;
+            int targetSquare = move.TargetSquare;
+
+            for (int i = 0; i < moves.Count; i++)
+            {
+                if (moves[i].StartSquare == startSquare)
+                    if (moves[i].TargetSquare == move.TargetSquare)
+                        return true;
+            }
+
+            return false;
         }
     }
 }

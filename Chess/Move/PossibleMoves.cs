@@ -34,14 +34,9 @@ namespace Chess.Moves
                 possibleMoves.AddRange(Castle.GetPossibleMoves(_board));
 
             if (_board.enPassantPiece != 64)
-                possibleMoves.AddRange(EnPassant.GetPossibleMoves(_board));
+            possibleMoves.AddRange(EnPassant.GetPossibleMoves(_board));
 
             return possibleMoves;
-        }
-
-        private bool IsKingInCheck(Board board, Move move)
-        {
-            return Check.IsKingInCheck(board, move);
         }
     }
 }
