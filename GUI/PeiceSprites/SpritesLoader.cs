@@ -22,6 +22,7 @@ namespace MyChessGUI.Sprites
             "Wking",
             "Bking"
         };
+        
         public static List<Bitmap> GetSprites() // note* Paint.net, 100x100, 120/tomme
         {
             List<Bitmap> sprites = new List<Bitmap>();

@@ -1,6 +1,3 @@
-4.
-make the posblemoves list
-
 4.5.
 make the castle work
 and make the code for if the kings is in check
@@ -23,7 +20,8 @@ and a bar where you can see the evaluation
 6.
 make a random ai
 
-7. Make the code faaaast, just come with ideers
+7.
+Make the code faaaast, just come with ideers
 remake the piece movement code
 make it so the game remebers where the pieces are instead of looping over all of them
 just look at sebastians code... :d
@@ -39,3 +37,6 @@ Make an AI/algorithm
 
 11.
 make, it, faaaast, with copute shader or multi threading
+
+12.
+Compute shader ? https://www.ddl.unimi.it/manual/plugins/c-scripts.htm

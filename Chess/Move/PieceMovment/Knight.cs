@@ -49,13 +49,3 @@ namespace Chess.Moves.PieceMovment
         }
     }
 }
-
-
-// for (int i = 0; i < pos.Length; i++)
-// {
-//     for (int j = 0; j < KnightMoves.Count(); j++)
-//     {
-//         if (Board.IsPieceOppositeOrNone(board.board[pos[i]], board.board[pos[i] + KnightMoves[i]]))
-//             posssibleMoves.Add(new Move(pos[i], KnightMoves[i]));
-//     }
-// }
