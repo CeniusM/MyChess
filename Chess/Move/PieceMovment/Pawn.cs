@@ -14,6 +14,8 @@ namespace Chess.Moves.PieceMovment
             {
                 if (!(board.board[square] == Piece.Pawm + playerTurn))
                     continue;
+                if (square < 8 || square > 55)
+                    continue;
 
 
                 if (playerTurn == Piece.White) // white

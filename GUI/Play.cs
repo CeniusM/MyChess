@@ -2,6 +2,8 @@ using Chess;
 using Chess.Moves;
 using winForm;
 using Chess.ChessBoard;
+using System.Media;
+using MyChessGUI.Sound;
 
 namespace MyChessGUI
 {
@@ -13,6 +15,7 @@ namespace MyChessGUI
         private int[] _squareDimensions = new int[2];
         private int _selecktedSquare;
         private bool _isRunning;
+        private MySound sounds = new MySound(@"GUI\MySound\Sounds\Click.wav"); // Proof of consept, shit sound tho
         private Random rnd = new Random();
         private Form1 _form;
         public GameOfChess(Form1 form)
@@ -108,7 +111,10 @@ namespace MyChessGUI
             if (_selecktedSquare != -1 && (chessGame.GetBoard().board[squareX + (squareY * 8)] == 0 || (chessGame.GetBoard().board[squareX + (squareY * 8)] & Piece.White + Piece.Black) != (chessGame.GetBoard().board[_selecktedSquare] & Piece.White + Piece.Black))) // second click
             {
                 // checks of the first piece is moving to either another colored piece or or nothing
-                chessGame.MakeMove(new Move(_selecktedSquare, squareX + (squareY * 8)));
+                if (chessGame.MakeMove(new Move(_selecktedSquare, squareX + (squareY * 8))) && false)
+                    sounds.PlaySound();
+
+
                 _selecktedSquare = -1;
             }
             else if (squareX + (squareY * 8) == _selecktedSquare) // checks if you click the same square
@@ -122,20 +128,22 @@ namespace MyChessGUI
 
             while (_isRunning && false)
             {
+                const int timePerMove = 0;
                 if (chessGame._board.PlayerTurn == Piece.White) // play vs completly random ai
                 {
                     List<Move> moves = chessGame.GetPossibleMoves();
                     chessGame.MakeMove(moves[rnd.Next(0, moves.Count)]);
                     chessAPI.PrintBoard(_selecktedSquare);
-                    Thread.Sleep(100);
+                    Thread.Sleep(timePerMove);
                 }
                 else if (chessGame._board.PlayerTurn == Piece.Black) // play vs completly random ai
                 {
                     List<Move> moves = chessGame.GetPossibleMoves();
                     chessGame.MakeMove(moves[rnd.Next(0, moves.Count)]);
                     chessAPI.PrintBoard(_selecktedSquare);
-                    Thread.Sleep(100);
+                    Thread.Sleep(timePerMove);
                 }
+                sounds.PlaySound();
             }
 
             // later on only print the square that is changed, make a method that takes a list of moves

@@ -17,6 +17,8 @@ namespace Chess
         { get; private set; }
         public bool isGameOver
         { get; private set; }
+        public int winner
+        { get; private set; }
 
         public ChessGame()
         {
@@ -40,11 +42,6 @@ namespace Chess
             isGameOver = false;
         }
 
-        public List<Move> GetPossibleMoves()
-        {
-            return _PossibleMoves.ReturnPossibleMoves();
-        }
-
         public bool MakeMove(Move move)
         {
             if ((_board.board[move.StartSquare] & Piece.ColorBits) != _board.PlayerTurn)
@@ -57,7 +54,7 @@ namespace Chess
             if (indexOfMove != -1)
             {
                 List<Move> moves = _PossibleMoves.possibleMoves; // just making a refrence right?
-                
+
                 int startSquare = moves[indexOfMove].StartSquare;
                 int targetSquare = moves[indexOfMove].TargetSquare;
 
@@ -95,6 +92,16 @@ namespace Chess
                     _board.board[startSquare] = 0;
                 }
                 _board.ChangePlayer();
+                _PossibleMoves.GeneratePossibleMoves();
+
+
+                // Just for testing atm, needs to be removed later
+                if (_PossibleMoves.possibleMoves.Count == 0)
+                {
+                    _board.Reset();
+                    _PossibleMoves.GeneratePossibleMoves();
+                }
+                return true;
             }
             return false;
         }
@@ -110,7 +117,12 @@ namespace Chess
             if (move.MoveFlag == Move.Flag.PromoteToQueen)
                 _board.board[move.StartSquare] = Piece.Pawm + _board.PlayerTurn;
 
+
+
+
+
             _board.ChangePlayer();
+            _PossibleMoves.GeneratePossibleMoves();
         }
 
 
@@ -123,6 +135,8 @@ namespace Chess
         public Board GetBoard() => _board;
 
         public int GetEvaluation() => myEvaluater.Evaluate();
+
+        public List<Move> GetPossibleMoves() => _PossibleMoves.possibleMoves;
 
         private int GetIndexOfMove(List<Move> moves, Move move)
         {
