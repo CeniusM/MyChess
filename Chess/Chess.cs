@@ -57,9 +57,11 @@ namespace Chess
             if (indexOfMove != -1)
             {
                 List<Move> moves = _PossibleMoves.possibleMoves; // just making a refrence right?
-                // Move move = moves[indexOfMove];
+                
                 int startSquare = moves[indexOfMove].StartSquare;
                 int targetSquare = moves[indexOfMove].TargetSquare;
+
+                // gotta later on make it so it dosent need the index and just use the input "move"
 
 
                 if (moves[indexOfMove].MoveFlag == Move.Flag.None)
@@ -89,15 +91,7 @@ namespace Chess
                 }
                 else // promotions
                 {
-                    if (moves[indexOfMove].MoveFlag == Move.Flag.PromoteToQueen)
-                        _board.board[targetSquare] = Piece.Queen + (_board.board[startSquare] & Piece.ColorBits);
-                    else if (moves[indexOfMove].MoveFlag == Move.Flag.PromoteToBishop)
-                        _board.board[targetSquare] = Piece.Bishop + (_board.board[startSquare] & Piece.ColorBits);
-                    else if (moves[indexOfMove].MoveFlag == Move.Flag.PromoteToRook)
-                        _board.board[targetSquare] = Piece.Rook + (_board.board[startSquare] & Piece.ColorBits);
-                    else if (moves[indexOfMove].MoveFlag == Move.Flag.PromoteToKnight)
-                        _board.board[targetSquare] = Piece.Knight + (_board.board[startSquare] & Piece.ColorBits);
-
+                    _board.board[targetSquare] = move.PromotionPieceType + _board.PlayerTurn;
                     _board.board[startSquare] = 0;
                 }
                 _board.ChangePlayer();

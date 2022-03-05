@@ -23,7 +23,7 @@ namespace Chess.Moves
         {
             possibleMoves = new List<Move>();
 
-            possibleMoves.AddRange(Pawn.GetPossibleMoves(_board)); // make it also clarify what pieces it takes in the Move
+            possibleMoves.AddRange(Pawn.GetPossibleMoves(_board)); // dosent queit work since just moving the pawn to the back line also counts
             possibleMoves.AddRange(Knight.GetPossibleMoves(_board));
             possibleMoves.AddRange(Bishop.GetPossibleMoves(_board));
             possibleMoves.AddRange(Rook.GetPossibleMoves(_board));
@@ -34,7 +34,7 @@ namespace Chess.Moves
                 possibleMoves.AddRange(Castle.GetPossibleMoves(_board));
 
             if (_board.enPassantPiece != 64)
-            possibleMoves.AddRange(EnPassant.GetPossibleMoves(_board));
+                possibleMoves.AddRange(EnPassant.GetPossibleMoves(_board));
 
             return possibleMoves;
         }

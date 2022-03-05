@@ -37,6 +37,15 @@ namespace Chess.Moves.PieceMovment
                         if (Board.IsPieceOpposite(board.board[square], board.board[square - 9]))
                             posssibleMoves.Add(new Move(square, square - 9));
                     }
+
+                    // promotions
+                    if (square < 16 && square > 7)
+                    {
+                        posssibleMoves.Add(new Move(square, square - 8, Move.Flag.PromoteToQueen));
+                        posssibleMoves.Add(new Move(square, square - 8, Move.Flag.PromoteToRook));
+                        posssibleMoves.Add(new Move(square, square - 8, Move.Flag.PromoteToBishop));
+                        posssibleMoves.Add(new Move(square, square - 8, Move.Flag.PromoteToKnight));
+                    }
                 }
                 else // black
                 {
@@ -61,9 +70,12 @@ namespace Chess.Moves.PieceMovment
                     }
 
                     // promotions
-                    if (square + 8 < 64 && square + 8 > 56)
+                    if (square < 56 && square > 47)
                     {
                         posssibleMoves.Add(new Move(square, square + 8, Move.Flag.PromoteToQueen));
+                        posssibleMoves.Add(new Move(square, square + 8, Move.Flag.PromoteToRook));
+                        posssibleMoves.Add(new Move(square, square + 8, Move.Flag.PromoteToBishop));
+                        posssibleMoves.Add(new Move(square, square + 8, Move.Flag.PromoteToKnight));
                     }
                 }
             }

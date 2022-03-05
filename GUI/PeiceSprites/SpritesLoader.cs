@@ -23,14 +23,12 @@ namespace MyChessGUI.Sprites
             "Bking"
         };
         
-        public static List<Bitmap> GetSprites() // note* Paint.net, 100x100, 120/tomme
+        public static List<Bitmap> GetSprites()
         {
             List<Bitmap> sprites = new List<Bitmap>();
 
             for (int i = 0; i < SpriteNames.Count(); i++)
             {
-                //string Path = PathToFolder + @"\" + SpriteNames[i] + ".png";
-                //var rm = new ResourceManager("MyChess", Assembly.GetExecutingAssembly());
                 var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"MyChess.GUI.PeiceSprites._100x100.{SpriteNames[i]}.png");
                 sprites.Add(ResizeBitmap(new Bitmap(stream!), 100, 100));
             }
