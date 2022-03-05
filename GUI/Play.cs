@@ -124,14 +124,14 @@ namespace MyChessGUI
             {
                 if (chessGame._board.PlayerTurn == Piece.White) // play vs completly random ai
                 {
-                    List<Move> moves = chessGame.GetPossibleMoves(0);
+                    List<Move> moves = chessGame.GetPossibleMoves();
                     chessGame.MakeMove(moves[rnd.Next(0, moves.Count)]);
                     chessAPI.PrintBoard(_selecktedSquare);
                     Thread.Sleep(100);
                 }
                 else if (chessGame._board.PlayerTurn == Piece.Black) // play vs completly random ai
                 {
-                    List<Move> moves = chessGame.GetPossibleMoves(0);
+                    List<Move> moves = chessGame.GetPossibleMoves();
                     chessGame.MakeMove(moves[rnd.Next(0, moves.Count)]);
                     chessAPI.PrintBoard(_selecktedSquare);
                     Thread.Sleep(100);

@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.IO.MemoryMappedFiles;
 using System;
 using System.Net.NetworkInformation;
 using Chess.Moves;
@@ -47,47 +49,61 @@ namespace Chess
         {
             if ((_board.board[move.StartSquare] & Piece.ColorBits) != _board.PlayerTurn)
                 return false;
-            
+            if (move.StartSquare > 63 || move.StartSquare < 0 || move.TargetSquare > 63 || move.TargetSquare < 0)
+                return false;
 
+            int indexOfMove = GetIndexOfMove(_PossibleMoves.possibleMoves, move);
+
+            if (indexOfMove != -1)
+            {
+                List<Move> moves = _PossibleMoves.possibleMoves; // just making a refrence right?
+                // Move move = moves[indexOfMove];
+                int startSquare = moves[indexOfMove].StartSquare;
+                int targetSquare = moves[indexOfMove].TargetSquare;
+
+
+                if (moves[indexOfMove].MoveFlag == Move.Flag.None)
+                {
+                    _board.board[targetSquare] = _board.board[startSquare];
+                    _board.board[startSquare] = 0;
+
+                }
+                else if (moves[indexOfMove].MoveFlag == Move.Flag.PawnTwoForward)
+                {
+                    _board.board[targetSquare] = _board.board[startSquare];
+                    _board.board[startSquare] = 0;
+                    _board.enPassantPiece = targetSquare;
+                }
+                else if (moves[indexOfMove].MoveFlag == Move.Flag.EnPassantCapture)
+                {
+                    _board.board[targetSquare] = _board.board[startSquare];
+                    _board.board[startSquare] = 0;
+                    if (Board.IsPieceWhite(_board.board[targetSquare]))
+                        _board.board[targetSquare + 8] = 0;
+                    else
+                        _board.board[targetSquare - 8] = 0;
+                }
+                else if (moves[indexOfMove].MoveFlag == Move.Flag.Castling)
+                {
+                    // (☞ﾟヮﾟ)☞  ☜(ﾟヮﾟ☜)
+                }
+                else // promotions
+                {
+                    if (moves[indexOfMove].MoveFlag == Move.Flag.PromoteToQueen)
+                        _board.board[targetSquare] = Piece.Queen + (_board.board[startSquare] & Piece.ColorBits);
+                    else if (moves[indexOfMove].MoveFlag == Move.Flag.PromoteToBishop)
+                        _board.board[targetSquare] = Piece.Bishop + (_board.board[startSquare] & Piece.ColorBits);
+                    else if (moves[indexOfMove].MoveFlag == Move.Flag.PromoteToRook)
+                        _board.board[targetSquare] = Piece.Rook + (_board.board[startSquare] & Piece.ColorBits);
+                    else if (moves[indexOfMove].MoveFlag == Move.Flag.PromoteToKnight)
+                        _board.board[targetSquare] = Piece.Knight + (_board.board[startSquare] & Piece.ColorBits);
+
+                    _board.board[startSquare] = 0;
+                }
+                _board.ChangePlayer();
+            }
             return false;
         }
-
-        // public bool MakeMove(Move move) // old
-        // {
-        //     if ((_board.board[move.StartSquare] & Piece.ColorBits) != _board.PlayerTurn)
-        //         return false;
-
-        //     //for now
-        //     // if (_PossibleMoves.ReturnPossibleMoves(64).Contains(move))
-        //     if (DoesListContainMove(_PossibleMoves.possibleMoves, move))
-        //     {
-        //         if (Board.IsPieceThisPiece(_board.board[move.StartSquare], Piece.Pawm)) // pawn promotian check, make it its own method
-        //         {
-        //             _board.enPassantPiece = 64;
-        //             if ((_board.board[move.StartSquare] & Piece.PieceBits) == Piece.Pawm)
-        //                 if (Math.Abs(move.StartSquare - move.TargetSquare) == 16)
-        //                     _board.enPassantPiece = move.TargetSquare;
-        //             // else if (move.TargetSquare )
-        //         }
-
-        //         gameMoves.Add(new GameMove(move.StartSquare, move.TargetSquare, move.MoveFlag, _board.board[move.TargetSquare]));
-
-        //         if (move.MoveFlag == Move.Flag.EnPassantCapture)
-        //         {
-        //             if (Board.IsPieceWhite(_board.board[move.StartSquare]))
-        //                 _board.board[move.TargetSquare + 8] = 0;
-        //             else
-        //                 _board.board[move.TargetSquare - 8] = 0;
-        //         }
-
-
-        //         _board.board[move.TargetSquare] = _board.board[move.StartSquare];
-        //         _board.board[move.StartSquare] = Piece.None;
-        //         _board.ChangePlayer();
-        //         return true;
-        //     }
-        //     return false;
-        // }
 
         public void UnmakeMove()
         {
@@ -103,32 +119,18 @@ namespace Chess
             _board.ChangePlayer();
         }
 
-        public void StartOver()
-        {
-            _board.Reset();
-        }
 
-        public Board GetBoard()
-        {
-            return _board;
-        }
+        public void StartOver() => _board.Reset();
 
-        public void LoadFENString(string FEN)
-        {
-            _board = MyFEN.GetBoardFromFEN(FEN);
-        }
+        public void LoadFENString(string FEN) => _board = MyFEN.GetBoardFromFEN(FEN);
 
-        public string GetFENBoard()
-        {
-            return MyFEN.GetFENFromBoard(_board);
-        }
+        public string GetFENBoard() => MyFEN.GetFENFromBoard(_board);
 
-        public int GetEvaluation()
-        {
-            return myEvaluater.Evaluate();
-        }
+        public Board GetBoard() => _board;
 
-        private bool DoesListContainMove(List<Move> moves, Move move)
+        public int GetEvaluation() => myEvaluater.Evaluate();
+
+        private int GetIndexOfMove(List<Move> moves, Move move)
         {
             int startSquare = move.StartSquare;
             int targetSquare = move.TargetSquare;
@@ -137,10 +139,10 @@ namespace Chess
             {
                 if (moves[i].StartSquare == startSquare)
                     if (moves[i].TargetSquare == move.TargetSquare)
-                        return true;
+                        return i;
             }
 
-            return false;
+            return -1;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Chess.Moves.PieceMovment
                     if (square >> 3 == 6)
                         if (board.board[square - 8] == 0)
                             if (board.board[square - 16] == 0)
-                                posssibleMoves.Add(new Move(square, square - 16));
+                                posssibleMoves.Add(new Move(square, square - 16, Move.Flag.PawnTwoForward));
 
                     if (board.board[square - 8] == 0)
                         posssibleMoves.Add(new Move(square, square - 8));
@@ -38,13 +38,12 @@ namespace Chess.Moves.PieceMovment
                             posssibleMoves.Add(new Move(square, square - 9));
                     }
                 }
-
-                else    // black
+                else // black
                 {
                     if (square >> 3 == 1)
                         if (board.board[square + 8] == 0)
                             if (board.board[square + 16] == 0)
-                                posssibleMoves.Add(new Move(square, square + 16));
+                                posssibleMoves.Add(new Move(square, square + 16, Move.Flag.PawnTwoForward));
 
                     if (board.board[square + 8] == 0)
                         posssibleMoves.Add(new Move(square, square + 8));
@@ -59,6 +58,12 @@ namespace Chess.Moves.PieceMovment
                     {
                         if (Board.IsPieceOpposite(board.board[square], board.board[square + 9]))
                             posssibleMoves.Add(new Move(square, square + 9));
+                    }
+
+                    // promotions
+                    if (square + 8 < 64 && square + 8 > 56)
+                    {
+                        posssibleMoves.Add(new Move(square, square + 8, Move.Flag.PromoteToQueen));
                     }
                 }
             }

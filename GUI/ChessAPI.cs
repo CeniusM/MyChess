@@ -53,7 +53,7 @@ namespace MyChessGUI
                 }
             }
 
-            PrintPosebleSquareForSelecktedSquare(selecktedPiece);
+            PrintPosebleSquaresForSelecktedSquare(selecktedPiece);
 
             PrintEvalBar();
 
@@ -62,9 +62,9 @@ namespace MyChessGUI
             _isPrinting = false;
         }
 
-        public void PrintPosebleSquareForSelecktedSquare(int selecktedPiece) // like the name?
+        public void PrintPosebleSquaresForSelecktedSquare(int selecktedPiece) // like the name?
         {
-            List<Move> listOfMoves = chessGame.GetPossibleMoves(selecktedPiece);
+            List<Move> listOfMoves = chessGame.GetPossibleMoves();
             List<Move> moves = new List<Move>();
             for (int i = 0; i < listOfMoves.Count; i++)
             {
