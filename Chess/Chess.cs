@@ -10,9 +10,10 @@ namespace Chess
 {
     class ChessGame
     {
-        public Board _board { get; private set; }
         private PossibleMoves _PossibleMoves;
         private MyEvaluater myEvaluater;
+        public Board _board
+        { get; private set; }
         public List<GameMove> gameMoves
         { get; private set; }
         public bool isGameOver
@@ -55,25 +56,27 @@ namespace Chess
             {
                 List<Move> moves = _PossibleMoves.possibleMoves; // just making a refrence right?
 
-                int startSquare = moves[indexOfMove].StartSquare;
-                int targetSquare = moves[indexOfMove].TargetSquare;
+                move = moves[indexOfMove];
+
+                int startSquare = move.StartSquare;
+                int targetSquare = move.TargetSquare;
 
                 // gotta later on make it so it dosent need the index and just use the input "move"
 
 
-                if (moves[indexOfMove].MoveFlag == Move.Flag.None)
+                if (move.MoveFlag == Move.Flag.None)
                 {
                     _board.board[targetSquare] = _board.board[startSquare];
                     _board.board[startSquare] = 0;
 
                 }
-                else if (moves[indexOfMove].MoveFlag == Move.Flag.PawnTwoForward)
+                else if (move.MoveFlag == Move.Flag.PawnTwoForward)
                 {
                     _board.board[targetSquare] = _board.board[startSquare];
                     _board.board[startSquare] = 0;
                     _board.enPassantPiece = targetSquare;
                 }
-                else if (moves[indexOfMove].MoveFlag == Move.Flag.EnPassantCapture)
+                else if (move.MoveFlag == Move.Flag.EnPassantCapture)
                 {
                     _board.board[targetSquare] = _board.board[startSquare];
                     _board.board[startSquare] = 0;
@@ -82,9 +85,15 @@ namespace Chess
                     else
                         _board.board[targetSquare - 8] = 0;
                 }
-                else if (moves[indexOfMove].MoveFlag == Move.Flag.Castling)
+                else if (move.MoveFlag == Move.Flag.Castling)
                 {
-                    // (☞ﾟヮﾟ)☞  ☜(ﾟヮﾟ☜)
+                    if (move.StartSquare == 8)
+                    {
+                        _board.board[61] = _board.board[63];
+                        _board.board[62] = _board.board[60];
+                        _board.board[60] = 0;
+                        _board.board[63] = 0;
+                    }
                 }
                 else // promotions
                 {
@@ -116,9 +125,6 @@ namespace Chess
 
             if (move.MoveFlag == Move.Flag.PromoteToQueen)
                 _board.board[move.StartSquare] = Piece.Pawm + _board.PlayerTurn;
-
-
-
 
 
             _board.ChangePlayer();
