@@ -15,7 +15,9 @@ namespace MyChessGUI
         private int[] _squareDimensions = new int[2];
         private int _selecktedSquare;
         private bool _isRunning;
-        private MySound sounds = new MySound(@"GUI\MySound\Sounds\Click.wav"); // Proof of consept, shit sound tho
+
+        // Proof of consept, anoying sound tho, and make it not a complete path
+        private MySound sounds = new MySound(@"C:\GitHub\MyChess\GUI\MySound\Sounds\Click.wav");
         private Random rnd = new Random();
         private Form1 _form;
         public GameOfChess(Form1 form)
@@ -101,7 +103,7 @@ namespace MyChessGUI
             }
         }
 
-        private void MouseClick(object? sender, MouseEventArgs e)
+        private async void MouseClick(object? sender, MouseEventArgs e)
         {
             int squareX = (int)((float)8 / 800 * (float)e.X);
             int squareY = (int)((float)8 / 800 * (float)e.Y);
@@ -126,6 +128,26 @@ namespace MyChessGUI
                 _selecktedSquare = squareX + (squareY * 8);
             }
 
+            await Task.Run(() => AIPlay()); // fixed it so you can aclually close the aplication when its running
+
+            // later on only print the square that is changed, make a method that takes a list of moves
+            chessAPI.PrintBoard(_selecktedSquare);
+
+
+            // debugging
+            // chessAPI.TestTheDirections();
+            // CS_MyConsole.MyConsole.WriteLine((squareX + ", " + squareY + "\n" + e.X + ", " + e.Y + "\n"));
+        }
+
+
+
+        private bool AIRunning = false;
+        private void AIPlay()
+        {
+            if (AIRunning)
+                return;
+
+            AIRunning = true;
             while (_isRunning && false)
             {
                 const int timePerMove = 0;
@@ -146,13 +168,7 @@ namespace MyChessGUI
                 sounds.PlaySound();
             }
 
-            // later on only print the square that is changed, make a method that takes a list of moves
-            chessAPI.PrintBoard(_selecktedSquare);
-
-
-            // debugging
-            // chessAPI.TestTheDirections();
-            // CS_MyConsole.MyConsole.WriteLine((squareX + ", " + squareY + "\n" + e.X + ", " + e.Y + "\n"));
+            AIRunning = false;
         }
     }
 }

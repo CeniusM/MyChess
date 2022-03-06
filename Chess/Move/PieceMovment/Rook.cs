@@ -34,7 +34,7 @@ namespace Chess.Moves.PieceMovment
                         }
                         else if (Board.IsPieceOpposite(board.board[square + (directionValues[direction] * toEdge)], playerTurn))
                         {
-                            posssibleMoves.Add(new Move(square, square + (direction * toEdge)));
+                            posssibleMoves.Add(new Move(square, square + (directionValues[direction] * toEdge)));
                             break;
                         }
                         else
