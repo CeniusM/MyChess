@@ -104,7 +104,7 @@ namespace MyChessGUI
 
             float evaluation = chessGame.GetEvaluation() / 300f; // idk 
 
-            float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f); // returs a num between -15 and 15
+            float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f, 15); // returs a num between -15 and 15
 
             int evalHeightpx = (int)((-evalHeight / 15f + 1) * 400f); // make eval height into a range between 0, 800
 

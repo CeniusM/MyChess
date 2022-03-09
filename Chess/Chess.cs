@@ -50,19 +50,10 @@ namespace Chess
             if (move.StartSquare > 63 || move.StartSquare < 0 || move.TargetSquare > 63 || move.TargetSquare < 0)
                 return false;
 
-            int indexOfMove = GetIndexOfMove(_PossibleMoves.possibleMoves, move);
-
-            if (indexOfMove != -1)
+            if (_PossibleMoves.possibleMoves.Count != 0)
             {
-                List<Move> moves = _PossibleMoves.possibleMoves; // just making a refrence right?
-
-                move = moves[indexOfMove];
-
                 int startSquare = move.StartSquare;
                 int targetSquare = move.TargetSquare;
-
-                // gotta later on make it so it dosent need the index and just use the input "move"
-
 
                 if (move.MoveFlag == Move.Flag.None)
                 {
@@ -143,20 +134,5 @@ namespace Chess
         public int GetEvaluation() => myEvaluater.Evaluate();
 
         public List<Move> GetPossibleMoves() => _PossibleMoves.possibleMoves;
-
-        private int GetIndexOfMove(List<Move> moves, Move move)
-        {
-            int startSquare = move.StartSquare;
-            int targetSquare = move.TargetSquare;
-
-            for (int i = 0; i < moves.Count; i++)
-            {
-                if (moves[i].StartSquare == startSquare)
-                    if (moves[i].TargetSquare == move.TargetSquare)
-                        return i;
-            }
-
-            return -1;
-        }
     }
 }

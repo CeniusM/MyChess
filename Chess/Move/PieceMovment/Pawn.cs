@@ -23,7 +23,7 @@ namespace Chess.Moves.PieceMovment
                     if (square >> 3 == 6)
                         if (board.board[square - 8] == 0)
                             if (board.board[square - 16] == 0)
-                                posssibleMoves.Add(new Move(square, square - 16, Move.Flag.PawnTwoForward));
+                                    posssibleMoves.Add(new Move(square, square - 16, Move.Flag.PawnTwoForward));
 
                     if (board.board[square - 8] == 0)
                         posssibleMoves.Add(new Move(square, square - 8));

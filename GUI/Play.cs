@@ -37,15 +37,15 @@ namespace MyChessGUI
 
         public void Play()
         {
-            // just to run the static method in the new directions
+            // just to run the static method in the Directions class
             int foo = Chess.Moves.Directions.DirectionValues[0, 0];
 
             _isRunning = true;
 
             chessAPI.PrintBoard();
 
-            while (_isRunning)
-                Thread.Sleep(1000);
+            // while (_isRunning)
+            //     Thread.Sleep(1000);
         }
 
         public void Stop() => _isRunning = false;
@@ -103,43 +103,80 @@ namespace MyChessGUI
             }
         }
 
+
+        int squareX = 0;
+        int squareY = 0;
         private async void MouseClick(object? sender, MouseEventArgs e)
         {
-            int squareX = (int)((float)8 / 800 * (float)e.X);
-            int squareY = (int)((float)8 / 800 * (float)e.Y);
+            squareX = (int)((float)8 / 800 * (float)e.X);
+            squareY = (int)((float)8 / 800 * (float)e.Y);
 
-            if ((squareX + (squareY * 8)) > 63) return;
+            await Task.Run(() => MakeMove(squareX, squareY));
 
-            if (_selecktedSquare != -1 && (chessGame.GetBoard().board[squareX + (squareY * 8)] == 0 || (chessGame.GetBoard().board[squareX + (squareY * 8)] & Piece.White + Piece.Black) != (chessGame.GetBoard().board[_selecktedSquare] & Piece.White + Piece.Black))) // second click
-            {
-                // checks of the first piece is moving to either another colored piece or or nothing
-                if (chessGame.MakeMove(new Move(_selecktedSquare, squareX + (squareY * 8))) && false)
-                    sounds.PlaySound();
+            // if ((squareX + (squareY * 8)) > 63) return;
 
-
-                _selecktedSquare = -1;
-            }
-            else if (squareX + (squareY * 8) == _selecktedSquare) // checks if you click the same square
-            {
-                _selecktedSquare = -1;
-            }
-            else if (chessGame.GetBoard().board[squareX + (squareY * 8)] != 0 && Board.IsPiecesSameColor(chessGame.GetBoard().board[squareX + (squareY * 8)], chessGame._board.PlayerTurn)) // first click
-            {
-                _selecktedSquare = squareX + (squareY * 8);
-            }
-
-            await Task.Run(() => AIPlay()); // fixed it so you can aclually close the aplication when its running
-
-            // later on only print the square that is changed, make a method that takes a list of moves
-            chessAPI.PrintBoard(_selecktedSquare);
+            // if (_selecktedSquare != -1 && (chessGame.GetBoard().board[squareX + (squareY * 8)] == 0 || (chessGame.GetBoard().board[squareX + (squareY * 8)] & Piece.White + Piece.Black) != (chessGame.GetBoard().board[_selecktedSquare] & Piece.White + Piece.Black))) // second click
+            // {
+            //     // checks of the first piece is moving to either another colored piece or or nothing
+            //     if (chessGame.MakeMove(new Move(_selecktedSquare, squareX + (squareY * 8))) && false)
+            //         sounds.PlaySound();
 
 
-            // debugging
-            // chessAPI.TestTheDirections();
-            // CS_MyConsole.MyConsole.WriteLine((squareX + ", " + squareY + "\n" + e.X + ", " + e.Y + "\n"));
+            //     _selecktedSquare = -1;
+            // }
+            // else if (squareX + (squareY * 8) == _selecktedSquare) // checks if you click the same square
+            // {
+            //     _selecktedSquare = -1;
+            // }
+            // else if (chessGame.GetBoard().board[squareX + (squareY * 8)] != 0 && Board.IsPiecesSameColor(chessGame.GetBoard().board[squareX + (squareY * 8)], chessGame._board.PlayerTurn)) // first click
+            // {
+            //     _selecktedSquare = squareX + (squareY * 8);
+            // }
+
+            // await Task.Run(() => AIPlay()); // fixed it so you can aclually close the aplication when its running
+
+            // // later on only print the square that is changed, make a method that takes a list of moves
+            // chessAPI.PrintBoard(_selecktedSquare);
+
+
+            // // debugging
+            // // chessAPI.TestTheDirections();
+            // // CS_MyConsole.MyConsole.WriteLine((squareX + ", " + squareY + "\n" + e.X + ", " + e.Y + "\n"));
         }
 
+        bool makingAMove = false;
+        private async void MakeMove(int x, int y)
+        {
+            if (makingAMove)
+                return;
+            makingAMove = true;
 
+            int pressedSquare = x + (y * 8);
+            if (_selecktedSquare == -1)
+            {
+                if ((chessGame._board.board[pressedSquare] & Piece.ColorBits) == chessGame._board.PlayerTurn)
+                {
+                    _selecktedSquare = pressedSquare;
+                }
+            }
+            else
+            {
+
+                if (false) // piece is promotion
+                {
+                    int promotionPiece = await Task.Run(() => GetChosenPromotionPiece());
+                }
+            }
+
+            makingAMove = false;
+        }
+
+        private int GetChosenPromotionPiece()
+        {
+
+
+            return 0;
+        }
 
         private bool AIRunning = false;
         private void AIPlay()
