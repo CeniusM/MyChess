@@ -159,14 +159,40 @@ namespace MyChessGUI
                     _selecktedSquare = pressedSquare;
                 }
             }
+            else if (pressedSquare == _selecktedSquare) // if pressed the same square
+            {
+                _selecktedSquare = -1;
+            }
             else
             {
+                List<Move> moves = chessGame.GetPossibleMoves(_selecktedSquare, pressedSquare);
 
-                if (false) // piece is promotion
+                if (moves.Count == 0)
+                {
+                    if ((chessGame._board.board[pressedSquare] & Piece.ColorBits) == chessGame._board.PlayerTurn)
+                    {
+                        _selecktedSquare = pressedSquare;
+                    }
+                    else
+                    {
+                        _selecktedSquare = -1;
+                    }
+                }
+                if (moves.Count == 1)
+                {
+                    chessGame.MakeMove(moves[0]);
+
+                    _selecktedSquare = -1;
+                }
+                else if (moves.Count == 5) // piece is promotion, make 4 later, it just counts moving the pawn as well
                 {
                     int promotionPiece = await Task.Run(() => GetChosenPromotionPiece());
+
+                    _selecktedSquare = -1;
                 }
             }
+
+            chessAPI.PrintBoard(_selecktedSquare);
 
             makingAMove = false;
         }
@@ -206,6 +232,19 @@ namespace MyChessGUI
             }
 
             AIRunning = false;
+        }
+
+        private int GetIndexOfMove(int startSquare, int targetSquare)
+        {
+            List<Move> moves = chessGame.GetPossibleMoves();
+
+            for (int i = 0; i < moves.Count; i++)
+            {
+                if (moves[i].StartSquare == startSquare && targetSquare == moves[i].TargetSquare)
+                    return i;
+            }
+
+            throw new Exception("dosent excist");
         }
     }
 }

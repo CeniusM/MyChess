@@ -18,7 +18,7 @@ namespace CS_MyConsole
 
             // Format and display the TimeSpan value.
             string elapsedTime = ts.TotalSeconds.ToString() + "s";
-//ts.Seconds.ToString() + 
+            //ts.Seconds.ToString() + 
             stopWatch.Reset();
 
             return ("RunTime " + elapsedTime);
@@ -35,7 +35,7 @@ namespace CS_MyConsole
 
             // Format and display the TimeSpan value.
             string elapsedTime = ts.TotalSeconds.ToString() + "s";
-//"minutes" + ts.Minutes + " and ms " +ts.Seconds.ToString() + 
+            //"minutes" + ts.Minutes + " and ms " +ts.Seconds.ToString() + 
             stopWatch2.Reset();
 
             return ("RunTime " + elapsedTime);

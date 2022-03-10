@@ -38,5 +38,18 @@ namespace Chess.Moves
 
             return possibleMoves;
         }
+
+        public List<Move> GetMovesFromMove(int startSquare, int targetSquare)
+        {
+            List<Move> moves = new List<Move>(4);
+
+            for (int i = 0; i < possibleMoves.Count; i++)
+            {
+                if (possibleMoves[i].StartSquare == startSquare && possibleMoves[i].TargetSquare == targetSquare)
+                    moves.Add(possibleMoves[i]);
+            }
+
+            return moves;
+        }
     }
 }
