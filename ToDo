@@ -3,10 +3,6 @@ lav Pieceplacements into an array, then alicate like 0-1 for the kings so the fo
 also do that with like the rooks, where it checks idk, like 4-5 of the array in the for loop, and like 15-31 for pawns
 just not sure how the promoted peices would work
 
-
-
-
-
 4.5.
 make the castle work
 and make the code for if the kings is in check
