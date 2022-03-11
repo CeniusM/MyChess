@@ -184,9 +184,18 @@ namespace MyChessGUI
 
                     _selecktedSquare = -1;
                 }
-                else if (moves.Count == 5) // piece is promotion, make 4 later, it just counts moving the pawn as well
+                else if (moves.Count == 4)
                 {
                     int promotionPiece = await Task.Run(() => GetChosenPromotionPiece());
+
+                    if (promotionPiece == 0)
+                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToQueen));
+                    else if (promotionPiece == 1)
+                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToRook));
+                    else if (promotionPiece == 2)
+                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToBishop));
+                    else if (promotionPiece == 3)
+                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToKnight));
 
                     _selecktedSquare = -1;
                 }
