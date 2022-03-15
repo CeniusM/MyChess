@@ -28,7 +28,7 @@ namespace Chess.Moves
         }
 
         readonly ushort moveValue;
-        readonly int capturedPiece = 0;
+        readonly byte capturedPiece = 0;
 
         const ushort startSquareMask = 0b0000000000111111;
         const ushort targetSquareMask = 0b0000111111000000;
@@ -51,7 +51,7 @@ namespace Chess.Moves
         public GameMove(int startSquare, int targetSquare, int flag, int capturedPiece)
         {
             moveValue = (ushort)(startSquare | targetSquare << 6 | flag << 12);
-            this.capturedPiece = capturedPiece;
+            this.capturedPiece = (byte)capturedPiece;
         }
 
         public int StartSquare
