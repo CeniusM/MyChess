@@ -29,18 +29,18 @@ namespace Chess
                     //checking for the king or rook moving
                     // kings
                     if (startSquare == 4)
-                        _board.castle = _board.castle & 12;
+                        _board.castle &= 0b1100;
                     else if (startSquare == 60)
-                        _board.castle = _board.castle & 3;
+                        _board.castle &= 0b0011;
                     // rooks
                     else if (startSquare == 63)
-                        _board.castle = _board.castle ^ 8;
+                        _board.castle = _board.castle & 0b0111;
                     else if (startSquare == 56)
-                        _board.castle = _board.castle ^ 4;
+                        _board.castle = _board.castle & 0b1011;
                     else if (startSquare == 7)
-                        _board.castle = _board.castle ^ 2;
+                        _board.castle = _board.castle & 0b1101;
                     else if (startSquare == 0)
-                        _board.castle = _board.castle ^ 1;
+                        _board.castle = _board.castle & 0b1110;
                 }
                 else if (move.MoveFlag == Move.Flag.PawnTwoForward)
                 {
@@ -65,7 +65,7 @@ namespace Chess
                         _board.board[62] = _board.board[60];
                         _board.board[60] = 0;
                         _board.board[63] = 0;
-                        _board.castle ^= 8;
+                        _board.castle &= 0b0111;
                     }
                     else if (move.TargetSquare == 58)
                     {
@@ -73,7 +73,7 @@ namespace Chess
                         _board.board[59] = _board.board[56];
                         _board.board[60] = 0;
                         _board.board[56] = 0;
-                        _board.castle ^= 4;
+                        _board.castle &= 0b1011;
                     }
                     else if (move.TargetSquare == 6)
                     {
@@ -81,7 +81,7 @@ namespace Chess
                         _board.board[5] = _board.board[7];
                         _board.board[4] = 0;
                         _board.board[7] = 0;
-                        _board.castle ^= 2;
+                        _board.castle &= 0b1101;
                     }
                     else if (move.TargetSquare == 2)
                     {
@@ -89,7 +89,7 @@ namespace Chess
                         _board.board[3] = _board.board[0];
                         _board.board[4] = 0;
                         _board.board[0] = 0;
-                        _board.castle ^= 1;
+                        _board.castle &= 0b1110;
                     }
                 }
                 else // promotions
