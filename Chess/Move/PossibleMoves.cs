@@ -36,7 +36,30 @@ namespace Chess.Moves
             if (_board.enPassantPiece != 64)
                 possibleMoves.AddRange(EnPassant.GetPossibleMoves(_board));
 
+            RemoveAllInvalidMoves();
+
             return possibleMoves;
+        }
+
+        private void RemoveAllInvalidMoves()
+        {
+            List<Move> validMoves = new List<Move>();
+            for (int i = 0; i < possibleMoves.Count; i++)
+            {
+                List<Move> tempMoves = GetMovesFromMove(_board, possibleMoves[i]);
+                bool validMove = true;
+                for (int j = 0; j < tempMoves.Count; j++)
+                {
+                    if (_board.board[tempMoves[j].TargetSquare] == (Piece.King | _board.playerTurn))
+                    {
+                        validMove = false;
+                        break;
+                    }
+                }
+                if (validMove)
+                    validMoves.Add(possibleMoves[i]);
+            }
+            possibleMoves = validMoves;
         }
 
         public List<Move> GetMovesFromMove(int startSquare, int targetSquare)
@@ -50,6 +73,28 @@ namespace Chess.Moves
             }
 
             return moves;
+        }
+
+        private List<Move> ReturnPossibleMoves(Board board, Move move)
+        {
+            List<Move> tempMoves = new List<Move>();
+
+            tempMoves.AddRange(Pawn.GetPossibleMoves(board)); // dosent queit work since just moving the pawn to the back line also counts
+            tempMoves.AddRange(Knight.GetPossibleMoves(board));
+            tempMoves.AddRange(Bishop.GetPossibleMoves(board));
+            tempMoves.AddRange(Rook.GetPossibleMoves(board));
+            tempMoves.AddRange(Queen.GetPossibleMoves(board));
+            tempMoves.AddRange(King.GetPossibleMoves(board));
+
+            if (board.castle != 0)
+                tempMoves.AddRange(Castle.GetPossibleMoves(board));
+
+            if (board.enPassantPiece != 64)
+                tempMoves.AddRange(EnPassant.GetPossibleMoves(board));
+
+            RemoveAllInvalidMoves();
+
+            return tempMoves;
         }
     }
 }
