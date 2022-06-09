@@ -113,35 +113,7 @@ namespace MyChessGUI
 
             await Task.Run(() => MakeMove(squareX, squareY));
 
-            // if ((squareX + (squareY * 8)) > 63) return;
-
-            // if (_selecktedSquare != -1 && (chessGame.GetBoard().board[squareX + (squareY * 8)] == 0 || (chessGame.GetBoard().board[squareX + (squareY * 8)] & Piece.White + Piece.Black) != (chessGame.GetBoard().board[_selecktedSquare] & Piece.White + Piece.Black))) // second click
-            // {
-            //     // checks of the first piece is moving to either another colored piece or or nothing
-            //     if (chessGame.MakeMove(new Move(_selecktedSquare, squareX + (squareY * 8))) && false)
-            //         sounds.PlaySound();
-
-
-            //     _selecktedSquare = -1;
-            // }
-            // else if (squareX + (squareY * 8) == _selecktedSquare) // checks if you click the same square
-            // {
-            //     _selecktedSquare = -1;
-            // }
-            // else if (chessGame.GetBoard().board[squareX + (squareY * 8)] != 0 && Board.IsPiecesSameColor(chessGame.GetBoard().board[squareX + (squareY * 8)], chessGame._board.PlayerTurn)) // first click
-            // {
-            //     _selecktedSquare = squareX + (squareY * 8);
-            // }
-
-            // await Task.Run(() => AIPlay()); // fixed it so you can aclually close the aplication when its running
-
-            // // later on only print the square that is changed, make a method that takes a list of moves
-            // chessAPI.PrintBoard(_selecktedSquare);
-
-
-            // // debugging
-            // // chessAPI.TestTheDirections();
-            // // CS_MyConsole.MyConsole.WriteLine((squareX + ", " + squareY + "\n" + e.X + ", " + e.Y + "\n"));
+            // await Task.Run(() => AIPlay());
         }
 
         bool makingAMove = false;
@@ -184,9 +156,18 @@ namespace MyChessGUI
 
                     _selecktedSquare = -1;
                 }
-                else if (moves.Count == 5) // piece is promotion, make 4 later, it just counts moving the pawn as well
+                else if (moves.Count == 4)
                 {
                     int promotionPiece = await Task.Run(() => GetChosenPromotionPiece());
+
+                    if (promotionPiece == 0)
+                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToQueen));
+                    else if (promotionPiece == 1)
+                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToRook));
+                    else if (promotionPiece == 2)
+                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToBishop));
+                    else if (promotionPiece == 3)
+                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToKnight));
 
                     _selecktedSquare = -1;
                 }
@@ -211,7 +192,7 @@ namespace MyChessGUI
                 return;
 
             AIRunning = true;
-            while (_isRunning && false)
+            while (_isRunning)
             {
                 const int timePerMove = 0;
                 if (chessGame._board.PlayerTurn == Piece.White) // play vs completly random ai
