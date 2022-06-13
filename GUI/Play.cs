@@ -1,7 +1,6 @@
-using Chess;
-using Chess.Moves;
+using MyChess;
 using winForm;
-using Chess.ChessBoard;
+using MyChess.ChessBoard;
 using System.Media;
 using MyChessGUI.Sound;
 
@@ -29,7 +28,7 @@ namespace MyChessGUI
             _squareDimensions[1] = 100;//form.Width / 8;
             _selecktedSquare = -1;
 
-            int renderDirections = Directions.DirectionValues[0, 0]; // just makes it so its loaded
+            //int renderDirections = Directions.DirectionValues[0, 0]; // just makes it so its loaded
 
             _form.MouseClick += MouseClick;
             _form.KeyPress += KeyPress;
@@ -38,7 +37,7 @@ namespace MyChessGUI
         public void Play()
         {
             // just to run the static method in the Directions class
-            int foo = Chess.Moves.Directions.DirectionValues[0, 0];
+            //int foo = Chess.Moves.Directions.DirectionValues[0, 0];
 
             _isRunning = true;
 
@@ -52,55 +51,55 @@ namespace MyChessGUI
 
         private void KeyPress(object? sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == 'r') // rePrints the whole board
-            {
-                chessAPI.PrintBoard();
-            }
-            else if (e.KeyChar == 'o') // Resests the board
-            {
-                chessGame.StartOver();
-                chessAPI.PrintBoard();
-                _selecktedSquare = -1;
-            }
-            else if (e.KeyChar == 's') // Saves board
-            {
-                CS_MyConsole.MyConsole.WriteLine(MyFEN.GetFENFromBoard(chessGame._board));
-            }
-            else if (e.KeyChar == '1')
-            {
-                chessGame = new ChessGame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-                chessAPI = new ChessAPI(_form, chessGame);
-                chessAPI.PrintBoard();
-            }
-            else if (e.KeyChar == '2')
-            {
-                chessGame = new ChessGame("rnb1kbnr/ppp1pppp/8/q7/8/2N5/PPPP1PPP/R1BQKBNR b KQ - 0 1");
-                chessAPI = new ChessAPI(_form, chessGame);
-                chessAPI.PrintBoard();
-            }
-            else if (e.KeyChar == '3')
-            {
-                chessGame = new ChessGame("1k2r3/1p3r2/pN4p1/3p4/1R2n2P/4Q1q1/PPP3P1/2K1R3 b - - 1 1");
-                chessAPI = new ChessAPI(_form, chessGame);
-                chessAPI.PrintBoard();
-            }
-
-            else if (e.KeyChar == '0') // reads the last line in MyConsole and takes it in as a fen string
-            {
-                chessGame = new ChessGame(CS_MyConsole.MyConsole.ReadLastLine());
-                chessAPI = new ChessAPI(_form, chessGame);
-                chessAPI.PrintBoard();
-            }
-
-            else if (e.KeyChar == 'l') // reads the last line in MyConsole and takes it in as a fen string
-            {
-                if (chessGame.gameMoves.Count != 0)
-                {
-                    chessGame.UnmakeMove();
-                    chessAPI.PrintBoard();
-                }
-
-            }
+            //if (e.KeyChar == 'r') // rePrints the whole board
+            //{
+            //    chessAPI.PrintBoard();
+            //}
+            //else if (e.KeyChar == 'o') // Resests the board
+            //{
+            //    chessGame.StartOver();
+            //    chessAPI.PrintBoard();
+            //    _selecktedSquare = -1;
+            //}
+            //else if (e.KeyChar == 's') // Saves board
+            //{
+            //    CS_MyConsole.MyConsole.WriteLine(MyFEN.GetFENFromBoard(chessGame._board));
+            //}
+            //else if (e.KeyChar == '1')
+            //{
+            //    chessGame = new ChessGame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            //    chessAPI = new ChessAPI(_form, chessGame);
+            //    chessAPI.PrintBoard();
+            //}
+            //else if (e.KeyChar == '2')
+            //{
+            //    chessGame = new ChessGame("rnb1kbnr/ppp1pppp/8/q7/8/2N5/PPPP1PPP/R1BQKBNR b KQ - 0 1");
+            //    chessAPI = new ChessAPI(_form, chessGame);
+            //    chessAPI.PrintBoard();
+            //}
+            //else if (e.KeyChar == '3')
+            //{
+            //    chessGame = new ChessGame("1k2r3/1p3r2/pN4p1/3p4/1R2n2P/4Q1q1/PPP3P1/2K1R3 b - - 1 1");
+            //    chessAPI = new ChessAPI(_form, chessGame);
+            //    chessAPI.PrintBoard();
+            //}
+//
+            //else if (e.KeyChar == '0') // reads the last line in MyConsole and takes it in as a fen string
+            //{
+            //    chessGame = new ChessGame(CS_MyConsole.MyConsole.ReadLastLine());
+            //    chessAPI = new ChessAPI(_form, chessGame);
+            //    chessAPI.PrintBoard();
+            //}
+//
+            //else if (e.KeyChar == 'l') // reads the last line in MyConsole and takes it in as a fen string
+            //{
+            //    if (chessGame.gameMoves.Count != 0)
+            //    {
+            //        chessGame.UnmakeMove();
+            //        chessAPI.PrintBoard();
+            //    }
+//
+            //}
         }
 
 
@@ -126,7 +125,7 @@ namespace MyChessGUI
             int pressedSquare = x + (y * 8);
             if (_selecktedSquare == -1)
             {
-                if ((chessGame._board.board[pressedSquare] & Piece.ColorBits) == chessGame._board.PlayerTurn)
+                if ((chessGame.board[pressedSquare] & Piece.ColorBits) == chessGame.board.playerTurn)
                 {
                     _selecktedSquare = pressedSquare;
                 }
@@ -137,11 +136,17 @@ namespace MyChessGUI
             }
             else
             {
-                List<Move> moves = chessGame.GetPossibleMoves(_selecktedSquare, pressedSquare);
-
-                if (moves.Count == 0)
+                List<Move> moves = chessGame.GetPossibleMoves();
+                int movesCount = 0;
+                for (var i = 0; i < moves.Count(); i++)
                 {
-                    if ((chessGame._board.board[pressedSquare] & Piece.ColorBits) == chessGame._board.PlayerTurn)
+                    if (moves[i].StartSquare == _selecktedSquare && moves[i].TargetSquare == pressedSquare)
+                        movesCount++;
+                }
+
+                if (movesCount == 0)
+                {
+                    if ((chessGame.board[pressedSquare] & Piece.ColorBits) == chessGame.board.playerTurn)
                     {
                         _selecktedSquare = pressedSquare;
                     }
@@ -150,13 +155,13 @@ namespace MyChessGUI
                         _selecktedSquare = -1;
                     }
                 }
-                if (moves.Count == 1)
+                if (movesCount == 1)
                 {
                     chessGame.MakeMove(moves[0]);
 
                     _selecktedSquare = -1;
                 }
-                else if (moves.Count == 4)
+                else if (movesCount == 4)
                 {
                     int promotionPiece = await Task.Run(() => GetChosenPromotionPiece());
 
@@ -194,15 +199,15 @@ namespace MyChessGUI
             AIRunning = true;
             while (_isRunning)
             {
-                const int timePerMove = 0;
-                if (chessGame._board.PlayerTurn == Piece.White) // play vs completly random ai
+                const int timePerMove = 100;
+                if (chessGame.board.playerTurn == Piece.White) // play vs completly random ai
                 {
                     List<Move> moves = chessGame.GetPossibleMoves();
                     chessGame.MakeMove(moves[rnd.Next(0, moves.Count)]);
                     chessAPI.PrintBoard(_selecktedSquare);
                     Thread.Sleep(timePerMove);
                 }
-                else if (chessGame._board.PlayerTurn == Piece.Black) // play vs completly random ai
+                else if (chessGame.board.playerTurn == Piece.Black) // play vs completly random ai
                 {
                     List<Move> moves = chessGame.GetPossibleMoves();
                     chessGame.MakeMove(moves[rnd.Next(0, moves.Count)]);

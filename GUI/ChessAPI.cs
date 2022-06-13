@@ -1,8 +1,8 @@
-using Chess.ChessBoard;
-using Chess.Moves;
+using MyChess.ChessBoard;
 using winForm;
-using Chess;
+using MyChess;
 using CS_Math;
+using MyChess.ChessBoard.Evaluation;
 
 namespace MyChessGUI
 {
@@ -48,8 +48,8 @@ namespace MyChessGUI
                         _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.LimeGreen);
                     }
 
-                    if ((chessGame._board.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
-                        PrintPeice(i, j, chessGame._board.board[i + (j * 8)]);
+                    if ((chessGame.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
+                        PrintPeice(i, j, chessGame.board[i + (j * 8)]);
                 }
             }
 
@@ -91,8 +91,8 @@ namespace MyChessGUI
                             _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.Red);
                         }
 
-                        if ((chessGame._board.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
-                            PrintPeice(i, j, chessGame._board.board[i + (j * 8)]);
+                        if ((chessGame.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
+                            PrintPeice(i, j, chessGame.board[i + (j * 8)]);
                     }
                 }
             }
@@ -102,7 +102,7 @@ namespace MyChessGUI
         {
             _formGUI.DrawSquare(800, 0, 800, 100, Color.White);
 
-            float evaluation = chessGame.GetEvaluation() / 300f; // idk 
+            float evaluation = MyEvaluater.Evaluate(chessGame.board) / 300f; // idk 
 
             float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f, 15); // returs a num between -15 and 15
 
@@ -138,32 +138,32 @@ namespace MyChessGUI
 
 
         public void TestTheDirections() // just for testing
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    int num = Directions.DirectionValues[i + (j * 8), 0 /*North*/];
-
-                    if (num == 0)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
-                    if (num == 1)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
-                    if (num == 2)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
-                    if (num == 3)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
-                    if (num == 4)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
-                    if (num == 5)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
-                    if (num == 6)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
-                    if (num == 7)
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
-                }
-            }
-            _formGUI.Print();
+        {//
+            //for (int i = 0; i < 8; i++)
+            //{
+            //    for (int j = 0; j < 8; j++)
+            //    {
+            //        int num = Directions.DirectionValues[i + (j * 8), 0 /*North*/];
+//
+            //        if (num == 0)
+            //            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
+            //        if (num == 1)
+            //            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
+            //        if (num == 2)
+            //            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
+            //        if (num == 3)
+            //            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
+            //        if (num == 4)
+            //            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
+            //        if (num == 5)
+            //            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
+            //        if (num == 6)
+            //            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
+            //        if (num == 7)
+            //            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
+            //    }
+            //}
+            //_formGUI.Print();
         }
     }
 }

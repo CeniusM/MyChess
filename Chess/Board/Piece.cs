@@ -1,4 +1,4 @@
-namespace Chess.ChessBoard
+namespace MyChess.ChessBoard
 {
     public static class Piece
     {
@@ -13,17 +13,17 @@ namespace Chess.ChessBoard
         public const int King = 6;
         public const int White = 8;
         public const int Black = 16;
-        public const int BPawm = 1 + Black;
-        public const int BRook = 2 + Black;
-        public const int BKnight = 3 + Black;
-        public const int BBishop = 4 + Black;
-        public const int BQueen = 5 + Black;
-        public const int BKing = 6 + Black;
         public const int WPawm = 1 + White;
         public const int WRook = 2 + White;
         public const int WKnight = 3 + White;
         public const int WBishop = 4 + White;
         public const int WQueen = 5 + White;
         public const int WKing = 6 + White;
+        public const int BPawm = 1 + Black;
+        public const int BRook = 2 + Black;
+        public const int BKnight = 3 + Black;
+        public const int BBishop = 4 + Black;
+        public const int BQueen = 5 + Black;
+        public const int BKing = 6 + Black;
     }
 }
