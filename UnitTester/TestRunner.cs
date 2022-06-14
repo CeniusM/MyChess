@@ -7,7 +7,8 @@ namespace Foo
     {
         public static void Run()
         {
-            
+            PrintReport(Test.TestGetFEN());
+            PrintReport(Test.TestKing());
         }
 
         private static void PrintReport(TestReport report)

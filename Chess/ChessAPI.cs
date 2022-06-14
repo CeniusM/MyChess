@@ -18,7 +18,7 @@ namespace MyChess
 
         public void MakeMove(Move move)
         {
-
+            board.MakeMove(move);
         }
 
         public List<Move> GetPossibleMoves() => PossibleMovesGenerator.GetMoves(board);

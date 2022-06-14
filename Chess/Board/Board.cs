@@ -22,9 +22,12 @@ namespace MyChess.ChessBoard
         */
         public int[] PiecePoses = new int[32];
         public int[] Square = new int[64];
+
         // W KingSide = 0b1000, W QueenSide = 0b0100, B KingSide = 0b0010, B QueenSide = 0b0001
         public int castle = 0b1111;
         public int enPassantPiece = 64;
+
+        // how many moves both players have made since the last pawn advance or piece capture
         public int halfMove = 0;
         public int fullMove  = 0;
         public int playerTurn = 1; // 1 = white, 2 = black;
@@ -40,6 +43,19 @@ namespace MyChess.ChessBoard
             get => Square[key];
             //set => Square[key] = value;
             set{}
+        }
+
+        public void MakeMove(Move move)
+        {
+            // will be reset after everycapture or pawn move
+            halfMove += 1;
+            
+
+            // if move was a succes, adds a fullmove after black moved
+            if (playerTurn == 2)
+                fullMove += 1;
+
+            ChangePlayer();
         }
         
         public void ChangePlayer() => playerTurn ^= 0b11;

@@ -12,7 +12,6 @@ namespace Foo.Tests
 
             ChessGame game = new("rn1b1rk1/ppp3p1/3p1p2/1N1Pp1Pp/4P3/3Q1N2/PPP2P1P/R3K2R w KQ h6 0 15");
 
-
             if (game.board.castle != 0b1100)
                 succes = Failed;
             if (game.board.enPassantPiece != 23)
@@ -31,14 +30,12 @@ namespace Foo.Tests
                 succes = Failed;
             if (game.board[1] != Piece.BKnight)
                 succes = Failed;
-
             if (game.board[8] != Piece.BPawn)
                 succes = Failed;
             if (game.board[9] != Piece.BPawn)
                 succes = Failed;
-            if (game.board[1] != Piece.BKnight)
+            if (game.board[19] != Piece.BPawn)
                 succes = Failed;
-
             if (game.board[43] != Piece.WQueen)
                 succes = Failed;
             if (game.board[45] != Piece.WKnight)
@@ -50,8 +47,7 @@ namespace Foo.Tests
             if (game.board[63] != Piece.WRook)
                 succes = Failed;
 
-
-            return new("King Test", succes);
+            return new("FEN Test", succes);
         }
     }
 }
