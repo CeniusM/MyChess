@@ -2,7 +2,7 @@ namespace MyChess.ChessBoard.Evaluation
 {
     class MyEvaluater
     {
-        const int pawnValue = 100;
+        const int PawnValue = 100;
         const int knightValue = 300;
         const int bishopValue = 300;
         const int rookValue = 500;
@@ -26,7 +26,7 @@ namespace MyChess.ChessBoard.Evaluation
             int material = 0;
             for (var i = 0; i < 64; i++)
             {
-                if (board[i] == Piece.Pawm + color) material += pawnValue;
+                if (board[i] == Piece.Pawn + color) material += PawnValue;
                 else if (board[i] == Piece.Knight + color) material += knightValue;
                 else if (board[i] == Piece.Bishop + color) material += bishopValue;
                 else if (board[i] == Piece.Rook + color) material += rookValue;

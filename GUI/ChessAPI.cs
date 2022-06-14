@@ -24,7 +24,7 @@ namespace MyChessGUI
 
         public void PrintBoard(int selecktedPiece)
         // make it so when it checks for wich peice it needs to print, 
-        // make it check if there is an empty square first, then the color, and then do the pawn, rook and so on
+        // make it check if there is an empty square first, then the color, and then do the Pawn, rook and so on
         {
             if (_isPrinting)
                 return;
@@ -113,7 +113,7 @@ namespace MyChessGUI
 
         public void PrintBoard()
         // make it so when it checks for wich peice it needs to print, 
-        // make it check if there is an empty square first, then the color, and then do the pawn, rook and so on
+        // make it check if there is an empty square first, then the color, and then do the Pawn, rook and so on
         {
             PrintBoard(64);
         }

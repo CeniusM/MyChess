@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-<EmbeddedResource Include="GUI\PeiceSprites\100x100\Bpawn.png" />
-<EmbeddedResource Include="GUI\PeiceSprites\100x100\Wpawn.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\BPawn.png" />
+<EmbeddedResource Include="GUI\PeiceSprites\100x100\WPawn.png" />
 <EmbeddedResource Include="GUI\PeiceSprites\100x100\Brook.png" />
 <EmbeddedResource Include="GUI\PeiceSprites\100x100\Wrook.png" />
 <EmbeddedResource Include="GUI\PeiceSprites\100x100\Wknight.png" />

@@ -28,6 +28,9 @@ static class Program
     }
     private static void StartGame(Form1 myForm)
     {
+        // UnitTest
+        Foo.TestRunner.Run();
+
         game = new GameOfChess(myForm);
         game.Play();
     }

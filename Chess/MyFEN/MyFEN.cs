@@ -1,5 +1,9 @@
 using MyChess.ChessBoard;
 
+
+// https://www.chess.com/terms/fen-chess
+
+
 namespace MyChess.FEN
 {
     class MyFEN
@@ -22,10 +26,10 @@ namespace MyChess.FEN
             {
                 if (char.IsNumber(FEN[FENIndex]))
                     boardIndexer += Convert.ToInt32(new string(FEN[FENIndex], 1));
-                else if (FEN[FENIndex] == 'P') // pawn
-                    SetPiece(Piece.WPawm);
+                else if (FEN[FENIndex] == 'P') // Pawn
+                    SetPiece(Piece.WPawn);
                 else if (FEN[FENIndex] == 'p')
-                    SetPiece(Piece.BPawm);
+                    SetPiece(Piece.BPawn);
 
                 else if (FEN[FENIndex] == 'R') // Rook
                     SetPiece(Piece.WRook);
@@ -153,7 +157,7 @@ namespace MyChess.FEN
                     }
                 }
 
-                if (IsPieceThisPiece(board.Square[i], Piece.Pawm))
+                if (IsPieceThisPiece(board.Square[i], Piece.Pawn))
                 {
                     if (IsPieceWhite(board.Square[i]))
                     {

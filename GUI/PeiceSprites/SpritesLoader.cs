@@ -9,8 +9,8 @@ namespace MyChessGUI.Sprites
     {
         private static string[] SpriteNames =
         {
-            "Wpawn",
-            "Bpawn",
+            "WPawn",
+            "BPawn",
             "Wrook",
             "Brook",
             "Wknight",
