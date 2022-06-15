@@ -7,13 +7,16 @@ namespace MyChess
     class ChessGame
     {
         public Board board;
+        public PossibleMovesGenerator possibleMoves;
         public ChessGame()
         {
             board = new Board();
+            possibleMoves = new PossibleMovesGenerator(board);
         }
         public ChessGame(string FEN)
         {
             board = MyFEN.GetBoardFromFEN(FEN);
+            possibleMoves = new PossibleMovesGenerator(board);
         }
 
         public void MakeMove(Move move)
@@ -21,6 +24,6 @@ namespace MyChess
             board.MakeMove(move);
         }
 
-        public List<Move> GetPossibleMoves() => PossibleMovesGenerator.GetMoves(board);
+        public List<Move> GetPossibleMoves() => possibleMoves.moves;
     }
 }

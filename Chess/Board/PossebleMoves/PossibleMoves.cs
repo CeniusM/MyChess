@@ -5,18 +5,28 @@ namespace MyChess.PossibleMoves
 {
     class PossibleMovesGenerator
     {
-        public static List<Move> GetMoves(Board board)
+        private Board board;
+        public List<Move> moves;
+        public PossibleMovesGenerator(Board board)
         {
-            List<Move> moves = new List<Move>(30); // avg moves for an pos
-
-
-
-            return moves;
+            moves = new List<Move>();
+            GenerateMoves();
+            this.board = board;
         }
-        public static List<Move> GetMoves(Board board, int selecktedPiece)
+        
+        public void GenerateMoves()
         {
-            List<Move> moves = GetMoves(board);
+            moves = new List<Move>(30); // avg moves for random pos
+            King.AddMoves(board, moves);
+        }
+
+        public List<Move> GetMoves(Board board, int selecktedPiece, bool reGenerateMoves = false)
+        {
+            if (reGenerateMoves)
+                GenerateMoves();
+
             List<Move> newMoves = new List<Move>(moves.Capacity);
+
             for (int i = 0; i < moves.Count; i++)
             {
                 if (moves[i].StartSquare == selecktedPiece)
@@ -24,7 +34,8 @@ namespace MyChess.PossibleMoves
                     newMoves.Add(moves[i]);
                 }
             }
-            return moves;
+            
+            return newMoves;
         }
     }
 }
