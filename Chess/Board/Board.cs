@@ -41,8 +41,7 @@ namespace MyChess.ChessBoard
         public int this[int key]
         {
             get => Square[key];
-            //set => Square[key] = value;
-            set{}
+            set => Square[key] = value;
         }
 
         public void MakeMove(Move move)

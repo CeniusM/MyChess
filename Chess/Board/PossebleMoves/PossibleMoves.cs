@@ -10,8 +10,8 @@ namespace MyChess.PossibleMoves
         public PossibleMovesGenerator(Board board)
         {
             moves = new List<Move>();
-            GenerateMoves();
             this.board = board;
+            GenerateMoves();
         }
         
         public void GenerateMoves()

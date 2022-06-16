@@ -1,6 +1,6 @@
 using MyChess;
 
-namespace Foo.Tests
+namespace MyChess.UnitTester.Tests
 {
     partial class Test
     {
@@ -30,7 +30,7 @@ namespace Foo.Tests
                 succes = Failed;
 
 
-            return new("King Test", succes);
+            return new("King moveing test", succes);
         }
     }
 }

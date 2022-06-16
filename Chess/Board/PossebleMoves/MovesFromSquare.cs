@@ -8,7 +8,7 @@ the queen, bisop, rook will have an exstra dimension the specify the direction
 so the number for what square it can go to, and the array ends at -1
 */
 
-namespace MyChess.Chess.Board
+namespace MyChess.PossibleMoves
 {
     class MovesFromSquare
     {
@@ -17,25 +17,44 @@ namespace MyChess.Chess.Board
         {
             InitKing();
         }
+        
+        public static bool IsValid(int place) => (place > 64 ||place < 0);
 
         private static void InitKing()
         {
+            
+            bool MakeMove(int square, int value, int index)
+            {
+                if (IsValid(square + value))
+                {
+                    KingMoves[square, index] = value;
+                    return true;
+                }
+                else
+                {
+                    KingMoves[square, index] = -1;
+                    return false; 
+                }
+            }
+
             for (int i = 0; i < 64; i++)
             {
-                int index = 0;
-                for (var x = -1; x < 2; x++)
-                {
-                    for (var y = -1; y < 2; y++)
-                    {
-                        if (i + x + y > 0 && i + x + y < 64)
-                        {
-                            KingMoves[i, index] = i + x + y;
-                            index++;
-                        }
-                    }
-                }
-                if (index < 8)
-                    KingMoves[i, index] = -1;
+                if (!MakeMove(i, Directions.Value.North, Directions.Index.North))
+                    continue;
+                if (!MakeMove(i, Directions.Value.NorthEast, Directions.Index.NorthEast))
+                    continue;
+                if (!MakeMove(i, Directions.Value.East, Directions.Index.East))
+                    continue;
+                if (!MakeMove(i, Directions.Value.SouthEast, Directions.Index.SouthEast))
+                    continue;
+                if (!MakeMove(i, Directions.Value.South, Directions.Index.South))
+                    continue;
+                if (!MakeMove(i, Directions.Value.SouthWest, Directions.Index.SouthWest))
+                    continue;
+                if (!MakeMove(i, Directions.Value.West, Directions.Index.West))
+                    continue;
+                if (!MakeMove(i, Directions.Value.NorthWest, Directions.Index.NorthWest))
+                    continue;
             }
         }
     }

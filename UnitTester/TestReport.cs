@@ -1,6 +1,6 @@
 
 
-namespace Foo
+namespace MyChess.UnitTester
 {
     class TestReport
     {

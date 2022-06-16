@@ -12,19 +12,15 @@ namespace MyChess.PossibleMoves.Pieces
             else                        // black king
                 kingPos = board[board.PiecePoses[1]];
 
-            for (int i = -1; i < 2; i++) // unrap later
+            for (int i = 0; i < 8; i++)
             {
-                for (int j = -1; j < 2; j++)
+                int kingeMove = MovesFromSquare.KingMoves[kingPos, i];
+                if (kingeMove == -1)
+                    break;
+                else if ((board[kingeMove] & Piece.ColorBits) != board.playerTurn)
                 {
-                    if (i == 0 && j == 0)
-                        return;
-                    int piece = board[kingPos + i + j];
-                    if (piece == 0 || (piece & Piece.ColorBits) != board.playerTurn)
-                    {
-                        moves.Add(new Move(kingPos, kingPos + i + j, 0));
-                        return;
-                    }
-                }
+                    moves.Add(new(kingPos, board[kingeMove], 0));
+                }                
             }
         }
     }

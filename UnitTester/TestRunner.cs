@@ -1,14 +1,16 @@
-using Foo.Tests;
+using MyChess.UnitTester.Tests;
 using CS_MyConsole;
 
-namespace Foo
+namespace MyChess.UnitTester
 {
     class TestRunner
     {
         public static void Run()
         {
-            PrintReport(Test.TestGetFEN());
+            PrintReport(Test.TestGetBoardFromFEN());
+            PrintReport(Test.TestGetFENFromBoard());
             PrintReport(Test.TestKing());
+            PrintReport(Test.TestKingsgeneratedPossibleMoves());
         }
 
         private static void PrintReport(TestReport report)

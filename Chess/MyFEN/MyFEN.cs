@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using MyChess.ChessBoard;
 
 
@@ -10,119 +11,134 @@ namespace MyChess.FEN
     {
         public static Board GetBoardFromFEN(string FENString)
         {
+            int FENPointer = 0;
             Board board = new Board();
-            char[] FEN = FENString.ToCharArray();
 
-            int boardIndexer = 0;
-            void SetPiece(int piece)
+            int boardPointer = 0;
+            while (true)
             {
-                board.Square[boardIndexer] = piece;
-                boardIndexer++;
-            }
+                if (boardPointer > 64)
+                    throw new Exception("Board pointer out of range");
+                if (FENPointer > 72)
+                    throw new Exception("FEN string too long");
 
-            int FENIndex = 0;
+                char c = FENString[FENPointer];
 
-            for (FENIndex = 0; FENIndex < FEN.Length; FENIndex++)
-            {
-                if (char.IsNumber(FEN[FENIndex]))
-                    boardIndexer += Convert.ToInt32(new string(FEN[FENIndex], 1));
-                else if (FEN[FENIndex] == 'P') // Pawn
-                    SetPiece(Piece.WPawn);
-                else if (FEN[FENIndex] == 'p')
-                    SetPiece(Piece.BPawn);
-
-                else if (FEN[FENIndex] == 'R') // Rook
-                    SetPiece(Piece.WRook);
-                else if (FEN[FENIndex] == 'r')
-                    SetPiece(Piece.BRook);
-
-                else if (FEN[FENIndex] == 'N') // Knight
-                    SetPiece(Piece.WKnight);
-                else if (FEN[FENIndex] == 'n')
-                    SetPiece(Piece.BKnight);
-
-                else if (FEN[FENIndex] == 'B') // Bishop
-                    SetPiece(Piece.WBishop);
-                else if (FEN[FENIndex] == 'b')
-                    SetPiece(Piece.BBishop);
-
-                else if (FEN[FENIndex] == 'Q') // Queen
-                    SetPiece(Piece.WQueen);
-                else if (FEN[FENIndex] == 'q')
-                    SetPiece(Piece.BQueen);
-
-                else if (FEN[FENIndex] == 'K') // King
-                    SetPiece(Piece.WKing);
-                else if (FEN[FENIndex] == 'k')
-                    SetPiece(Piece.BKing);
-
-                else if (FEN[FENIndex] == ' ')
+                if (Char.IsDigit(c))
+                {
+                    boardPointer += c - '0' - 1;
+                }
+                if (c == '/')
+                {
+                    boardPointer--;
+                }
+                else 
+                {
+                    switch (c)
+                    {
+                        case 'P':
+                            board[boardPointer] = Piece.WPawn;
+                            break;
+                        case 'N':
+                            board[boardPointer] = Piece.WKnight;
+                            break;
+                        case 'B':
+                            board[boardPointer] = Piece.WBishop;
+                            break;
+                        case 'R':
+                            board[boardPointer] = Piece.WRook;
+                            break;
+                        case 'Q':
+                            board[boardPointer] = Piece.WQueen;
+                            break;
+                        case 'K':
+                            board[boardPointer] = Piece.WKing;
+                            break;
+                        case 'p':
+                            board[boardPointer] = Piece.BPawn;
+                            break;
+                        case 'n':
+                            board[boardPointer] = Piece.BKnight;
+                            break;
+                        case 'b':
+                            board[boardPointer] = Piece.BBishop;
+                            break;
+                        case 'r':
+                            board[boardPointer] = Piece.BRook;
+                            break;
+                        case 'q':
+                            board[boardPointer] = Piece.BQueen;
+                            break;
+                        case 'k':
+                            board[boardPointer] = Piece.BKing;
+                            break;
+                    }
+                }
+                if (c == ' ')
                     break;
-            }
-            FENIndex++;
-            if (FEN[FENIndex] == 'b')
-                board.ChangePlayer();
-            FENIndex += 2;
+                boardPointer++;
+                FENPointer++;
+            } FENPointer++;
 
+            if (FENString[FENPointer] == 'w')
+                board.playerTurn = 1;
+            else
+                board.playerTurn = 2;
+            FENPointer += 2;
+            
             board.castle = 0;
-            int addedNextTime = 0;
             for (int i = 0; i < 4; i++)
             {
-
-                if (FEN[FENIndex + i] == 'K')
+                if (FENString[FENPointer] == 'K')
                 {
                     board.castle = (board.castle | 0b1000);
-                    addedNextTime++;
                 }
-                else if (FEN[FENIndex + i] == 'Q')
+                else if (FENString[FENPointer] == 'Q')
                 {
                     board.castle = (board.castle | 0b0100);
-                    addedNextTime++;
                 }
-                else if (FEN[FENIndex + i] == 'k')
+                else if (FENString[FENPointer] == 'k')
                 {
                     board.castle = (board.castle | 0b0010);
-                    addedNextTime++;
                 }
-                else if (FEN[FENIndex + i] == 'q')
+                else if (FENString[FENPointer] == 'q')
                 {
                     board.castle = (board.castle | 0b0001);
-                    addedNextTime++;
                 }
-                else if (FEN[FENIndex + i] == ' ')
+                else if (FENString[FENPointer] == ' ')
                     break;
-            }
-            FENIndex += addedNextTime + 1;
-
-            if (board.enPassantPiece == 64)
+                FENPointer++;
+            } FENPointer++;
+            
+            board.enPassantPiece = 0;
+            if (FENString[FENPointer] != '-')
             {
-                FEN[FENIndex] = '-';
-                FENIndex += 2;
+                board.enPassantPiece += FENString[FENPointer] - 'a';
+                FENPointer++;
+                board.enPassantPiece += 64 - ((FENString[FENPointer] - '0') * 8);
+            }
+            FENPointer++;
+            FENPointer++;
+
+            if (FENString[FENPointer + 1] != ' ')
+            {
+                board.halfMove += (FENString[FENPointer] - '0') * 10;
+                FENPointer++;
+                board.halfMove += (FENString[FENPointer] - '0');
             }
             else
+                board.halfMove += (FENString[FENPointer] - '0');
+            FENPointer++;
+            FENPointer++;
+
+            if (FENString.Length > FENPointer + 1 && FENString[FENPointer] + 1 != ' ')
             {
-                int enPassantPiecePlacement = (8 - FEN[FENIndex + 1]) * 8; // the number
-                if (FEN[FENIndex] == 'a')
-                    enPassantPiecePlacement += 1;
-                else if (FEN[FENIndex] == 'b')
-                    enPassantPiecePlacement += 2;
-                else if (FEN[FENIndex] == 'c')
-                    enPassantPiecePlacement += 3;
-                else if (FEN[FENIndex] == 'd')
-                    enPassantPiecePlacement += 4;
-                else if (FEN[FENIndex] == 'e')
-                    enPassantPiecePlacement += 5;
-                else if (FEN[FENIndex] == 'f')
-                    enPassantPiecePlacement += 6;
-                else if (FEN[FENIndex] == 'g')
-                    enPassantPiecePlacement += 7;
-                else if (FEN[FENIndex] == 'h')
-                    enPassantPiecePlacement += 8;
-
-                board.enPassantPiece = enPassantPiecePlacement;
-
-                FENIndex += 3;
+                board.fullMove += (FENString[FENPointer] - '0') * 10;
+                FENPointer++;
+                board.fullMove += (FENString[FENPointer] - '0');
             }
+            else
+                board.fullMove += (FENString[FENPointer] - '0');             
 
             return board;
         }
@@ -316,3 +332,117 @@ namespace MyChess.FEN
         private static bool IsPieceThisPiece(int p, int pType) => (p & Piece.PieceBits) == pType;
     }
 }
+
+/*
+GraveYard
+
+
+            Board board = new Board();
+            char[] FEN = FENString.ToCharArray();
+
+            int boardIndexer = 0;
+            void SetPiece(int piece)
+            {
+                board.Square[boardIndexer] = piece;
+                boardIndexer++;
+            }
+
+            int FENIndex = 0;
+
+            for (FENIndex = 0; FENIndex < FEN.Length; FENIndex++)
+            {
+                if (char.IsNumber(FEN[FENIndex]))
+                    boardIndexer += Convert.ToInt32(new string(FEN[FENIndex], 1));
+                else if (FEN[FENIndex] == 'P') // Pawn
+                    SetPiece(Piece.WPawn);
+                else if (FEN[FENIndex] == 'p')
+                    SetPiece(Piece.BPawn);
+
+                else if (FEN[FENIndex] == 'R') // Rook
+                    SetPiece(Piece.WRook);
+                else if (FEN[FENIndex] == 'r')
+                    SetPiece(Piece.BRook);
+
+                else if (FEN[FENIndex] == 'N') // Knight
+                    SetPiece(Piece.WKnight);
+                else if (FEN[FENIndex] == 'n')
+                    SetPiece(Piece.BKnight);
+
+                else if (FEN[FENIndex] == 'B') // Bishop
+                    SetPiece(Piece.WBishop);
+                else if (FEN[FENIndex] == 'b')
+                    SetPiece(Piece.BBishop);
+
+                else if (FEN[FENIndex] == 'Q') // Queen
+                    SetPiece(Piece.WQueen);
+                else if (FEN[FENIndex] == 'q')
+                    SetPiece(Piece.BQueen);
+
+                else if (FEN[FENIndex] == 'K') // King
+                    SetPiece(Piece.WKing);
+                else if (FEN[FENIndex] == 'k')
+                    SetPiece(Piece.BKing);
+
+                else if (FEN[FENIndex] == ' ')
+                    break;
+            }
+            FENIndex++;
+            if (FEN[FENIndex] == 'b')
+                board.ChangePlayer();
+            FENIndex += 2;
+
+            board.castle = 0;
+            int addedNextTime = 0;
+            for (int i = 0; i < 4; i++)
+            {
+
+                if (FEN[FENIndex + i] == 'K')
+                {
+                    board.castle = (board.castle | 0b1000);
+                    addedNextTime++;
+                }
+                else if (FEN[FENIndex + i] == 'Q')
+                {
+                    board.castle = (board.castle | 0b0100);
+                    addedNextTime++;
+                }
+                else if (FEN[FENIndex + i] == 'k')
+                {
+                    board.castle = (board.castle | 0b0010);
+                    addedNextTime++;
+                }
+                else if (FEN[FENIndex + i] == 'q')
+                {
+                    board.castle = (board.castle | 0b0001);
+                    addedNextTime++;
+                }
+                else if (FEN[FENIndex + i] == ' ')
+                    break;
+            }
+            FENIndex += addedNextTime + 1;
+
+            int enPassantPiecePlacement = (8 - FEN[FENIndex + 1]) * 8; // the number
+            if (FEN[FENIndex] == 'a')
+                enPassantPiecePlacement += 1;
+            else if (FEN[FENIndex] == 'b')
+                enPassantPiecePlacement += 2;
+            else if (FEN[FENIndex] == 'c')
+                enPassantPiecePlacement += 3;
+            else if (FEN[FENIndex] == 'd')
+                enPassantPiecePlacement += 4;
+            else if (FEN[FENIndex] == 'e')
+                enPassantPiecePlacement += 5;
+            else if (FEN[FENIndex] == 'f')
+                enPassantPiecePlacement += 6;
+            else if (FEN[FENIndex] == 'g')
+                enPassantPiecePlacement += 7;
+            else if (FEN[FENIndex] == 'h')
+                enPassantPiecePlacement += 8;
+
+            board.enPassantPiece = enPassantPiecePlacement;
+
+            FENIndex += 3;
+
+            return board;
+            
+*/
