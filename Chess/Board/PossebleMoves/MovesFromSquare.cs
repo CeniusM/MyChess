@@ -15,11 +15,13 @@ namespace MyChess.PossibleMoves
         private static bool isInit = false;
         public const int InvalidMove = int.MinValue;
         public static int[,] KingMoves = new int[64, 8];
+        public static int[,] KnightMoves = new int[64, 8];
         public static void Init()
         {
             if (isInit)
                 return;
             InitKing();
+            InitKnight();
 
             isInit = true;
         }
@@ -28,14 +30,12 @@ namespace MyChess.PossibleMoves
 
         private static void InitKing()
         {
-            
-            bool MakeMove(int square, int value, int index)
+            void TryMakeMove(int square, int value, int index, int lineDiff)
             {
                 if (IsInBounds(square + value))
                 {
-                    if (true) 
+                    if (((square + value) >> 3) - (square >> 3) == lineDiff)
                     {
-                        throw new NotImplementedException("Needs to check if the king goes to the other side of the board");
                         KingMoves[square, index] = value;
                     }
                     else
@@ -43,30 +43,49 @@ namespace MyChess.PossibleMoves
                 }
                 else
                     KingMoves[square, index] = InvalidMove;
+            }
+            for (int i = 0; i < 64; i++)
+            {
+                TryMakeMove(i, Directions.Value.North, Directions.Index.North, -1);
+                TryMakeMove(i, Directions.Value.NorthEast, Directions.Index.NorthEast, -1);
+                TryMakeMove(i, Directions.Value.East, Directions.Index.East, 0);
+                TryMakeMove(i, Directions.Value.SouthEast, Directions.Index.SouthEast, 1);
+                TryMakeMove(i, Directions.Value.South, Directions.Index.South, 1);
+                TryMakeMove(i, Directions.Value.SouthWest, Directions.Index.SouthWest, 1);
+                TryMakeMove(i, Directions.Value.West, Directions.Index.West, 0);
+                TryMakeMove(i, Directions.Value.NorthWest, Directions.Index.NorthWest, -1);
+            }
+        }
+
+        private static void InitKnight()
+        {
+            bool TryMakeMove(int square, int value, int index, int lineDiff)
+            {
+                if (IsInBounds(square + value))
+                {
+                    if (((square + value) >> 3) - (square >> 3) == lineDiff)
+                    {
+                        KnightMoves[square, index] = value;
+                    }
+                    else
+                        KnightMoves[square, index] = InvalidMove;
+                }
+                else
+                    KnightMoves[square, index] = InvalidMove;
 
                 return true;
             }
-
             for (int i = 0; i < 64; i++)
             {
-                if (!MakeMove(i, Directions.Value.North, Directions.Index.North))
-                    continue;
-                if (!MakeMove(i, Directions.Value.NorthEast, Directions.Index.NorthEast))
-                    continue;
-                if (!MakeMove(i, Directions.Value.East, Directions.Index.East))
-                    continue;
-                if (!MakeMove(i, Directions.Value.SouthEast, Directions.Index.SouthEast))
-                    continue;
-                if (!MakeMove(i, Directions.Value.South, Directions.Index.South))
-                    continue;
-                if (!MakeMove(i, Directions.Value.SouthWest, Directions.Index.SouthWest))
-                    continue;
-                if (!MakeMove(i, Directions.Value.West, Directions.Index.West))
-                    continue;
-                if (!MakeMove(i, Directions.Value.NorthWest, Directions.Index.NorthWest))
-                    continue;
+                TryMakeMove(i, -6, 0, -1);
+                TryMakeMove(i, -10, 1, -1);
+                TryMakeMove(i, -15, 2, -2);
+                TryMakeMove(i, -17, 3, -2);
+                TryMakeMove(i, 6, 4, 1);
+                TryMakeMove(i, 10, 5, 1);
+                TryMakeMove(i, 15, 6, 2);
+                TryMakeMove(i, 17, 7, 2);
             }
-
         }
     }
 }

@@ -18,6 +18,7 @@ namespace MyChess.PossibleMoves
         {
             moves = new List<Move>(30); // avg moves for random pos
             King.AddMoves(board, moves);
+            Knight.AddMoves(board, moves);
         }
 
         public List<Move> GetMoves(Board board, int selecktedPiece, bool reGenerateMoves = false)

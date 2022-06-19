@@ -6,6 +6,30 @@ namespace MyChess.PossibleMoves.Pieces
     {
         public static void AddMoves(Board board, List<Move> moves)
         {
+            for (int i = 0; i < board.piecePoses.Count; i++)
+            {
+                if (board[board.piecePoses[i]] == (Piece.King | board.playerTurn))
+                {
+                    int kingPos = board.piecePoses[i];
+                    for (int j = 0; j < 8; j++)
+                    {
+                        int kingMove = kingPos + MovesFromSquare.KingMoves[kingPos, j];
+                        if (MovesFromSquare.KingMoves[kingPos, j] == MovesFromSquare.InvalidMove)
+                            continue;
+                        else if ((board[kingMove] & Piece.ColorBits) != board.playerTurn)
+                        {
+                            moves.Add(new(kingPos, kingMove, 0));
+                        }    
+                    }
+                    // for when there is only 2 kings
+                    //break;
+                }
+            }
+        }
+    }
+}
+
+
             //int kingPos;
             //if (board.playerTurn == 8)  // white king
             //    kingPos = board.piecePoses[0];
@@ -22,25 +46,3 @@ namespace MyChess.PossibleMoves.Pieces
             //        moves.Add(new(kingPos, kingeMove, 0));
             //    }                
             //}
-
-            for (int i = 0; i < board.piecePoses.Count; i++)
-            {
-                if (board[board.piecePoses[i]] == (Piece.King | board.playerTurn))
-                {
-                    int kingPos = board.piecePoses[i];
-                    for (int j = 0; j < 8; j++)
-                    {
-                        int kingeMove = kingPos + MovesFromSquare.KingMoves[kingPos, j];
-                        if (MovesFromSquare.KingMoves[kingPos, j] == MovesFromSquare.InvalidMove)
-                            continue;
-                        else if ((board[kingeMove] & Piece.ColorBits) != board.playerTurn)
-                        {
-                            moves.Add(new(kingPos, kingeMove, 0));
-                        }    
-                    }
-                    //break;
-                }
-            }
-        }
-    }
-}
