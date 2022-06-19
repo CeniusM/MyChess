@@ -12,29 +12,39 @@ namespace MyChess.PossibleMoves
 {
     class MovesFromSquare
     {
+        private static bool isInit = false;
+        public const int InvalidMove = int.MinValue;
         public static int[,] KingMoves = new int[64, 8];
         public static void Init()
         {
+            if (isInit)
+                return;
             InitKing();
+
+            isInit = true;
         }
         
-        public static bool IsValid(int place) => (place > 64 ||place < 0);
+        public static bool IsInBounds(int place) => (place < 64 && place > -1);
 
         private static void InitKing()
         {
             
             bool MakeMove(int square, int value, int index)
             {
-                if (IsValid(square + value))
+                if (IsInBounds(square + value))
                 {
-                    KingMoves[square, index] = value;
-                    return true;
+                    if (true) 
+                    {
+                        throw new NotImplementedException("Needs to check if the king goes to the other side of the board");
+                        KingMoves[square, index] = value;
+                    }
+                    else
+                        KingMoves[square, index] = InvalidMove;
                 }
                 else
-                {
-                    KingMoves[square, index] = -1;
-                    return false; 
-                }
+                    KingMoves[square, index] = InvalidMove;
+
+                return true;
             }
 
             for (int i = 0; i < 64; i++)
@@ -56,6 +66,7 @@ namespace MyChess.PossibleMoves
                 if (!MakeMove(i, Directions.Value.NorthWest, Directions.Index.NorthWest))
                     continue;
             }
+
         }
     }
 }

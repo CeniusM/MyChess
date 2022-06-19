@@ -1,0 +1,228 @@
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+
+Succes!
+Get Board from FEN Test
+
+Failed...
+Get FEN string from board Test
+
+Failed...
+King moveing test
+
+Undetermined-
+Possible piece movement generator
+

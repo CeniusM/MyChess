@@ -81,9 +81,9 @@ namespace MyChess.FEN
             } FENPointer++;
 
             if (FENString[FENPointer] == 'w')
-                board.playerTurn = 1;
+                board.playerTurn = 8;
             else
-                board.playerTurn = 2;
+                board.playerTurn = 16;
             FENPointer += 2;
             
             board.castle = 0;
@@ -139,6 +139,8 @@ namespace MyChess.FEN
             }
             else
                 board.fullMove += (FENString[FENPointer] - '0');             
+            
+            board.InitPiecePoses();
 
             return board;
         }
