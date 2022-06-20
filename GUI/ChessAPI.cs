@@ -64,6 +64,9 @@ namespace MyChessGUI
 
         public void PrintPosebleSquaresForSelecktedSquare(int selecktedPiece) // like the name?
         {
+            //for debugging
+            chessGame.possibleMoves.GenerateMoves();
+
             List<Move> listOfMoves = chessGame.GetPossibleMoves();
             List<Move> moves = new List<Move>();
             for (int i = 0; i < listOfMoves.Count; i++)
@@ -102,7 +105,7 @@ namespace MyChessGUI
         {
             _formGUI.DrawSquare(800, 0, 800, 100, Color.White);
 
-            float evaluation = MyEvaluater.Evaluate(chessGame.board) / 300f; // idk 
+            float evaluation = MyEvaluater.EvaluateBoard(chessGame.board, chessGame.GetPossibleMoves()) / 300f; // idk 
 
             float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f, 15); // returs a num between -15 and 15
 

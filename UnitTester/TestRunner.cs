@@ -15,19 +15,20 @@ namespace MyChess.UnitTester
 
         private static void PrintReport(TestReport report)
         {
-            if (report.succesStatus == TestReport.SuccesFlag.Succes)
+            switch (report.succesStatus)
             {
-                MyConsole.WriteLine("Succes!");
+                case TestReport.SuccesFlag.Succes:
+                    MyConsole.WriteLine("Succes!");
+                    break;
+                case TestReport.SuccesFlag.Undetermined:
+                    MyConsole.WriteLine("Undetermined-");
+                    break;
+                case TestReport.SuccesFlag.Failed:
+                    MyConsole.WriteLine("Failed...");
+                    break;
+                default:
+                    break;
             }
-            else if (report.succesStatus == TestReport.SuccesFlag.Undetermined)
-            {
-                MyConsole.WriteLine("Undetermined-");
-            }
-            else if (report.succesStatus == TestReport.SuccesFlag.Failed)
-            {
-                MyConsole.WriteLine("Failed...");
-            }
-        
             MyConsole.WriteLine(report.strReport);
             MyConsole.WriteLine("");
         }

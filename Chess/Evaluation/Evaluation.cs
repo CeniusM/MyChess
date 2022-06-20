@@ -11,8 +11,22 @@ namespace MyChess.ChessBoard.Evaluation
         /// <summary>
         /// This returns a positiv number for white winning and a negativ number if black is winning
         /// </summary>
-        public static int Evaluate(Board board)
+        public static int EvaluateBoard(Board board, List<Move> moves)
         {
+            if (moves.Count == 0)
+            {
+                // if King in check
+                if (false)
+                    return 0;
+                else
+                {
+                    if (board.playerTurn == 8)
+                        return int.MinValue;
+                    else
+                        return int.MaxValue;
+                }
+            }
+
             int whiteEval = CountMaterial(board, Piece.White);
             int blackEval = CountMaterial(board, Piece.Black);
 
@@ -34,5 +48,23 @@ namespace MyChess.ChessBoard.Evaluation
             }
             return material;
         }
+
+        public static int EvaluateBoardMinMax(Board board)
+        {throw new NotImplementedException("");} // this will evaluate with a min max search instead of just a postion
     }
 }
+
+/*
+Ideers:
+
+Multiply the piece by some amount depending on where on the board it is so it will gain more value if standing in the middle
+
+Get possible moves and if the moves amount is 0 its either stalemate or chackmate depending on if the king is in check
+
+?
+Give pawn extra value if they defend eachother?
+
+Get a list of all the possible moves and give maby like 10? for all the possible moves one side have
+And maby give point for if the piece attacks a piece or defends a pikece?
+
+*/

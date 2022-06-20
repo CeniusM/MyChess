@@ -17,7 +17,7 @@ namespace MyChess.UnitTester.Tests
                 succes = Failed;
             if (game.board.enPassantPiece != 23)
                 succes = Failed;
-            if (game.board.playerTurn != 0b01)
+            if (game.board.playerTurn != Board.WhiteMask)
                 succes = Failed;
             if (game.board.halfMove != 0)
                 succes = Failed;

@@ -6,22 +6,43 @@ namespace MyChess.PossibleMoves.Pieces
     {
         public static void AddMoves(Board board, List<Move> moves)
         {
-            int kingPos;
-            if (board.playerTurn == 1)  // white king
-                kingPos = board[board.PiecePoses[0]];
-            else                        // black king
-                kingPos = board[board.PiecePoses[1]];
-
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < board.piecePoses.Count; i++)
             {
-                int kingeMove = MovesFromSquare.KingMoves[kingPos, i];
-                if (kingeMove == -1)
-                    break;
-                else if ((board[kingeMove] & Piece.ColorBits) != board.playerTurn)
+                if (board[board.piecePoses[i]] == (Piece.King | board.playerTurn))
                 {
-                    moves.Add(new(kingPos, board[kingeMove], 0));
-                }                
+                    int kingPos = board.piecePoses[i];
+                    for (int j = 0; j < 8; j++)
+                    {
+                        int kingMove = kingPos + MovesFromSquare.KingMoves[kingPos, j];
+                        if (MovesFromSquare.KingMoves[kingPos, j] == MovesFromSquare.InvalidMove)
+                            continue;
+                        else if ((board[kingMove] & Piece.ColorBits) != board.playerTurn)
+                        {
+                            moves.Add(new(kingPos, kingMove, 0));
+                        }    
+                    }
+                    // for when there is only 2 kings
+                    //break;
+                }
             }
         }
     }
 }
+
+
+            //int kingPos;
+            //if (board.playerTurn == 8)  // white king
+            //    kingPos = board.piecePoses[0];
+            //else                        // black king
+            //    kingPos = board.piecePoses[1];
+//
+            //for (int i = 0; i < 8; i++)
+            //{
+            //    int kingeMove = kingPos + MovesFromSquare.KingMoves[kingPos, i];
+            //    if (MovesFromSquare.KingMoves[kingPos, i] == MovesFromSquare.InvalidMove)
+            //        continue;
+            //    else if ((board[kingeMove] & Piece.ColorBits) != board.playerTurn)
+            //    {
+            //        moves.Add(new(kingPos, kingeMove, 0));
+            //    }                
+            //}

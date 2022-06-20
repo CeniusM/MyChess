@@ -20,7 +20,7 @@ namespace MyChess.ChessBoard
         14 - 29 Pawns
         30 & 31 queens
         */
-        public int[] PiecePoses = new int[32];
+        public PieceList piecePoses = new PieceList();
         public int[] Square = new int[64];
 
         // W KingSide = 0b1000, W QueenSide = 0b0100, B KingSide = 0b0010, B QueenSide = 0b0001
@@ -30,13 +30,32 @@ namespace MyChess.ChessBoard
         // how many moves both players have made since the last pawn advance or piece capture
         public int halfMove = 0;
         public int fullMove  = 0;
-        public int playerTurn = 1; // 1 = white, 2 = black;
+
+        public const int WhiteMask = 0b00001000;
+        public const int BlackMask = 0b00010000;
+        const int ColorMask = WhiteMask | BlackMask;
+        public int playerTurn = 8; // 8 = white, 16 = black;
 
         // 2 = running
         // 1 = White Won
         // 0 = Draw
         // -1 = Black Won
         public int GameStatus = GameStatusFlag.Running;
+
+        public Board()
+        {
+            InitPiecePoses();
+        }
+
+        public void InitPiecePoses()
+        {
+            piecePoses = new PieceList(32);
+            for (int i = 0; i < 64; i++)
+            {
+                if (Square[i] != 0)
+                    piecePoses.AddPieceAtSquare(i);
+            }
+        }
 
         public int this[int key]
         {
@@ -51,12 +70,12 @@ namespace MyChess.ChessBoard
             
 
             // if move was a succes, adds a fullmove after black moved
-            if (playerTurn == 2)
+            if (playerTurn == BlackMask)
                 fullMove += 1;
 
             ChangePlayer();
         }
         
-        public void ChangePlayer() => playerTurn ^= 0b11;
+        public void ChangePlayer() => playerTurn ^= ColorMask;
     }
 }
