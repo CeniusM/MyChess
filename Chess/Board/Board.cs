@@ -20,6 +20,7 @@ namespace MyChess.ChessBoard
         14 - 29 Pawns
         30 & 31 queens
         */
+        public Stack<Move> moves = new Stack<Move>();
         public PieceList piecePoses = new PieceList();
         public int[] Square = new int[64];
 

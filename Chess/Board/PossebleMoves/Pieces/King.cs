@@ -21,8 +21,6 @@ namespace MyChess.PossibleMoves.Pieces
                             moves.Add(new(kingPos, kingMove, 0));
                         }    
                     }
-                    // for when there is only 2 kings
-                    //break;
                 }
             }
         }

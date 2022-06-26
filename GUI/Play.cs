@@ -22,6 +22,7 @@ namespace MyChessGUI
         public GameOfChess(Form1 form)
         {
             chessGame = new ChessGame("bKb2nNB/KN1K1k1K/b3N3/n7/b2nBB2/1BK5/kn1B1n2/Kk3NkK w - - 0 1");
+            chessGame = new ChessGame("8/3nR3/8/3K2k1/1R2Bb2/2Q3q1/4N3/8 w - - 0 1");
 
             chessAPI = new ChessAPI(form, chessGame);
             _form = form;

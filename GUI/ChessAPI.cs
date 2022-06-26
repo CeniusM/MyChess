@@ -33,15 +33,12 @@ namespace MyChessGUI
 
             _isPrinting = true;
 
+            // reset Board
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    if (i + (j * 8) == selecktedPiece)
-                    {
-                        _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.Red);
-                    }
-                    else if ((i + j) % 2 == 0) // white squares, mnake it its own method
+                    if ((i + j) % 2 == 0)
                     {
                         _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.WhiteSmoke);
                     }
@@ -50,7 +47,7 @@ namespace MyChessGUI
                         _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.LimeGreen);
                     }
 
-                    if ((chessGame.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
+                    if ((chessGame.board[i + (j * 8)] & 31) != 0)
                         PrintPeice(i, j, chessGame.board[i + (j * 8)]);
                 }
             }
@@ -89,7 +86,7 @@ namespace MyChessGUI
                         }
                         else if ((i + j) % 2 == 0 && moves[moveIndex].TargetSquare == i + (j * 8)) // white squares, mnake it its own method
                         {
-                            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.Orange);
+                            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.OrangeRed);
                         }
                         else if (moves[moveIndex].TargetSquare == i + (j * 8))
                         {

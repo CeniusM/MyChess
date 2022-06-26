@@ -3,6 +3,7 @@ using MyChess.ChessBoard;
 using MyChess.FEN;
 
 // https://en.wikipedia.org/wiki/Shannon_number
+// https://www.chessprogramming.org/Perft_Results
 
 // can both be used for speed and testing of the system
 

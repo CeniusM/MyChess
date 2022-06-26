@@ -8,7 +8,7 @@ namespace MyChess.PossibleMoves.Pieces
         {
             for (int i = 0; i < board.piecePoses.Count; i++)
             {
-                if (board[board.piecePoses[i]] == (Piece.Bishop | board.playerTurn))
+                if (board[board.piecePoses[i]] == (Piece.Rook | board.playerTurn))
                 {
                     int pos = board.piecePoses[i];
                     for (int dir = 0; dir < 4; dir++)

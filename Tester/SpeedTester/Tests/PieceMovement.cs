@@ -6,9 +6,9 @@ namespace MyChess.SpeedTester.Tests
     {
         public static TestReport TestGeneratePossibleMoves()
         {
-            int maxFENStrings = 20;
+            int maxFENStrings = 10;
             int reps = 10;
-            int repsPerRep = 100000;
+            int repsPerRep = 1000000;
             int FENStringAmount = 0;
             ulong avg = 0;
 

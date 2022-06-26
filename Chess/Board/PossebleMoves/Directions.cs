@@ -25,12 +25,32 @@ namespace MyChess.PossibleMoves
             public const int SouthWest = 7;
             public const int NorthWest = -9;
         }
-
-        //                                          Square, Directions
         public static int[,] LenghtToSide = new int[64, 8];
         public static void Init()
         {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    int North = j;
+                    int East = 7 - i;
+                    int South = 7 - j;
+                    int West = i;
+                    int NorthEast = North < East ? North : East;
+                    int SouthEast = South < East ? South : East;
+                    int SouthWest = South < West ? South : West;
+                    int NothWest = North < West ? North : West;
 
+                    LenghtToSide[i + (j << 3), 0] = North;
+                    LenghtToSide[i + (j << 3), 1] = East;
+                    LenghtToSide[i + (j << 3), 2] = South;
+                    LenghtToSide[i + (j << 3), 3] = West;
+                    LenghtToSide[i + (j << 3), 4] = NorthEast;
+                    LenghtToSide[i + (j << 3), 5] = SouthEast;
+                    LenghtToSide[i + (j << 3), 6] = SouthWest;
+                    LenghtToSide[i + (j << 3), 7] = NothWest;
+                }
+            }
         }
     }
 }

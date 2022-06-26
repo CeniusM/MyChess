@@ -13,7 +13,7 @@ namespace MyChess.SpeedTester
         private static void PrintReport(TestReport report)
         {
             MyConsole.WriteLine(report.strReport);
-            MyConsole.WriteLine(report.ElaspedMS + "Ms");
+            MyConsole.WriteLine(report.ElaspedMS + "ms");
             MyConsole.WriteLine("");
         }
 

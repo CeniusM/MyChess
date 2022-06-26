@@ -26,6 +26,7 @@ namespace MyChess.PossibleMoves
         {
             if (isInit)
                 return;
+            Directions.Init();
             InitKing();
             InitKnight();
             InitSlidingPieces();

@@ -1,3 +1,5 @@
+
+
 namespace MyChess.ChessBoard.Evaluation
 {
     class MyEvaluater
