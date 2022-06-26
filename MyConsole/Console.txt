@@ -1,3 +1,0 @@
-Time of the avg chess board GeneratePossibleMoves 1000000 time(s) on random FEN strings
-2400ms
-

@@ -2,6 +2,7 @@ using MyChess.ChessBoard;
 using MyChess.PossibleMoves.Pieces;
 
 // maby put all the piece movement code in here for speed?
+// implement and test the loop inside Generate the loop
 
 
 namespace MyChess.PossibleMoves
