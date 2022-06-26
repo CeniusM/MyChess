@@ -11,6 +11,7 @@ namespace MyChess.FEN
 {
     class MyFEN
     {
+        public static readonly string StartPostion = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         public static int GetPieceFromChar(char c)
         {
             switch (c)

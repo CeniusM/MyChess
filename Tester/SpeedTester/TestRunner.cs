@@ -16,5 +16,10 @@ namespace MyChess.SpeedTester
             MyConsole.WriteLine(report.ElaspedMS + "Ms");
             MyConsole.WriteLine("");
         }
+
+        private static void PrintCompareReports(TestReport r1, TestReport r2)
+        {
+
+        }
     }
 }
