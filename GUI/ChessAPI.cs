@@ -4,6 +4,8 @@ using MyChess;
 using CS_Math;
 using MyChess.ChessBoard.Evaluation;
 
+using MyChess.PossibleMoves;
+
 namespace MyChessGUI
 {
     class ChessAPI // gets the instruction from the chess game and gives the FormGUI instructions on what to print
@@ -141,13 +143,13 @@ namespace MyChessGUI
 
 
         public void TestTheDirections() // just for testing
-        {//
+        {
             //for (int i = 0; i < 8; i++)
             //{
             //    for (int j = 0; j < 8; j++)
             //    {
             //        int num = Directions.DirectionValues[i + (j * 8), 0 /*North*/];
-//
+            //
             //        if (num == 0)
             //            _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.FromArgb(255, (240 / (num + 1)), 0, 0));
             //        if (num == 1)
@@ -167,6 +169,37 @@ namespace MyChessGUI
             //    }
             //}
             //_formGUI.Print();
+        }
+
+        public void PrintMoves(int square, int direction)
+        {
+            // reset
+            for (int col = 0; col < 8; col++)
+            {
+                for (int rank = 0; rank < 8; rank++)
+                {
+                    if ((col + rank) % 2 == 0)
+                    {
+                        _formGUI.DrawSquare(col * 100, rank * 100, 100, 100, Color.WhiteSmoke);
+                    }
+                    else
+                    {
+                        _formGUI.DrawSquare(col * 100, rank * 100, 100, 100, Color.LimeGreen);
+                    }
+                }
+            }
+
+            // directions
+            _formGUI.DrawSquare(square % 8 * 100, square / 8 * 100, 100, 100, Color.Yellow);
+            for (int i = 0; i < 7; i++)
+            {
+                int s = MovesFromSquare.SlidingpieceMoves[square, direction, i];
+                if (s == MovesFromSquare.InvalidMove)
+                    break;
+                _formGUI.DrawSquare(s % 8 * 100, s / 8 * 100, 100, 100, Color.Red);
+            }
+
+            _formGUI.Print();
         }
     }
 }

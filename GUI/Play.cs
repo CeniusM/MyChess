@@ -21,7 +21,7 @@ namespace MyChessGUI
         private Form1 _form;
         public GameOfChess(Form1 form)
         {
-            chessGame = new ChessGame("kK3nNk/KN1Kkk1K/3kN3/n3NN2/3nN3/2K3K1/kn3nnk/Kk3NkK w - - 0 1");
+            chessGame = new ChessGame("bKb2nNB/KN1K1k1K/b3N3/n7/b2nBB2/1BK5/kn1B1n2/Kk3NkK w - - 0 1");
 
             chessAPI = new ChessAPI(form, chessGame);
             _form = form;
@@ -51,8 +51,32 @@ namespace MyChessGUI
 
         public void Stop() => _isRunning = false;
 
+
+        int fooSquare = 0;
+        int fooDirection = 0;
         private void KeyPress(object? sender, KeyPressEventArgs e)
         {
+            if (true) // for debugging
+            {
+                if (e.KeyChar == 'w')
+                    fooSquare += -8;
+                else if (e.KeyChar == 'a')
+                    fooSquare += -1;
+                else if (e.KeyChar == 's')
+                    fooSquare += 8;
+                else if (e.KeyChar == 'd')
+                    fooSquare += 1;
+                else if (e.KeyChar == '+')
+                    fooDirection += 1;
+                else if (e.KeyChar == '-')
+                    fooDirection -= 1;
+
+                if (fooDirection > 7)
+                    fooDirection = 0;
+                else if (fooDirection < 0)
+                    fooDirection = 7;
+                chessAPI.PrintMoves(fooSquare, fooDirection);
+            }
             //if (e.KeyChar == 'r') // rePrints the whole board
             //{
             //    chessAPI.PrintBoard();
@@ -85,14 +109,14 @@ namespace MyChessGUI
             //    chessAPI = new ChessAPI(_form, chessGame);
             //    chessAPI.PrintBoard();
             //}
-//
+            //
             //else if (e.KeyChar == '0') // reads the last line in MyConsole and takes it in as a fen string
             //{
             //    chessGame = new ChessGame(CS_MyConsole.MyConsole.ReadLastLine());
             //    chessAPI = new ChessAPI(_form, chessGame);
             //    chessAPI.PrintBoard();
             //}
-//
+            //
             //else if (e.KeyChar == 'l') // reads the last line in MyConsole and takes it in as a fen string
             //{
             //    if (chessGame.gameMoves.Count != 0)
@@ -100,7 +124,7 @@ namespace MyChessGUI
             //        chessGame.UnmakeMove();
             //        chessAPI.PrintBoard();
             //    }
-//
+            //
             //}
         }
 

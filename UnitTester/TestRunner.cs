@@ -7,6 +7,10 @@ namespace MyChess.UnitTester
     {
         public static void Run()
         {
+            // heavy tests
+            
+
+            // light tests
             PrintReport(Test.TestGetBoardFromFEN());
             PrintReport(Test.TestGetFENFromBoard());
             PrintReport(Test.TestKing());

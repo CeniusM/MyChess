@@ -29,7 +29,7 @@ static class Program
     private static void StartGame(Form1 myForm)
     {
         // UnitTest
-        MyChess.UnitTester.TestRunner.Run();
+        //MyChess.UnitTester.TestRunner.Run();
 
         game = new GameOfChess(myForm);
         game.Play();

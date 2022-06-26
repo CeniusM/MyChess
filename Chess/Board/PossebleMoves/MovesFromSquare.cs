@@ -16,16 +16,23 @@ namespace MyChess.PossibleMoves
         public const int InvalidMove = int.MinValue;
         public static int[,] KingMoves = new int[64, 8];
         public static int[,] KnightMoves = new int[64, 8];
+
+        ///<summary> 
+        /// Square, direction, the moves in the direction.
+        /// Doesn't count the square its on and the line ends at ivalidMove
+        /// </summary>
+        public static int[,,] SlidingpieceMoves = new int[64, 8, 7];
         public static void Init()
         {
             if (isInit)
                 return;
             InitKing();
             InitKnight();
+            InitSlidingPieces();
 
             isInit = true;
         }
-        
+
         public static bool IsInBounds(int place) => (place < 64 && place > -1);
 
         private static void InitKing()
@@ -47,12 +54,12 @@ namespace MyChess.PossibleMoves
             for (int i = 0; i < 64; i++)
             {
                 TryMakeMove(i, Directions.Value.North, Directions.Index.North, -1);
-                TryMakeMove(i, Directions.Value.NorthEast, Directions.Index.NorthEast, -1);
                 TryMakeMove(i, Directions.Value.East, Directions.Index.East, 0);
-                TryMakeMove(i, Directions.Value.SouthEast, Directions.Index.SouthEast, 1);
                 TryMakeMove(i, Directions.Value.South, Directions.Index.South, 1);
-                TryMakeMove(i, Directions.Value.SouthWest, Directions.Index.SouthWest, 1);
                 TryMakeMove(i, Directions.Value.West, Directions.Index.West, 0);
+                TryMakeMove(i, Directions.Value.NorthEast, Directions.Index.NorthEast, -1);
+                TryMakeMove(i, Directions.Value.SouthEast, Directions.Index.SouthEast, 1);
+                TryMakeMove(i, Directions.Value.SouthWest, Directions.Index.SouthWest, 1);
                 TryMakeMove(i, Directions.Value.NorthWest, Directions.Index.NorthWest, -1);
             }
         }
@@ -85,6 +92,48 @@ namespace MyChess.PossibleMoves
                 TryMakeMove(i, 10, 5, 1);
                 TryMakeMove(i, 15, 6, 2);
                 TryMakeMove(i, 17, 7, 2);
+            }
+        }
+
+        private static void InitSlidingPieces()
+        {
+            int[] lineDiffs =
+            {
+                -1,
+                0,
+                1,
+                0,
+                -1,
+                1,
+                1,
+                -1           
+            };
+            for (int square = 0; square < 64; square++)
+            {
+                for (int dir = 0; dir < 8; dir++)
+                {
+                    int move = square;
+                    int lindDiff = 0;
+                    for (int moveCount = 0; moveCount < 7; moveCount++)
+                    {
+                        int temp = move;
+                        move += Directions.Value.Indexed[dir];
+                        lindDiff = (move >> 3) - (temp >> 3);
+
+                        if (!IsInBounds(move))
+                        {
+                            SlidingpieceMoves[square, dir, moveCount] = InvalidMove; 
+                            break;
+                        }
+                        if (lindDiff != lineDiffs[dir])
+                        {
+                            SlidingpieceMoves[square, dir, moveCount] = InvalidMove; 
+                            break;
+                        }
+
+                        SlidingpieceMoves[square, dir, moveCount] = move; 
+                    }
+                }
             }
         }
     }
