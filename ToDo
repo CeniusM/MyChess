@@ -1,4 +1,36 @@
 1.
+Make the board work
+
+2.
+make unitests
+
+3.
+make some timing code for testing speed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1.
 lav Pieceplacements into an array, then alicate like 0-1 for the kings so the for loop in the kings only need to check those
 also do that with like the rooks, where it checks idk, like 4-5 of the array in the for loop, and like 15-31 for Pawns
 just not sure how the promoted peices would work

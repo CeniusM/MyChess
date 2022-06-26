@@ -31,6 +31,9 @@ static class Program
         // UnitTest
         //MyChess.UnitTester.TestRunner.Run();
 
+        // SpeedTest
+        MyChess.SpeedTester.TestRunner.Run();
+
         game = new GameOfChess(myForm);
         game.Play();
     }

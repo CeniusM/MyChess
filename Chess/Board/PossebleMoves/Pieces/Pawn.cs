@@ -6,7 +6,16 @@ namespace MyChess.PossibleMoves.Pieces
     {
         public static void AddMoves(Board board, List<Move> moves)
         {
-            
+            // walks towards negativ
+            if (board.playerTurn == Piece.White)
+            {
+                
+            }
+
+            else
+            {
+                
+            }
         }
     }
 }
