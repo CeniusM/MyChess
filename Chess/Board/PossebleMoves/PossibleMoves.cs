@@ -42,23 +42,5 @@ namespace MyChess.PossibleMoves
             Queen.AddMoves(board, moves);
             Pawn.AddMoves(board, moves);
         }
-
-        public List<Move> GetMoves(Board board, int selecktedPiece, bool reGenerateMoves = false)
-        {
-            if (reGenerateMoves)
-                GenerateMoves();
-
-            List<Move> newMoves = new List<Move>(moves.Capacity);
-
-            for (int i = 0; i < moves.Count; i++)
-            {
-                if (moves[i].StartSquare == selecktedPiece)
-                {
-                    newMoves.Add(moves[i]);
-                }
-            }
-            
-            return newMoves;
-        }
     }
 }

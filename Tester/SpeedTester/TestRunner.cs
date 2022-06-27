@@ -7,7 +7,8 @@ namespace MyChess.SpeedTester
     {
         public static void Run()
         {
-            PrintReport(Test.TestGeneratePossibleMoves());
+            //PrintReport(Test.TestGeneratePossibleMoves());
+            PrintReport(Test.OutOfBoundsCheck());
         }
 
         private static void PrintReport(TestReport report)

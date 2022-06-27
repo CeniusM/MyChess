@@ -1,5 +1,5 @@
 namespace MyChess
-{    
+{
     public readonly struct Move
     {
         public readonly struct Flag
@@ -16,11 +16,13 @@ namespace MyChess
         public readonly byte StartSquare;
         public readonly byte TargetSquare;
         public readonly byte MoveFlag;
-        public Move(int s, int t, int f)
+        public readonly byte CapturedPiece;
+        public Move(int s, int t, int f, int cp = 0)
         {
             StartSquare = (byte)s;
             TargetSquare = (byte)t;
             MoveFlag = (byte)f;
+            CapturedPiece = (byte)cp;
         }
     }
 }

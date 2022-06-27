@@ -21,8 +21,10 @@ namespace MyChessGUI
         private Form1 _form;
         public GameOfChess(Form1 form)
         {
-            chessGame = new ChessGame("bKb2nNB/KN1K1k1K/b3N3/n7/b2nBB2/1BK5/kn1B1n2/Kk3NkK w - - 0 1");
-            chessGame = new ChessGame("8/3nR3/8/3K2k1/1R2Bb2/2Q3q1/4N3/8 w - - 0 1");
+            //chessGame = new ChessGame("bKb2nNB/KN1K1k1K/b3N3/n7/b2nBB2/1BK5/kn1B1n2/Kk3NkK w - - 0 1");
+            //chessGame = new ChessGame("8/3nR3/8/3K2k1/1R2Bb2/2Q3q1/4N3/8 w - - 0 1");
+            //chessGame = new ChessGame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8");
 
             chessAPI = new ChessAPI(form, chessGame);
             _form = form;
@@ -57,8 +59,17 @@ namespace MyChessGUI
         int fooDirection = 0;
         private void KeyPress(object? sender, KeyPressEventArgs e)
         {
+            if (e.KeyChar == ' ')
+            {
+                chessGame.board.UnMakeMove();
+                _selecktedSquare = -1;
+                chessAPI.PrintBoard(_selecktedSquare);
+                return;
+            }
+
             if (true) // for debugging
             {
+
                 if (e.KeyChar == 'w')
                     fooSquare += -8;
                 else if (e.KeyChar == 'a')
@@ -165,10 +176,14 @@ namespace MyChessGUI
             {
                 List<Move> moves = chessGame.GetPossibleMoves();
                 int movesCount = 0;
+                int index = 0;
                 for (var i = 0; i < moves.Count(); i++)
                 {
                     if (moves[i].StartSquare == _selecktedSquare && moves[i].TargetSquare == pressedSquare)
+                    {
                         movesCount++;
+                        index = i;
+                    }
                 }
 
                 if (movesCount == 0)
@@ -184,7 +199,7 @@ namespace MyChessGUI
                 }
                 if (movesCount == 1)
                 {
-                    chessGame.MakeMove(moves[0]);
+                    chessGame.MakeMove(moves[index]);
 
                     _selecktedSquare = -1;
                 }
