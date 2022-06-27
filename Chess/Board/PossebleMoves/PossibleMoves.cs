@@ -17,7 +17,7 @@ namespace MyChess.PossibleMoves
             this.board = board;
             GenerateMoves();
         }
-        
+
         public void GenerateMoves()
         {
             moves = new List<Move>(30); // avg moves for random pos
@@ -41,6 +41,48 @@ namespace MyChess.PossibleMoves
             Rook.AddMoves(board, moves);
             Queen.AddMoves(board, moves);
             Pawn.AddMoves(board, moves);
+
+            TerribleFilterForChecks();
+        }
+
+        private void TerribleFilterForChecks()
+        {
+            List<Move> newMoves = new List<Move>(moves.Count);
+
+            for (int i = 0; i < moves.Count; i++)
+            {
+                board.MakeMove(moves[i]);
+
+                moves = new List<Move>(30);
+
+                King.AddMoves(board, moves);
+                Knight.AddMoves(board, moves);
+                Bishop.AddMoves(board, moves);
+                Rook.AddMoves(board, moves);
+                Queen.AddMoves(board, moves);
+                Pawn.AddMoves(board, moves);
+
+                bool notInCheck = true;
+                int kingPos = -1;
+
+                for (int j = 0; j < board.piecePoses.Count; j++)
+                {
+                    if (board[board.piecePoses[j]] == (Piece.King | (board.playerTurn ^ Board.ColorMask)))
+                    {
+                        kingPos = board.piecePoses[j];
+                        break;
+                    }
+                }
+
+                for (int j = 0; j < moves.Count; j++)
+                {
+                    if ()
+                }
+
+                board.UnMakeMove();
+            }
+
+            moves = newMoves;
         }
     }
 }

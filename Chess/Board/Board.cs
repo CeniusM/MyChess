@@ -29,7 +29,7 @@ namespace MyChess.ChessBoard
 
         public const int WhiteMask = 0b00001000;
         public const int BlackMask = 0b00010000;
-        const int ColorMask = WhiteMask | BlackMask;
+        public const int ColorMask = WhiteMask | BlackMask;
         public int playerTurn = 8; // 8 = white, 16 = black;
 
 
@@ -61,7 +61,7 @@ namespace MyChess.ChessBoard
         }
 
         /// <summary> works up too 65535 and down too -65472 </summary>
-        public static bool IsPieceOutOfBounce(int pos) => (pos & 0xFFC0) != 0;
+        public static bool IsPieceInBound(int pos) => (pos & 0xFFC0) != 0;
 
         public void MakeMove(Move move)
         {
@@ -88,13 +88,17 @@ namespace MyChess.ChessBoard
 
         public void UnMakeMove()
         {
-            if (fullMove == 0 && playerTurn != BlackMask) // check if we are at the begining
+            if (fullMove == 0 && playerTurn != BlackMask || moves.Count == 0) // check if we are at the begining
                 return;
+            else
+                fullMove--;
+
             ChangePlayer();
             Move move = moves.Pop();
 
             piecePoses.MovePiece(move.TargetSquare, move.StartSquare);
-            piecePoses.AddPieceAtSquare(move.TargetSquare);
+            if (move.CapturedPiece != 0)
+                piecePoses.AddPieceAtSquare(move.TargetSquare);
 
             Square[move.StartSquare] = Square[move.TargetSquare];
             Square[move.TargetSquare] = move.CapturedPiece;
@@ -105,9 +109,6 @@ namespace MyChess.ChessBoard
             }
             else if (move.MoveFlag == Move.Flag.EnPassantCapture)
                 enPassantPiece = move.TargetSquare;
-
-
-
         }
 
         public void ChangePlayer() => playerTurn ^= ColorMask;

@@ -19,10 +19,6 @@ namespace MyChess.PossibleMoves.Pieces
                         if (56 > pos && pos > 47)
                             moves.Add(new(pos, pos - 16, Move.Flag.PawnTwoForward));
 
-                        // one forward
-                        if (board[pos - 8] == Piece.None)
-                            moves.Add(new(pos, pos - 8, Move.Flag.None));
-
                         // right
                         if ((board[pos - 7] & Piece.ColorBits) == Piece.Black)
                             if ((pos - 7) >> 3 == (pos >> 3) - 1)
@@ -42,6 +38,22 @@ namespace MyChess.PossibleMoves.Pieces
                         if (pos - 7 == board.enPassantPiece)
                             if ((pos - 7) >> 3 == (pos >> 3) - 1)
                                 moves.Add(new(pos, board.enPassantPiece, Move.Flag.EnPassantCapture));
+
+                        // promotion
+                        if (Board.IsPieceInBound(pos - 8))
+                        {
+                            if (pos - 8 > -1 && pos - 8 < 8)
+                            {
+                                moves.Add(new Move(pos, pos - 8, Move.Flag.PromoteToQueen));
+                                moves.Add(new Move(pos, pos - 8, Move.Flag.PromoteToRook));
+                                moves.Add(new Move(pos, pos - 8, Move.Flag.PromoteToBishop));
+                                moves.Add(new Move(pos, pos - 8, Move.Flag.PromoteToKnight));
+                            }
+                            // one forward
+                            else if (board[pos - 8] == Piece.None)
+                                moves.Add(new(pos, pos - 8, Move.Flag.None));
+                        }
+
                     }
 
                     else
@@ -49,10 +61,6 @@ namespace MyChess.PossibleMoves.Pieces
                         // two forward
                         if (16 > pos && pos > 7)
                             moves.Add(new(pos, pos + 16, Move.Flag.PawnTwoForward));
-
-                        // one forward
-                        if (board[pos + 8] == Piece.None)
-                            moves.Add(new(pos, pos + 8, Move.Flag.None));
 
                         // right
                         if ((board[pos + 7] & Piece.ColorBits) == Piece.White)
@@ -71,6 +79,21 @@ namespace MyChess.PossibleMoves.Pieces
                         if (pos + 7 == board.enPassantPiece)
                             if ((pos + 7) >> 3 == (pos >> 3) + 1)
                                 moves.Add(new(pos, board.enPassantPiece, Move.Flag.EnPassantCapture));
+
+                        // promotion
+                        if (Board.IsPieceInBound(pos + 8))
+                        {
+                            if (pos + 8 > 55 && pos + 8 < 64)
+                            {
+                                moves.Add(new Move(pos, pos + 8, Move.Flag.PromoteToQueen));
+                                moves.Add(new Move(pos, pos + 8, Move.Flag.PromoteToRook));
+                                moves.Add(new Move(pos, pos + 8, Move.Flag.PromoteToBishop));
+                                moves.Add(new Move(pos, pos + 8, Move.Flag.PromoteToKnight));
+                            }
+                            // one forward
+                            else if (board[pos + 8] == Piece.None)
+                                moves.Add(new(pos, pos + 8, Move.Flag.None));
+                        }
                     }
 
                 }
