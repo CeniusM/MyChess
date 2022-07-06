@@ -61,54 +61,131 @@ namespace MyChess.ChessBoard
         }
 
         /// <summary> works up too 65535 and down too -65472 </summary>
-        public static bool IsPieceInBound(int pos) => (pos & 0xFFC0) != 0;
+        public static bool IsPieceInBound(int pos) => (pos & 0xFFC0) == 0;
+
+
+
+        // move methods need
+        // half/fullMove
+        //
 
         public void MakeMove(Move move)
         {
-            // will be reset after everycapture or pawn move
-            halfMove += 1;
+            // halfMove += 1;
+            // // if move was a succes, adds a fullmove after black moved
+            // if (playerTurn == BlackMask)
+            //     fullMove += 1;
 
+            if (move.MoveFlag == Move.Flag.None)
+            {
+                moves.Push(new(move.StartSquare, move.TargetSquare, move.MoveFlag, Square[move.TargetSquare]));
 
-            // if move was a succes, adds a fullmove after black moved
-            if (playerTurn == BlackMask)
-                fullMove += 1;
+                // pawn move or capture
+                if ((Square[move.StartSquare] & Piece.PieceBits) == Piece.Pawn || Square[move.TargetSquare] != 0)
+                    halfMove = 0;
 
+                if (Square[move.TargetSquare] != 0)
+                    piecePoses.RemovePieceAtSquare(move.TargetSquare);
 
-            if (Square[move.TargetSquare] != 0)
-                piecePoses.RemovePieceAtSquare(move.TargetSquare);
-            piecePoses.MovePiece(move.StartSquare, move.TargetSquare);
-            int temp = Square[move.TargetSquare];
-            Square[move.TargetSquare] = Square[move.StartSquare];
-            Square[move.StartSquare] = 0;
-            moves.Push(new(move.StartSquare, move.TargetSquare, move.MoveFlag, temp));
+                piecePoses.MovePiece(move.StartSquare, move.TargetSquare);
+                Square[move.TargetSquare] = Square[move.StartSquare];
+                Square[move.StartSquare] = 0;
+                enPassantPiece = 64;
+            }
+            else if (move.MoveFlag == Move.Flag.PawnTwoForward)
+            {
+                moves.Push(move);
+                halfMove = 0;
+                piecePoses.MovePiece(move.StartSquare, move.TargetSquare);
+                Square[move.TargetSquare] = Square[move.StartSquare];
+                Square[move.StartSquare] = 0;
+            }
+            else if (move.MoveFlag == Move.Flag.EnPassantCapture)
+            {
+                moves.Push(move);
+                halfMove = 0;
+                piecePoses.MovePiece(move.StartSquare, move.TargetSquare);
+                if (playerTurn == WhiteMask)
+                {
+                    Square[move.StartSquare] = 0;
+                    Square[move.TargetSquare] = Piece.WPawn;
+                    Square[move.TargetSquare + 8] = 0;
+                }
+                else
+                {
+                    Square[move.StartSquare] = 0;
+                    Square[move.TargetSquare] = Piece.BPawn;
+                    Square[move.TargetSquare - 8] = 0;
+                }
+            }
+            else if (move.MoveFlag == Move.Flag.Castling)
+            {
+                throw new NotImplementedException();
+            }
+            else // promotion
+            {
+                moves.Push(new(move.StartSquare, move.TargetSquare, move.MoveFlag, Square[move.TargetSquare]));
+                halfMove = 0;
 
+                if (Square[move.TargetSquare] != 0)
+                    piecePoses.RemovePieceAtSquare(move.TargetSquare);
+
+                piecePoses.MovePiece(move.StartSquare, move.TargetSquare);
+                Square[move.TargetSquare] = move.PromotionPiece() | playerTurn;
+                Square[move.StartSquare] = 0;
+                enPassantPiece = 64;
+            }
 
             ChangePlayer();
         }
 
         public void UnMakeMove()
         {
-            if (fullMove == 0 && playerTurn != BlackMask || moves.Count == 0) // check if we are at the begining
-                return;
-            else
-                fullMove--;
-
-            ChangePlayer();
+            // if (fullMove == 0 && playerTurn != BlackMask || moves.Count == 0) // check if we are at the begining
+            //     return;
+            // else
+            //     fullMove--;
             Move move = moves.Pop();
+            ChangePlayer();
 
-            piecePoses.MovePiece(move.TargetSquare, move.StartSquare);
-            if (move.CapturedPiece != 0)
-                piecePoses.AddPieceAtSquare(move.TargetSquare);
-
-            Square[move.StartSquare] = Square[move.TargetSquare];
-            Square[move.TargetSquare] = move.CapturedPiece;
-
-            if (move.MoveFlag == Move.Flag.PawnTwoForward)
+            if (move.MoveFlag == Move.Flag.None)
             {
-                //enPassantPiece = move.TargetSquare;
+                piecePoses.MovePiece(move.TargetSquare, move.StartSquare);
+                if (move.CapturedPiece != 0)
+                    piecePoses.AddPieceAtSquare(move.TargetSquare);
+
+                Square[move.StartSquare] = Square[move.TargetSquare];
+                Square[move.TargetSquare] = move.CapturedPiece;
+            }
+            else if (move.MoveFlag == Move.Flag.PawnTwoForward)
+            {
+                piecePoses.MovePiece(move.TargetSquare, move.StartSquare);
+                Square[move.StartSquare] = Square[move.TargetSquare];
+                Square[move.TargetSquare] = 0;
             }
             else if (move.MoveFlag == Move.Flag.EnPassantCapture)
-                enPassantPiece = move.TargetSquare;
+            {
+                piecePoses.MovePiece(move.TargetSquare, move.StartSquare);
+                Square[move.StartSquare] = Square[move.TargetSquare];
+                Square[move.TargetSquare] = 0;
+                if (playerTurn == WhiteMask)
+                    Square[move.TargetSquare + 8] = Piece.WPawn;
+                else
+                    Square[move.TargetSquare - 8] = Piece.BPawn;
+            }
+            else if (move.MoveFlag == Move.Flag.Castling)
+            {
+                throw new NotImplementedException();
+            }
+            else // promotion
+            {
+                piecePoses.MovePiece(move.TargetSquare, move.StartSquare);
+                if (move.CapturedPiece != 0)
+                    piecePoses.AddPieceAtSquare(move.TargetSquare);
+
+                Square[move.StartSquare] = Piece.Pawn | playerTurn;
+                Square[move.TargetSquare] = move.CapturedPiece;
+            }
         }
 
         public void ChangePlayer() => playerTurn ^= ColorMask;

@@ -61,7 +61,8 @@ namespace MyChessGUI
         {
             if (e.KeyChar == ' ')
             {
-                chessGame.board.UnMakeMove();
+                if (chessGame.board.moves.Count != 0)
+                    chessGame.board.UnMakeMove();
                 _selecktedSquare = -1;
                 chessAPI.PrintBoard(_selecktedSquare);
                 return;

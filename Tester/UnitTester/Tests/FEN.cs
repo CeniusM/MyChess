@@ -11,41 +11,41 @@ namespace MyChess.UnitTester.Tests
             const int Failed = TestReport.SuccesFlag.Failed;
             int succes = TestReport.SuccesFlag.Succes;
 
-            ChessGame game = new("rn1b1rk1/ppp3p1/3p1p2/1N1Pp1Pp/4P3/3Q1N2/PPP2P1P/R3K2R w KQ h6 0 15");
+            Board board = MyFEN.GetBoardFromFEN("rn1b1rk1/ppp3p1/3p1p2/1N1Pp1Pp/4P3/3Q1N2/PPP2P1P/R3K2R w KQ h6 0 15");
 
-            if (game.board.castle != 0b1100)
+            if (board.castle != 0b1100)
                 succes = Failed;
-            if (game.board.enPassantPiece != 23)
+            if (board.enPassantPiece != 23)
                 succes = Failed;
-            if (game.board.playerTurn != Board.WhiteMask)
+            if (board.playerTurn != Board.WhiteMask)
                 succes = Failed;
-            if (game.board.halfMove != 0)
+            if (board.halfMove != 0)
                 succes = Failed;
-            if (game.board.fullMove != 15)
+            if (board.fullMove != 15)
                 succes = Failed;
-            if (game.board.GameStatus != GameStatusFlag.Running)
+            if (board.GameStatus != GameStatusFlag.Running)
                 succes = Failed;
 
             // random pieces
-            if (game.board[0] != Piece.BRook)
+            if (board[0] != Piece.BRook)
                 succes = Failed;
-            if (game.board[1] != Piece.BKnight)
+            if (board[1] != Piece.BKnight)
                 succes = Failed;
-            if (game.board[8] != Piece.BPawn)
+            if (board[8] != Piece.BPawn)
                 succes = Failed;
-            if (game.board[9] != Piece.BPawn)
+            if (board[9] != Piece.BPawn)
                 succes = Failed;
-            if (game.board[19] != Piece.BPawn)
+            if (board[19] != Piece.BPawn)
                 succes = Failed;
-            if (game.board[43] != Piece.WQueen)
+            if (board[43] != Piece.WQueen)
                 succes = Failed;
-            if (game.board[45] != Piece.WKnight)
+            if (board[45] != Piece.WKnight)
                 succes = Failed;
-            if (game.board[56] != Piece.WRook)
+            if (board[56] != Piece.WRook)
                 succes = Failed;
-            if (game.board[60] != Piece.WKing)
+            if (board[60] != Piece.WKing)
                 succes = Failed;
-            if (game.board[63] != Piece.WRook)
+            if (board[63] != Piece.WRook)
                 succes = Failed;
 
             return new("Get Board from FEN Test", succes);
@@ -70,8 +70,8 @@ namespace MyChess.UnitTester.Tests
             
             for (int i = 0; i < FENs.Length; i++)
             {
-                ChessGame game = new ChessGame(FENs[i]);
-                if (MyFEN.GetFENFromBoard(game.board) != FENs[i])
+                Board board = MyFEN.GetBoardFromFEN(FENs[i]);
+                if (MyFEN.GetFENFromBoard(board) != FENs[i])
                     succes = Failed;
             }
 

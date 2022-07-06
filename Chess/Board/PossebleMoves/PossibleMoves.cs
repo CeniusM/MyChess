@@ -41,48 +41,157 @@ namespace MyChess.PossibleMoves
             Rook.AddMoves(board, moves);
             Queen.AddMoves(board, moves);
             Pawn.AddMoves(board, moves);
+            Castle.AddMoves(board, moves);
 
             TerribleFilterForChecks();
         }
 
         private void TerribleFilterForChecks()
         {
-            List<Move> newMoves = new List<Move>(moves.Count);
+            List<Move> ValidMoves = new List<Move>(moves.Count);
 
+            int GetKingsPos(int color)
+            {
+                for (int i = 0; i < board.piecePoses.Count; i++)
+                    if (board[board.piecePoses[i]] == (color | Piece.King))
+                        return board.piecePoses[i];
+                return -1;
+            }
+
+            // go through each move
             for (int i = 0; i < moves.Count; i++)
             {
                 board.MakeMove(moves[i]);
 
-                moves = new List<Move>(30);
+                // save the new possible moves
+                if (!CheckKingInCheck(GetKingsPos(board.playerTurn ^ Board.ColorMask), board.playerTurn ^ Board.ColorMask, i))
+                    ValidMoves.Add(moves[i]);
 
-                King.AddMoves(board, moves);
-                Knight.AddMoves(board, moves);
-                Bishop.AddMoves(board, moves);
-                Rook.AddMoves(board, moves);
-                Queen.AddMoves(board, moves);
-                Pawn.AddMoves(board, moves);
+                // if (moves[i].MoveFlag != 0) // for debuging
+                // {
 
-                bool notInCheck = true;
-                int kingPos = -1;
-
-                for (int j = 0; j < board.piecePoses.Count; j++)
-                {
-                    if (board[board.piecePoses[j]] == (Piece.King | (board.playerTurn ^ Board.ColorMask)))
-                    {
-                        kingPos = board.piecePoses[j];
-                        break;
-                    }
-                }
-
-                for (int j = 0; j < moves.Count; j++)
-                {
-                    if ()
-                }
+                // }
 
                 board.UnMakeMove();
             }
 
-            moves = newMoves;
+            moves = ValidMoves;
+        }
+
+        private bool CheckKingInCheck(int kingPos, int kingColor, int debuggingMoveNum)
+        {
+            /*
+                for v2 note,
+                here you can use magic bitboard, you can just AND operate a long that has bits on all the locations that the knight
+                can jump to from the square is on
+                so fx
+
+                    Long                   Magic bitboard with the knights
+                if ((KinghtMoves[KINGPOS] & KnightPositions) != 0)
+                    KING IN CHECK
+
+                    example of a KnightMoves long on square 8, x is the square
+                    8 * 8 bits, 64 bit int
+                    00010000
+                    0x000000
+                    00010000
+                    10100000
+                    00000000
+                    00000000
+                    00000000
+                    00000000
+
+                King will look like
+                    00000000
+                    00011100
+                    0001x100
+                    00011100
+                    00000000
+                    00000000
+                    00000000
+                    00000000
+                    
+                can implement the exact same with atlist pawns and kings
+                and a modifyed version with the sliding pieces
+            */
+
+
+
+
+            // check Knights
+            for (int i = 0; i < 8; i++)
+            {
+                if (MovesFromSquare.KnightMoves[kingPos, i] == MovesFromSquare.InvalidMove)
+                    continue;
+                if (board[kingPos + MovesFromSquare.KnightMoves[kingPos, i]] == (Piece.Knight | board.playerTurn))
+                    return true;
+            }
+
+            // check King
+            for (int i = 0; i < 8; i++)
+            {
+                if (MovesFromSquare.KingMoves[kingPos, i] == MovesFromSquare.InvalidMove)
+                    continue;
+                if (board[kingPos + MovesFromSquare.KingMoves[kingPos, i]] == (Piece.King | board.playerTurn))
+                    return true;
+            }
+
+            // check pawns
+            if (board.playerTurn == Board.BlackMask)
+            {
+                if (Board.IsPieceInBound(kingPos + 7))
+                    if (board[kingPos + 7] == Piece.BPawn)
+                        return true;
+                if (Board.IsPieceInBound(kingPos + 9))
+                    if (board[kingPos + 9] == Piece.BPawn)
+                        return true;
+            }
+            else
+            {
+                if (Board.IsPieceInBound(kingPos - 7))
+                    if (board[kingPos - 7] == Piece.WPawn)
+                        return true;
+                if (Board.IsPieceInBound(kingPos - 9))
+                    if (board[kingPos - 9] == Piece.WPawn)
+                        return true;
+            }
+
+            // check Sliding Pieces
+            for (int dir = 0; dir < 8; dir++)
+            {
+                int move = kingPos;
+                for (int moveCount = 0; moveCount < 7; moveCount++)
+                {
+                    if (MovesFromSquare.SlidingpieceMoves[kingPos, dir, moveCount] == MovesFromSquare.InvalidMove)
+                        break;
+                    move = MovesFromSquare.SlidingpieceMoves[kingPos, dir, moveCount];
+
+
+                    if (board[move] != 0)
+                    {
+                        if ((board[move] & Board.ColorMask) == board.playerTurn)
+                        {
+                            switch (board[move] & Piece.PieceBits)
+                            {
+                                case Piece.Queen:
+                                    return true;
+                                case Piece.Rook:
+                                    if (dir < 4)
+                                        return true;
+                                    break;
+                                case Piece.Bishop:
+                                    if (dir > 3)
+                                        return true;
+                                    break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+
+            return false;
         }
     }
 }

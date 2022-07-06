@@ -180,36 +180,35 @@ namespace MyChess.FEN
 
             return board;
         }
-        public static string GetFENFromBoardNEW()
-        {
-            throw new NotImplementedException();
+        // public static string GetFENFromBoardNEW()
+        // {
+        //     throw new NotImplementedException();
 
-            char[] cString = new char[100];
-            int cPtr = 0;
-            void SetChar(char c)
-            {
-                cString[cPtr] = c;
-                cPtr++;
-            }
+        //     char[] cString = new char[100];
+        //     int cPtr = 0;
+        //     void SetChar(char c)
+        //     {
+        //         cString[cPtr] = c;
+        //         cPtr++;
+        //     }
 
-            for (int rank = 0; rank < 8; rank++)
-            {
-                for (int col = 0; col < 8; col++)
-                {
+        //     for (int rank = 0; rank < 8; rank++)
+        //     {
+        //         for (int col = 0; col < 8; col++)
+        //         {
                     
-                }
-            }
+        //         }
+        //     }
 
 
-            char[] temp = new char[cPtr];
-            for (int i = 0; i < cPtr; i++)
-            {
-                temp[i] = cString[i];
-            }
-            string FENString = new string(temp);
-            return FENString;
-
-        }
+        //     char[] temp = new char[cPtr];
+        //     for (int i = 0; i < cPtr; i++)
+        //     {
+        //         temp[i] = cString[i];
+        //     }
+        //     string FENString = new string(temp);
+        //     return FENString;
+        // }
         public static string GetFENFromBoard(Board board)
         {
             char[] CString = new char[100];

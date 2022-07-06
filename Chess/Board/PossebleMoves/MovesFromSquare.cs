@@ -17,6 +17,9 @@ namespace MyChess.PossibleMoves
         public static int[,] KingMoves = new int[64, 8];
         public static int[,] KnightMoves = new int[64, 8];
 
+        // public static int[,] WhitePawnMoves = new int[64, 2];
+        // public static int[,] BlackPawnMoves = new int[64, 2];
+
         ///<summary> 
         /// Square, direction, the moves in the direction.
         /// Doesn't count the square its on and the line ends at ivalidMove

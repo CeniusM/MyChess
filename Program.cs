@@ -1,15 +1,18 @@
+using System.Runtime.InteropServices;
+
+
 using MyChessGUI;
 
 namespace winForm;
 
 static class Program
-{
+{    
     private static GameOfChess? game;
     /// <summary>
     ///  The main entry point for the application.
     /// </summary>
     [STAThread]
-    static void Main()
+    static void Main(string[] args)
     {
         ApplicationConfiguration.Initialize();
 
@@ -29,7 +32,7 @@ static class Program
     private static void StartGame(Form1 myForm)
     {
         // UnitTest
-        //MyChess.UnitTester.TestRunner.Run();
+        MyChess.UnitTester.TestRunner.Run();
 
         // SpeedTest
         //MyChess.SpeedTester.TestRunner.Run();

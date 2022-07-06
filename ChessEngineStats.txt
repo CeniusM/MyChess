@@ -1,0 +1,10 @@
+Lets say stockfish can go through 50mil positions per second
+
+my engine
+
+06-07-2022
+My engine, 20 mil in 1 HOUR
+a facktor of 9000 times worse
+
+
+
