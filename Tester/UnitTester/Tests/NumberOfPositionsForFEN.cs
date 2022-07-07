@@ -11,43 +11,12 @@ namespace MyChess.UnitTester.Tests
 {
     partial class Test
     {
-        public static TestReport NumberOfPositionsAfter5plies(string FEN)
-            => NumberOfPositionsAfter5plies(new ChessGame(FEN));
-        public static TestReport NumberOfPositionsAfter5plies(ChessGame chessGame)
+        public static TestReport NumberOfPositionsAfter5plies(string FEN, int ExpectedValue, int Depth)
+            => NumberOfPositionsAfter5plies(new ChessGame(FEN), ExpectedValue, Depth);
+
+        public static TestReport NumberOfPositionsAfter5plies(ChessGame chessGame, int ExpectedValue, int Depth)
         {
-            int SearchDepth = 5;
-
-            int moveCount = 0;
-
-            //List<Move> moves = chessGame.GetPossibleMoves();
-
-            SearchMove(SearchDepth);
-
-            void SearchMove(int depth)
-            {
-                if (depth == 0)
-                    return;
-
-                List<Move> moves = chessGame.GetPossibleMoves();
-
-                for (int i = 0; i < moves.Count(); i++)
-                {
-                    chessGame.MakeMove(moves[i]);
-                    moveCount++;
-                    SearchMove(depth - 1);
-                    chessGame.UnMakeMove();
-                }
-            }
-
-
-            int ExpectedValue = 15833292;
-            return new(moveCount + " amount of combinations after " + SearchDepth + " moves" + ", Expected: " + ExpectedValue,
-            moveCount == ExpectedValue ? TestReport.SuccesFlag.Succes : TestReport.SuccesFlag.Failed); // succes flag
-        }
-
-        public static TestReport NumberOfPositionsAfter5pliesV2(ChessGame chessGame)
-        {
-            int SearchDepth = 5;
+            int SearchDepth = Depth;
 
             int moveCount = 0;
 
@@ -74,10 +43,8 @@ namespace MyChess.UnitTester.Tests
                     chessGame.board.UnMakeMove();
                 }
             }
-
-
-            int ExpectedValue = 15833292;
-            return new(moveCount + " amount of combinations after " + SearchDepth + " moves" + ", Expected: " + ExpectedValue,
+            return new(moveCount + " amount of combinations after " + SearchDepth + " moves" + ", Expected: " + ExpectedValue + "\n"
+            + MyFEN.GetFENFromBoard(chessGame.board),
             moveCount == ExpectedValue ? TestReport.SuccesFlag.Succes : TestReport.SuccesFlag.Failed); // succes flag
         }
     }

@@ -80,6 +80,17 @@ namespace MyChess.PossibleMoves
 
         private bool CheckKingInCheck(int kingPos, int kingColor, int debuggingMoveNum)
         {
+            // test, and shouldent acktullay be needed
+            if (kingPos == -1)
+                return true;
+
+
+
+
+
+
+
+
             /*
                 for v2 note,
                 here you can use magic bitboard, you can just AND operate a long that has bits on all the locations that the knight

@@ -81,6 +81,11 @@ namespace MyChess.ChessBoard
             // if (playerTurn == BlackMask)
             //     fullMove += 1;
 
+            if ((Square[move.TargetSquare] & Piece.PieceBits) == Piece.King)
+            {
+
+            }
+
             moves.Push(move);
 
             if (move.MoveFlag == Move.Flag.None)
