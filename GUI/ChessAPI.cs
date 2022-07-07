@@ -64,7 +64,7 @@ namespace MyChessGUI
         public void PrintPosebleSquaresForSelecktedSquare(int selecktedPiece) // like the name?
         {
             //for debugging
-            chessGame.possibleMoves.GenerateMoves();
+            //chessGame.possibleMoves.GenerateMoves();
 
             List<Move> listOfMoves = chessGame.GetPossibleMoves();
             List<Move> moves = new List<Move>();

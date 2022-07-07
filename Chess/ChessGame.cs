@@ -23,7 +23,20 @@ namespace MyChess
 
         public void MakeMove(Move move)
         {
+            // if (possibleMoves.moves.Count == 0)
+            //     throw new Exception("Can not make a move when there is none");
+            
+            if (possibleMoves.moves.Count == 0)
+                return;
             board.MakeMove(move);
+            possibleMoves.GenerateMoves();
+        }
+
+        public void UnMakeMove()
+        {
+            if (board.moves.Count == 0)
+                return;
+            board.UnMakeMove();
             possibleMoves.GenerateMoves();
         }
 

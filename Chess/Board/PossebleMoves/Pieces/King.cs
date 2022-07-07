@@ -18,8 +18,8 @@ namespace MyChess.PossibleMoves.Pieces
                             continue;
                         else if ((board[kingMove] & Piece.ColorBits) != board.playerTurn)
                         {
-                            moves.Add(new(kingPos, kingMove, 0));
-                        }    
+                            moves.Add(new(kingPos, kingMove, 0, board[kingMove]));
+                        }
                     }
                 }
             }
@@ -28,19 +28,19 @@ namespace MyChess.PossibleMoves.Pieces
 }
 
 
-            //int kingPos;
-            //if (board.playerTurn == 8)  // white king
-            //    kingPos = board.piecePoses[0];
-            //else                        // black king
-            //    kingPos = board.piecePoses[1];
+//int kingPos;
+//if (board.playerTurn == 8)  // white king
+//    kingPos = board.piecePoses[0];
+//else                        // black king
+//    kingPos = board.piecePoses[1];
 //
-            //for (int i = 0; i < 8; i++)
-            //{
-            //    int kingeMove = kingPos + MovesFromSquare.KingMoves[kingPos, i];
-            //    if (MovesFromSquare.KingMoves[kingPos, i] == MovesFromSquare.InvalidMove)
-            //        continue;
-            //    else if ((board[kingeMove] & Piece.ColorBits) != board.playerTurn)
-            //    {
-            //        moves.Add(new(kingPos, kingeMove, 0));
-            //    }                
-            //}
+//for (int i = 0; i < 8; i++)
+//{
+//    int kingeMove = kingPos + MovesFromSquare.KingMoves[kingPos, i];
+//    if (MovesFromSquare.KingMoves[kingPos, i] == MovesFromSquare.InvalidMove)
+//        continue;
+//    else if ((board[kingeMove] & Piece.ColorBits) != board.playerTurn)
+//    {
+//        moves.Add(new(kingPos, kingeMove, 0));
+//    }                
+//}

@@ -5,10 +5,10 @@ namespace MyChess.ChessBoard
    struct PieceList 
    {
         // Indices of squares occupied by given piece type (only elements up to Count are valid, the rest are unused/garbage)
-        public int[] occupiedSquares;
+        private int[] occupiedSquares;
         // Map to go from index of a square, to the index in the occupiedSquares array where that square is stored
-        int[] map;
-        int numPieces;
+        private int[] map;
+        private int numPieces;
 
         public PieceList (int maxPieceCount = 16) {
             occupiedSquares = new int[maxPieceCount];

@@ -43,10 +43,10 @@ namespace MyChess.PossibleMoves
             Pawn.AddMoves(board, moves);
             Castle.AddMoves(board, moves);
 
-            TerribleFilterForChecks();
+            KingCheckCheck();
         }
 
-        private void TerribleFilterForChecks()
+        private void KingCheckCheck()
         {
             List<Move> ValidMoves = new List<Move>(moves.Count);
 

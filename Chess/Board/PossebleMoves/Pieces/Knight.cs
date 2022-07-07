@@ -18,7 +18,7 @@ namespace MyChess.PossibleMoves.Pieces
                             continue;
                         else if ((board[knightMove] & Piece.ColorBits) != board.playerTurn)
                         {
-                            moves.Add(new(knightPos, knightMove, 0));
+                            moves.Add(new(knightPos, knightMove, 0, board[knightMove]));
                         }    
                     }
                 }

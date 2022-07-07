@@ -26,7 +26,7 @@ namespace MyChess.PossibleMoves.Pieces
                             }
                             else if ((board[move] & Piece.ColorBits) != board.playerTurn)
                             {
-                                moves.Add(new(pos, move, 0));
+                                moves.Add(new(pos, move, 0, board[move]));
                                 break;
                             }
                             else
@@ -37,34 +37,34 @@ namespace MyChess.PossibleMoves.Pieces
             }
         }
 
-        public static void AddMoves(Board board, List<Move> moves, int square)
-        {
-            int pos = square;
+        // public static void AddMoves(Board board, List<Move> moves, int square)
+        // {
+        //     int pos = square;
 
-            for (int dir = 4; dir < 8; dir++)
-            {
-                int move = pos;
-                for (int moveCount = 0; moveCount < 7; moveCount++)
-                {
-                    int nextMoves = MovesFromSquare.SlidingpieceMoves[pos, dir, moveCount];
-                    if (nextMoves == MovesFromSquare.InvalidMove)
-                        break;
+        //     for (int dir = 4; dir < 8; dir++)
+        //     {
+        //         int move = pos;
+        //         for (int moveCount = 0; moveCount < 7; moveCount++)
+        //         {
+        //             int nextMoves = MovesFromSquare.SlidingpieceMoves[pos, dir, moveCount];
+        //             if (nextMoves == MovesFromSquare.InvalidMove)
+        //                 break;
 
-                    move = nextMoves;
+        //             move = nextMoves;
 
-                    if (board[move] == 0)
-                    {
-                        moves.Add(new(pos, move, 0));
-                    }
-                    else if ((board[move] & Piece.ColorBits) != board.playerTurn)
-                    {
-                        moves.Add(new(pos, move, 0));
-                        break;
-                    }
-                    else
-                        break;
-                }
-            }
-        }
+        //             if (board[move] == 0)
+        //             {
+        //                 moves.Add(new(pos, move, 0));
+        //             }
+        //             else if ((board[move] & Piece.ColorBits) != board.playerTurn)
+        //             {
+        //                 moves.Add(new(pos, move, 0));
+        //                 break;
+        //             }
+        //             else
+        //                 break;
+        //         }
+        //     }
+        // }
     }
 }

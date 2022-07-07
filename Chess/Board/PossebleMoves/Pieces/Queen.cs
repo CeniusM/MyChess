@@ -22,11 +22,11 @@ namespace MyChess.PossibleMoves.Pieces
 
                             if (board[move] == 0)
                             {
-                                moves.Add(new(pos, move, 0));
+                                moves.Add(new(pos, move, 0, board[move]));
                             }
                             else if ((board[move] & Piece.ColorBits) != board.playerTurn)
                             {
-                                moves.Add(new(pos, move, 0));
+                                moves.Add(new(pos, move, 0, board[move]));
                                 break;
                             }
                             else

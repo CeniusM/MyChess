@@ -47,9 +47,14 @@ namespace MyChess.ChessBoard
         public void InitPiecePoses()
         {
             piecePoses = new PieceList(32);
+            for (int i = 0; i < 64; i++) // put in kings first
+            {
+                if ((Square[i] & Piece.PieceBits) == Piece.King)
+                    piecePoses.AddPieceAtSquare(i);
+            }
             for (int i = 0; i < 64; i++)
             {
-                if (Square[i] != 0)
+                if (Square[i] != 0 && (Square[i] & Piece.PieceBits) != Piece.King)
                     piecePoses.AddPieceAtSquare(i);
             }
         }
@@ -76,15 +81,15 @@ namespace MyChess.ChessBoard
             // if (playerTurn == BlackMask)
             //     fullMove += 1;
 
+            moves.Push(move);
+
             if (move.MoveFlag == Move.Flag.None)
             {
-                moves.Push(new(move.StartSquare, move.TargetSquare, move.MoveFlag, Square[move.TargetSquare]));
-
                 // pawn move or capture
-                if ((Square[move.StartSquare] & Piece.PieceBits) == Piece.Pawn || Square[move.TargetSquare] != 0)
-                    halfMove = 0;
+                // if ((Square[move.StartSquare] & Piece.PieceBits) == Piece.Pawn || Square[move.TargetSquare] != 0)
+                //     halfMove = 0;
 
-                if (Square[move.TargetSquare] != 0)
+                if (move.CapturedPiece != 0)
                     piecePoses.RemovePieceAtSquare(move.TargetSquare);
 
                 piecePoses.MovePiece(move.StartSquare, move.TargetSquare);
@@ -94,40 +99,46 @@ namespace MyChess.ChessBoard
             }
             else if (move.MoveFlag == Move.Flag.PawnTwoForward)
             {
-                moves.Push(move);
                 halfMove = 0;
                 piecePoses.MovePiece(move.StartSquare, move.TargetSquare);
                 Square[move.TargetSquare] = Square[move.StartSquare];
                 Square[move.StartSquare] = 0;
+
+                if (playerTurn == WhiteMask)
+                    enPassantPiece = move.TargetSquare + 8;
+                else
+                    enPassantPiece = move.TargetSquare - 8;
             }
             else if (move.MoveFlag == Move.Flag.EnPassantCapture)
             {
-                moves.Push(move);
                 halfMove = 0;
-                piecePoses.MovePiece(move.StartSquare, move.TargetSquare);
                 if (playerTurn == WhiteMask)
                 {
+                    piecePoses.RemovePieceAtSquare(move.TargetSquare + 8);
                     Square[move.StartSquare] = 0;
                     Square[move.TargetSquare] = Piece.WPawn;
                     Square[move.TargetSquare + 8] = 0;
                 }
                 else
                 {
+                    piecePoses.RemovePieceAtSquare(move.TargetSquare - 8);
                     Square[move.StartSquare] = 0;
                     Square[move.TargetSquare] = Piece.BPawn;
                     Square[move.TargetSquare - 8] = 0;
                 }
+                piecePoses.MovePiece(move.StartSquare, move.TargetSquare);
+                enPassantPiece = 64;
             }
             else if (move.MoveFlag == Move.Flag.Castling)
             {
+                enPassantPiece = 64;
                 throw new NotImplementedException();
             }
             else // promotion
             {
-                moves.Push(new(move.StartSquare, move.TargetSquare, move.MoveFlag, Square[move.TargetSquare]));
                 halfMove = 0;
 
-                if (Square[move.TargetSquare] != 0)
+                if (move.CapturedPiece != 0)
                     piecePoses.RemovePieceAtSquare(move.TargetSquare);
 
                 piecePoses.MovePiece(move.StartSquare, move.TargetSquare);
@@ -162,6 +173,7 @@ namespace MyChess.ChessBoard
                 piecePoses.MovePiece(move.TargetSquare, move.StartSquare);
                 Square[move.StartSquare] = Square[move.TargetSquare];
                 Square[move.TargetSquare] = 0;
+                enPassantPiece = 64;
             }
             else if (move.MoveFlag == Move.Flag.EnPassantCapture)
             {
@@ -169,9 +181,16 @@ namespace MyChess.ChessBoard
                 Square[move.StartSquare] = Square[move.TargetSquare];
                 Square[move.TargetSquare] = 0;
                 if (playerTurn == WhiteMask)
-                    Square[move.TargetSquare + 8] = Piece.WPawn;
+                {
+                    Square[move.TargetSquare + 8] = Piece.BPawn;
+                    piecePoses.AddPieceAtSquare(move.TargetSquare + 8);
+                }
                 else
-                    Square[move.TargetSquare - 8] = Piece.BPawn;
+                {
+                    Square[move.TargetSquare - 8] = Piece.WPawn;
+                    piecePoses.AddPieceAtSquare(move.TargetSquare - 8);
+                }
+                enPassantPiece = move.TargetSquare;
             }
             else if (move.MoveFlag == Move.Flag.Castling)
             {
@@ -180,12 +199,22 @@ namespace MyChess.ChessBoard
             else // promotion
             {
                 piecePoses.MovePiece(move.TargetSquare, move.StartSquare);
+                // if (move.CapturedPiece != 0)
                 if (move.CapturedPiece != 0)
                     piecePoses.AddPieceAtSquare(move.TargetSquare);
 
                 Square[move.StartSquare] = Piece.Pawn | playerTurn;
                 Square[move.TargetSquare] = move.CapturedPiece;
             }
+
+            if (moves.Count != 0)
+                if (moves.Peek().MoveFlag == Move.Flag.PawnTwoForward)
+                {
+                    if (playerTurn == WhiteMask)
+                        enPassantPiece = moves.Peek().TargetSquare - 8;
+                    else
+                        enPassantPiece = moves.Peek().TargetSquare + 8;
+                }
         }
 
         public void ChangePlayer() => playerTurn ^= ColorMask;
