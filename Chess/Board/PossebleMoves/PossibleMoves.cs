@@ -64,7 +64,7 @@ namespace MyChess.PossibleMoves
                 board.MakeMove(moves[i]);
 
                 // save the new possible moves
-                if (!CheckKingInCheck(GetKingsPos(board.playerTurn ^ Board.ColorMask), board.playerTurn ^ Board.ColorMask, i))
+                if (!CheckKingInCheck(GetKingsPos(board.playerTurn ^ Board.ColorMask), board.playerTurn ^ Board.ColorMask))
                     ValidMoves.Add(moves[i]);
 
                 // if (moves[i].MoveFlag != 0) // for debuging
@@ -78,7 +78,7 @@ namespace MyChess.PossibleMoves
             moves = ValidMoves;
         }
 
-        private bool CheckKingInCheck(int kingPos, int kingColor, int debuggingMoveNum)
+        private bool CheckKingInCheck(int kingPos, int kingColor)
         {
             // test, and shouldent acktullay be needed
             if (kingPos == -1)
@@ -92,7 +92,7 @@ namespace MyChess.PossibleMoves
 
 
             /*
-                for v2 note,
+                for v2 note, also add in castle
                 here you can use magic bitboard, you can just AND operate a long that has bits on all the locations that the knight
                 can jump to from the square is on
                 so fx
@@ -148,22 +148,22 @@ namespace MyChess.PossibleMoves
             }
 
             // check pawns
-            if (board.playerTurn == Board.BlackMask)
+            if (kingColor == Board.WhiteMask)
             {
-                if (Board.IsPieceInBound(kingPos + 7))
-                    if (board[kingPos + 7] == Piece.BPawn)
+                if (Board.IsPieceInBound(kingPos - 7))
+                    if (board[kingPos - 7] == Piece.BPawn)
                         return true;
-                if (Board.IsPieceInBound(kingPos + 9))
-                    if (board[kingPos + 9] == Piece.BPawn)
+                if (Board.IsPieceInBound(kingPos - 9))
+                    if (board[kingPos - 9] == Piece.BPawn)
                         return true;
             }
             else
             {
-                if (Board.IsPieceInBound(kingPos - 7))
-                    if (board[kingPos - 7] == Piece.WPawn)
+                if (Board.IsPieceInBound(kingPos + 7))
+                    if (board[kingPos + 7] == Piece.WPawn)
                         return true;
-                if (Board.IsPieceInBound(kingPos - 9))
-                    if (board[kingPos - 9] == Piece.WPawn)
+                if (Board.IsPieceInBound(kingPos + 9))
+                    if (board[kingPos + 9] == Piece.WPawn)
                         return true;
             }
 

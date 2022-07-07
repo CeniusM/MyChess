@@ -25,6 +25,8 @@ namespace MyChessGUI
             //chessGame = new ChessGame("8/3nR3/8/3K2k1/1R2Bb2/2Q3q1/4N3/8 w - - 0 1");
             //chessGame = new ChessGame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
             chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8");
+            chessGame = new ChessGame("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 0");
+            chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 0 8");
 
             chessAPI = new ChessAPI(form, chessGame);
             _form = form;
@@ -59,10 +61,22 @@ namespace MyChessGUI
         int fooDirection = 0;
         private void KeyPress(object? sender, KeyPressEventArgs e)
         {
+            if (e.KeyChar == 'p')
+            {
+                List<Move> moves = chessGame.GetPossibleMoves();
+                for (int i = 0; i < moves.Count; i++)
+                {
+                    CS_MyConsole.MyConsole.WriteLine((i + 1) + ": S: "
+                    + Board.IntToLetterNum(moves[i].StartSquare)
+                    + ", T: " + Board.IntToLetterNum(moves[i].TargetSquare)
+                    + ", F: " + moves[i].MoveFlag
+                    + ", C: " + moves[i].CapturedPiece);
+                }
+            }
+
             if (e.KeyChar == ' ')
             {
-                if (chessGame.board.moves.Count != 0)
-                    chessGame.board.UnMakeMove();
+                chessGame.UnMakeMove();
                 _selecktedSquare = -1;
                 chessAPI.PrintBoard(_selecktedSquare);
                 return;
@@ -209,17 +223,20 @@ namespace MyChessGUI
                     int promotionPiece = await Task.Run(() => GetChosenPromotionPiece());
 
                     if (promotionPiece == 0)
-                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToQueen));
+                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToQueen, moves[index].CapturedPiece));
                     else if (promotionPiece == 1)
-                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToRook));
+                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToRook, moves[index].CapturedPiece));
                     else if (promotionPiece == 2)
-                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToBishop));
+                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToBishop, moves[index].CapturedPiece));
                     else if (promotionPiece == 3)
-                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToKnight));
+                        chessGame.MakeMove(new Move(_selecktedSquare, pressedSquare, Move.Flag.PromoteToKnight, moves[index].CapturedPiece));
 
                     _selecktedSquare = -1;
                 }
             }
+
+            // if (chessGame.board.playerTurn == Board.BlackMask)
+            //     chessGame.MakeMove(chessGame.GetPossibleMoves()[new Random().Next(0, chessGame.GetPossibleMoves().Count)]);
 
             chessAPI.PrintBoard(_selecktedSquare);
 

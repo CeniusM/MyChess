@@ -16,11 +16,26 @@ namespace MyChess.UnitTester.Tests
 
         public static TestReport NumberOfPositionsAfter5plies(ChessGame chessGame, int ExpectedValue, int Depth)
         {
+            // debuging
+            // int MoveNum = 0;
+
+
+
+
             int SearchDepth = Depth;
 
-            int moveCount = 0;
+            // int moveCount = 0;
+
+
+
+
+            // int[] moveCount = new int[Depth + 1];
 
             //List<Move> moves = chessGame.GetPossibleMoves();
+
+
+
+            int moveCount = 0;
 
             SearchMove(SearchDepth);
 
@@ -38,14 +53,35 @@ namespace MyChess.UnitTester.Tests
                 for (int i = 0; i < Count; i++)
                 {
                     chessGame.board.MakeMove(moves[i]);
-                    moveCount++;
+                    // moveCount[depth]++;
+                    if (depth == 1)
+                        moveCount++;
                     SearchMove(depth - 1);
                     chessGame.board.UnMakeMove();
                 }
             }
-            return new(moveCount + " amount of combinations after " + SearchDepth + " moves" + ", Expected: " + ExpectedValue + "\n"
+            return new(moveCount/*[1]*/ + " amount of combinations after " + SearchDepth + " moves" + ", Expected: " + ExpectedValue + "\n"
             + MyFEN.GetFENFromBoard(chessGame.board),
-            moveCount == ExpectedValue ? TestReport.SuccesFlag.Succes : TestReport.SuccesFlag.Failed); // succes flag
+            moveCount/*[1]*/ == ExpectedValue ? TestReport.SuccesFlag.Succes : TestReport.SuccesFlag.Failed); // succes flag
         }
     }
 }
+
+
+// if (depth == 1)
+// {
+//     MoveNum++;
+//     Move theMove = chessGame.board.moves.Peek();
+//     CS_MyConsole.MyConsole.WriteLine(MoveNum + ": " + moves.Length + 
+//     ", S: " + Board.IntToLetterNum(theMove.StartSquare)
+//     + ", T: " + Board.IntToLetterNum(theMove.TargetSquare)
+//     + ", F: " + theMove.MoveFlag
+//     + ", C: " + theMove.CapturedPiece);
+//     CS_MyConsole.MyConsole.WriteLine("");
+//     for (int i = 0; i < moves.Length; i++)
+//     {
+//         CS_MyConsole.MyConsole.Write("(" + Board.IntToLetterNum(moves[i].StartSquare) + 
+//         " " + Board.IntToLetterNum(moves[i].TargetSquare) + ")");
+//     }
+//     CS_MyConsole.MyConsole.WriteLine("");
+// }

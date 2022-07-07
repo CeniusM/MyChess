@@ -7,6 +7,26 @@ namespace MyChess.ChessBoard
         public const int WhiteWin = 1;
         public const int Running = 2;
     }
+    public readonly struct CASTLE
+    {
+        public const int W_King_Side = 0b1000;
+        public const int W_Queen_Side = 0b0100;
+        public const int B_King_Side = 0b0010;
+        public const int B_Queen_Side = 0b0001;
+    }
+
+    public struct DataICouldentGetToWork
+    {
+        public readonly int fullMove;
+        public readonly int halfMove;
+        public readonly int castle;
+        public DataICouldentGetToWork(int Full, int Half, int Castle)
+        {
+            fullMove = Full;
+            halfMove = Half;
+            castle = Castle;
+        }
+    }
 
     /*
     edge cases
@@ -15,6 +35,7 @@ namespace MyChess.ChessBoard
     */
     class Board
     {
+        public Stack<DataICouldentGetToWork> gameData = new Stack<DataICouldentGetToWork>();
         public Stack<Move> moves = new Stack<Move>();
         public PieceList piecePoses = new PieceList();
         public int[] Square = new int[64];
@@ -67,6 +88,10 @@ namespace MyChess.ChessBoard
 
         /// <summary> works up too 65535 and down too -65472 </summary>
         public static bool IsPieceInBound(int pos) => (pos & 0xFFC0) == 0;
+        public static string IntToLetterNum(int pos)
+        {
+            return (char)((int)'a' + pos % 8) + "" + (char)(8 - (pos >> 3) + '0');
+        }
 
 
 
@@ -81,12 +106,26 @@ namespace MyChess.ChessBoard
             // if (playerTurn == BlackMask)
             //     fullMove += 1;
 
-            if ((Square[move.TargetSquare] & Piece.PieceBits) == Piece.King)
-            {
-
-            }
-
             moves.Push(move);
+            gameData.Push(new(fullMove, halfMove, castle));
+
+
+
+            // can avoid some of these if you dont put them in fx PawnTwoForward, EnPassantCapture, Castle
+            if (move.StartSquare == 60 || move.TargetSquare == 60)
+                castle ^= CASTLE.W_Queen_Side;
+            if (move.StartSquare == 63 || move.TargetSquare == 63)
+                castle ^= CASTLE.W_King_Side;
+            if (move.StartSquare == 0 || move.TargetSquare == 0)
+                castle ^= CASTLE.B_Queen_Side;
+            if (move.StartSquare == 7 || move.TargetSquare == 0)
+                castle ^= CASTLE.B_King_Side;
+            if (move.StartSquare == 4) // move.TargetSqure... bigger problem then castle if the king is there
+                castle ^= (CASTLE.B_King_Side & CASTLE.B_Queen_Side);
+            if (move.StartSquare == 60)
+                castle ^= (CASTLE.W_King_Side & CASTLE.W_Queen_Side);
+
+
 
             if (move.MoveFlag == Move.Flag.None)
             {
@@ -136,8 +175,25 @@ namespace MyChess.ChessBoard
             }
             else if (move.MoveFlag == Move.Flag.Castling)
             {
-                enPassantPiece = 64;
-                throw new NotImplementedException();
+                // // white king side
+                // if (move.TargetSquare == 62)
+                // {
+                //     piecePoses.MovePiece(60, 62);
+                //     piecePoses.MovePiece(63, 61);
+                //     Square[60] = 0;
+                //     Square[61] = Piece.WRook;
+                //     Square[62] = Piece.WKing;
+                //     Square[63] = 0;
+                //     castle ^= (CASTLE.W_King_Side & CASTLE.W_Queen_Side);
+                // }
+
+
+
+
+
+
+
+                // enPassantPiece = 64;
             }
             else // promotion
             {
@@ -162,6 +218,12 @@ namespace MyChess.ChessBoard
             // else
             //     fullMove--;
             Move move = moves.Pop();
+            DataICouldentGetToWork data = gameData.Pop();
+            fullMove = data.fullMove;
+            halfMove = data.halfMove;
+            castle = data.castle;
+
+
             ChangePlayer();
 
             if (move.MoveFlag == Move.Flag.None)
@@ -199,7 +261,16 @@ namespace MyChess.ChessBoard
             }
             else if (move.MoveFlag == Move.Flag.Castling)
             {
-                throw new NotImplementedException();
+                // white king side
+                if (move.TargetSquare == 62)
+                {
+                    piecePoses.MovePiece(62, 60);
+                    piecePoses.MovePiece(61, 63);
+                    Square[60] = Piece.WKing;
+                    Square[61] = 0;
+                    Square[62] = 0;
+                    Square[63] = Piece.WRook;
+                }
             }
             else // promotion
             {
