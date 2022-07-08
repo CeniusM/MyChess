@@ -41,7 +41,7 @@ namespace MyChess.PossibleMoves
             Rook.AddMoves(board, moves);
             Queen.AddMoves(board, moves);
             Pawn.AddMoves(board, moves);
-            Castle.AddMoves(board, moves);
+            //Castle.AddMoves(board, moves);
 
             KingCheckCheck();
         }

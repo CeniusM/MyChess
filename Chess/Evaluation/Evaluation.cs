@@ -10,6 +10,44 @@ namespace MyChess.ChessBoard.Evaluation
         const int rookValue = 500;
         const int queenValue = 900;
 
+
+        public readonly struct PieceValue
+        {
+            const int Pawn = 100;
+            const int Knight = 300;
+            const int Bishop = 300;
+            const int Rook = 500;
+            const int Queen = 900;
+            public static readonly int[] Indexed =
+            {
+                // so we dont need if statements too get he piece type
+                // becous just use the piece as an idexer to get the value
+                0, // nothing
+                0, // nothing
+                0, // nothing
+                0, // nothing
+                0, // nothing
+                0, // nothing
+                0, // nothing
+                0, // nothing
+                0, // nothing
+                Pawn, // wPawn
+                Rook, // wRook
+                Knight, // wKnight
+                Bishop, // wBishop
+                Queen, // wQueen
+                0, // wKing
+                0, // nothing
+                0, // nothing
+                Pawn, // bPawn
+                Rook, // bRook
+                Knight, // bKnight
+                Bishop, // bBishop
+                Queen, // bQueen
+                0, // bKing
+            };
+        }
+
         /// <summary>
         /// This returns a positiv number for white winning and a negativ number if black is winning
         /// </summary>
@@ -40,19 +78,16 @@ namespace MyChess.ChessBoard.Evaluation
         private static int CountMaterial(Board board, int color)
         {
             int material = 0;
-            for (var i = 0; i < 64; i++)
+            for (int i = 0; i < board.piecePoses.Count; i++)
             {
-                if (board[i] == Piece.Pawn + color) material += PawnValue;
-                else if (board[i] == Piece.Knight + color) material += knightValue;
-                else if (board[i] == Piece.Bishop + color) material += bishopValue;
-                else if (board[i] == Piece.Rook + color) material += rookValue;
-                else if (board[i] == Piece.Queen + color) material += queenValue;
+                if ((board[board.piecePoses[i]] & Piece.ColorBits) == color)
+                    material += PieceValue.Indexed[board[board.piecePoses[i]]];
             }
             return material;
         }
 
         public static int EvaluateBoardMinMax(Board board)
-        {throw new NotImplementedException("");} // this will evaluate with a min max search instead of just a postion
+        { throw new NotImplementedException(""); } // this will evaluate with a min max search instead of just a postion
     }
 }
 
