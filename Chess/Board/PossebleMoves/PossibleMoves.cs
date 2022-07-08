@@ -41,7 +41,7 @@ namespace MyChess.PossibleMoves
             Rook.AddMoves(board, moves);
             Queen.AddMoves(board, moves);
             Pawn.AddMoves(board, moves);
-            //Castle.AddMoves(board, moves);
+            Castle.AddMoves(board, moves);
 
             KingCheckCheck();
         }
@@ -62,6 +62,7 @@ namespace MyChess.PossibleMoves
             for (int i = 0; i < moves.Count; i++)
             {
                 board.MakeMove(moves[i]);
+
 
                 // save the new possible moves
                 if (!CheckKingInCheck(GetKingsPos(board.playerTurn ^ Board.ColorMask), board.playerTurn ^ Board.ColorMask))

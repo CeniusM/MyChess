@@ -3,11 +3,20 @@ so fx a value for the kin could be {-1,-7,-8,-9,1,7,8,9} but instead give the sq
 so like if at 10 {9,3,4,5,11,17,18,19}
 
 
-Redo the pawn code
-redo the board make/unmake move code
-do castle
+testing:
+make a regit full test of everything
+make it time how long the search function takes
 
+board logic:
+add magic bitboards
+clean up
 
+evalutation:
+add it so the peiece value also depends on the placment
+
+ai / search funtion:
+add MinMax
+add that like long where you can see if the game has been played
 
 
 

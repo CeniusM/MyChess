@@ -11,80 +11,94 @@ namespace MyChess.PossibleMoves.Pieces
             if (castle == 0)
                 return;
 
-            // only check the first and second square, the third will be checked later
-            if ((castle & CASTLE.W_King_Side) == CASTLE.W_King_Side)
+            if (board.playerTurn == 8)
             {
-                if (board[61] == 0)
+                // only check the first and second square, the third will be checked later
+                if ((castle & CASTLE.W_King_Side) == CASTLE.W_King_Side)
                 {
-                    if (board[62] == 0)
+                    if (board[61] == 0)
                     {
-                        // board.MakeMove(new(60, 61, 0, 0));
-                        // if (CheckKingInCheck(board, 60, (board.playerTurn ^ Board.ColorMask)))
-                        // {
-                        //     board.MakeMove(new(61, 62, 0, 0));
-                        //     if (CheckKingInCheck(board, 62, (board.playerTurn ^ Board.ColorMask)))
-                        //     {
-                        //         moves.Add(new(60, 62, Move.Flag.Castling));
-                        //     }
-                        //     board.UnMakeMove();
-                        // }
-                        // board.UnMakeMove();
+                        if (board[62] == 0)
+                        {
+                            if (!CheckKingInCheck(board, 60, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
+                            {
+                                board.MakeMove(new(60, 61, 0, 0));
+                                if (!CheckKingInCheck(board, 61, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                                {
+                                    moves.Add(new(60, 62, Move.Flag.Castling)); // check at 62 will be checked later
+                                }
+                                board.UnMakeMove();
+                            }
+                        }
                     }
                 }
-            }
-
-
-
-
-            if ((castle & CASTLE.W_Queen_Side) == CASTLE.W_Queen_Side)
-            {
-                if (board[59] == 0)
+                if ((castle & CASTLE.W_Queen_Side) == CASTLE.W_Queen_Side)
                 {
-                    if (board[58] == 0)
+                    if (board[59] == 0)
                     {
-                        if (board[57] == 0)
+                        if (board[58] == 0)
                         {
-
+                            if (board[57] == 0)
+                            {
+                                if (!CheckKingInCheck(board, 60, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
+                                {
+                                    board.MakeMove(new(60, 59, 0, 0));
+                                    if (!CheckKingInCheck(board, 59, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                                    {
+                                        moves.Add(new(60, 58, Move.Flag.Castling)); // check at 62 will be checked later
+                                    }
+                                    board.UnMakeMove();
+                                }
+                            }
                         }
                     }
                 }
             }
-
-
-
-
-
-            if ((castle & CASTLE.B_King_Side) == CASTLE.B_King_Side)
+            else
             {
-                if (board[5] == 0)
+                if ((castle & CASTLE.B_King_Side) == CASTLE.B_King_Side)
                 {
-                    if (board[6] == 0)
+                    if (board[5] == 0)
                     {
-
+                        if (board[6] == 0)
+                        {
+                            if (!CheckKingInCheck(board, 4, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
+                            {
+                                board.MakeMove(new(4, 5, 0, 0));
+                                if (!CheckKingInCheck(board, 5, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                                {
+                                    moves.Add(new(4, 6, Move.Flag.Castling)); // check at 62 will be checked later
+                                }
+                                board.UnMakeMove();
+                            }
+                        }
                     }
                 }
-            }
-
-
-
-
-
-            if ((castle & CASTLE.B_Queen_Side) == CASTLE.B_Queen_Side)
-            {
-                if (board[1] == 0)
+                if ((castle & CASTLE.B_Queen_Side) == CASTLE.B_Queen_Side)
                 {
-                    if (board[2] == 0)
+                    if (board[1] == 0)
                     {
-                        if (board[3] == 0)
+                        if (board[2] == 0)
                         {
-
+                            if (board[3] == 0)
+                            {
+                                if (!CheckKingInCheck(board, 4, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
+                                {
+                                    board.MakeMove(new(4, 3, 0, 0));
+                                    if (!CheckKingInCheck(board, 3, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                                    {
+                                        moves.Add(new(4, 2, Move.Flag.Castling)); // check at 62 will be checked later
+                                    }
+                                    board.UnMakeMove();
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
-        private static bool CheckKingInCheck(Board board, int kingPos, int opesitColor)
+        private static bool CheckKingInCheck(Board board, int kingPos, int playerTurn, int opesitColor)
         {
             if (kingPos == -1)
                 return true;
@@ -108,7 +122,7 @@ namespace MyChess.PossibleMoves.Pieces
             }
 
             // check pawns
-            if (board.playerTurn == Board.WhiteMask)
+            if (playerTurn == Board.WhiteMask)
             {
                 if (Board.IsPieceInBound(kingPos - 7))
                     if (board[kingPos - 7] == Piece.BPawn)

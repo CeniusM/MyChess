@@ -11,10 +11,10 @@ namespace MyChess.UnitTester.Tests
 {
     partial class Test
     {
-        public static TestReport NumberOfPositionsAfter5plies(string FEN, int ExpectedValue, int Depth)
+        public static TestReport NumberOfPositionsAfter5plies(string FEN, long ExpectedValue, int Depth)
             => NumberOfPositionsAfter5plies(new ChessGame(FEN), ExpectedValue, Depth);
 
-        public static TestReport NumberOfPositionsAfter5plies(ChessGame chessGame, int ExpectedValue, int Depth)
+        public static TestReport NumberOfPositionsAfter5plies(ChessGame chessGame, long ExpectedValue, int Depth)
         {
             // debuging
             // int MoveNum = 0;
@@ -35,7 +35,7 @@ namespace MyChess.UnitTester.Tests
 
 
 
-            int moveCount = 0;
+            long moveCount = 0;
 
             SearchMove(SearchDepth);
 
