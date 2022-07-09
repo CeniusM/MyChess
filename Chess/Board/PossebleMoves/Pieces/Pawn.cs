@@ -28,7 +28,7 @@ namespace MyChess.PossibleMoves.Pieces
                             if ((inBoundPos) >> 3 == (pos >> 3) - 1)
                             {
                                 if (inBoundPos == board.enPassantPiece)
-                                    moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture)); // allredy know its a bPawn
+                                    moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture, Piece.BPawn));
 
                                 if (IsOponent(board[pos], board[inBoundPos]))
                                 {
@@ -66,7 +66,7 @@ namespace MyChess.PossibleMoves.Pieces
                             if ((inBoundPos) >> 3 == (pos >> 3) - 1)
                             {
                                 if (inBoundPos == board.enPassantPiece)
-                                    moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture)); // allredy know its a bPawn
+                                    moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture, Piece.BPawn));
 
                                 if (IsOponent(board[pos], board[inBoundPos]))
                                 {
@@ -99,7 +99,7 @@ namespace MyChess.PossibleMoves.Pieces
                             if ((inBoundPos) >> 3 == (pos >> 3) + 1)
                             {
                                 if (inBoundPos == board.enPassantPiece)
-                                    moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture)); // allredy know its a bPawn
+                                    moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture, Piece.WPawn));
 
                                 if (IsOponent(board[pos], board[inBoundPos]))
                                 {
@@ -137,7 +137,7 @@ namespace MyChess.PossibleMoves.Pieces
                             if ((inBoundPos) >> 3 == (pos >> 3) + 1)
                             {
                                 if (inBoundPos == board.enPassantPiece)
-                                    moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture)); // allredy know its a bPawn
+                                    moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture, Piece.WPawn));
 
                                 if (IsOponent(board[pos], board[inBoundPos]))
                                 {

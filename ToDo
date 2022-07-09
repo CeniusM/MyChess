@@ -3,6 +3,13 @@ so fx a value for the kin could be {-1,-7,-8,-9,1,7,8,9} but instead give the sq
 so like if at 10 {9,3,4,5,11,17,18,19}
 
 
+Check:
+Better code for checking the king and what happends when the king is in check
+
+Castles!
+Pawn promotion
+checkmates
+
 testing:
 make a regit full test of everything
 make it time how long the search function takes

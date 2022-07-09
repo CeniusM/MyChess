@@ -45,18 +45,18 @@ namespace MyChess.PossibleMoves
 
             KingCheckCheck();
         }
+        
+        public int GetKingsPos(int color)
+        {
+            for (int i = 0; i < board.piecePoses.Count; i++)
+                if (board[board.piecePoses[i]] == (color | Piece.King))
+                    return board.piecePoses[i];
+            return -1;
+        }
 
         private void KingCheckCheck()
         {
             List<Move> ValidMoves = new List<Move>(moves.Count);
-
-            int GetKingsPos(int color)
-            {
-                for (int i = 0; i < board.piecePoses.Count; i++)
-                    if (board[board.piecePoses[i]] == (color | Piece.King))
-                        return board.piecePoses[i];
-                return -1;
-            }
 
             // go through each move
             for (int i = 0; i < moves.Count; i++)
@@ -79,7 +79,7 @@ namespace MyChess.PossibleMoves
             moves = ValidMoves;
         }
 
-        private bool CheckKingInCheck(int kingPos, int kingColor)
+        public bool CheckKingInCheck(int kingPos, int kingColor)
         {
             // test, and shouldent acktullay be needed
             if (kingPos == -1)
@@ -122,7 +122,7 @@ namespace MyChess.PossibleMoves
                     00000000
                     00000000
                     00000000
-                    
+
                 can implement the exact same with atlist pawns and kings
                 and a modifyed version with the sliding pieces
             */
@@ -152,20 +152,24 @@ namespace MyChess.PossibleMoves
             if (kingColor == Board.WhiteMask)
             {
                 if (Board.IsPieceInBound(kingPos - 7))
-                    if (board[kingPos - 7] == Piece.BPawn)
-                        return true;
+                    if ((kingPos - 7) >> 3 == (kingPos >> 3) - 1)
+                        if (board[kingPos - 7] == Piece.BPawn)
+                            return true;
                 if (Board.IsPieceInBound(kingPos - 9))
-                    if (board[kingPos - 9] == Piece.BPawn)
-                        return true;
+                    if ((kingPos - 9) >> 3 == (kingPos >> 3) - 1)
+                        if (board[kingPos - 9] == Piece.BPawn)
+                            return true;
             }
             else
             {
                 if (Board.IsPieceInBound(kingPos + 7))
-                    if (board[kingPos + 7] == Piece.WPawn)
-                        return true;
+                    if ((kingPos + 7) >> 3 == (kingPos >> 3) + 1)
+                        if (board[kingPos + 7] == Piece.WPawn)
+                            return true;
                 if (Board.IsPieceInBound(kingPos + 9))
-                    if (board[kingPos + 9] == Piece.WPawn)
-                        return true;
+                    if ((kingPos + 9) >> 3 == (kingPos >> 3) + 1)
+                        if (board[kingPos + 9] == Piece.WPawn)
+                            return true;
             }
 
             // check Sliding Pieces
