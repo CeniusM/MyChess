@@ -3,6 +3,16 @@ so fx a value for the kin could be {-1,-7,-8,-9,1,7,8,9} but instead give the sq
 so like if at 10 {9,3,4,5,11,17,18,19}
 
 
+
+Use stockfish to find the invald moves
+
+
+position fen r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 0
+d
+print perft 5
+
+
+
 Check:
 Better code for checking the king and what happends when the king is in check
 
@@ -45,8 +55,6 @@ make some timing code for testing speed
 
 4.
 make the search functions
-
-
 
 beat a human <3
 

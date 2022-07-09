@@ -99,3 +99,7 @@ Perft Position 6 game
 3: 89890
 4: 3894594
 5: 164075551
+
+
+8: 7877564 Failed! Expected: 0
+9: 54948733
