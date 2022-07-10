@@ -230,12 +230,6 @@ namespace MyChess.ChessBoard
                     Square[2] = Piece.BKing;
                     Square[0] = 0;
                 }
-
-
-
-
-
-
                 // enPassantPiece = 64;
             }
             else // promotion

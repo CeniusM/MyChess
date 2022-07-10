@@ -23,7 +23,6 @@ namespace MyLib
             lines = File.ReadAllLines(path).ToList();
             lines.Add(text);
             File.WriteAllLines(path, lines);
-            ulong i = ulong.MaxValue;
         }
         public static void Write(string text)
         {
