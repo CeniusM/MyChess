@@ -1,4 +1,8 @@
 Make it able too search atlist 1 million postions a second
 both generate, evaluate and make/unmake the move
 
+atlist 10 mil combinations a second without evaluation
+
 beat humans :D
+
+and 20 mil on c++ chess engine

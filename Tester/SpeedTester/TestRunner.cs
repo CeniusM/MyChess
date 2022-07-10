@@ -1,5 +1,5 @@
 using MyChess.SpeedTester.Tests;
-using CS_MyConsole;
+using MyLib;
 
 namespace MyChess.SpeedTester
 {
@@ -13,9 +13,9 @@ namespace MyChess.SpeedTester
 
         private static void PrintReport(TestReport report)
         {
-            MyConsole.WriteLine(report.strReport);
-            MyConsole.WriteLine(report.ElaspedMS + "ms");
-            MyConsole.WriteLine("");
+            FileWriter.WriteLine(report.strReport);
+            FileWriter.WriteLine(report.ElaspedMS + "ms");
+            FileWriter.WriteLine("");
         }
 
         private static void PrintCompareReports(TestReport r1, TestReport r2)

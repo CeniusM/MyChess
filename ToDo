@@ -9,7 +9,7 @@ Use stockfish to find the invald moves
 
 position fen r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 0
 d
-print perft 5
+go perft 5
 
 
 
@@ -36,7 +36,9 @@ add MinMax
 add that like long where you can see if the game has been played
 
 
-
+Add Multithreading to the move combinations code
+make it so you have as many threads as cores and you set the first thread to start the other threads and then begin it self
+so when one thread reaches the depth it will begin on the next unused move and when there arent any left it just stops
 
 
 

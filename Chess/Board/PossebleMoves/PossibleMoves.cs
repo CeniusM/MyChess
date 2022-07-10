@@ -65,7 +65,7 @@ namespace MyChess.PossibleMoves
 
 
                 // save the new possible moves
-                if (!CheckKingInCheck(GetKingsPos(board.playerTurn ^ Board.ColorMask), board.playerTurn ^ Board.ColorMask))
+                if (!IsSquareAttacked(GetKingsPos(board.playerTurn ^ Board.ColorMask), board.playerTurn ^ Board.ColorMask))
                     ValidMoves.Add(moves[i]);
 
                 // if (moves[i].MoveFlag != 0) // for debuging
@@ -79,7 +79,7 @@ namespace MyChess.PossibleMoves
             moves = ValidMoves;
         }
 
-        public bool CheckKingInCheck(int kingPos, int kingColor)
+        public bool IsSquareAttacked(int kingPos, int kingColor)
         {
             // test, and shouldent acktullay be needed
             if (kingPos == -1)

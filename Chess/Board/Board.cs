@@ -90,9 +90,17 @@ namespace MyChess.ChessBoard
 
         /// <summary> works up too 65535 and down too -65472 </summary>
         public static bool IsPieceInBound(int pos) => (pos & 0xFFC0) == 0;
+        public static string MoveToStr(Move move)
+        {
+            return IntToLetterNum(move.StartSquare) + IntToLetterNum(move.TargetSquare);
+        }
         public static string IntToLetterNum(int pos)
         {
             return (char)((int)'a' + pos % 8) + "" + (char)(8 - (pos >> 3) + '0');
+        }
+        public static string LetterToIntNum(string pos)
+        {
+            throw new NotImplementedException();
         }
 
 
@@ -103,6 +111,7 @@ namespace MyChess.ChessBoard
 
         public void MakeMove(Move move)
         {
+
             // halfMove += 1;
             // // if move was a succes, adds a fullmove after black moved
             // if (playerTurn == BlackMask)
@@ -258,6 +267,10 @@ namespace MyChess.ChessBoard
             castle = data.castle;
             enPassantPiece = data.enPassantPiece;
 
+            if ((move.CapturedPiece & Piece.King) == Piece.King)
+            {
+                
+            }
 
             ChangePlayer();
 
@@ -316,7 +329,7 @@ namespace MyChess.ChessBoard
                     Square[58] = 0;
                     Square[56] = Piece.WRook;
                 }
-                // black queen side
+                // black king side
                 else if (move.TargetSquare == 6)
                 {
                     piecePoses.MovePiece(6, 4);

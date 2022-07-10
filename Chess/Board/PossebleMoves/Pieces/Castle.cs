@@ -20,10 +20,10 @@ namespace MyChess.PossibleMoves.Pieces
                     {
                         if (board[62] == 0)
                         {
-                            if (!CheckKingInCheck(board, 60, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
+                            if (!IsSquareAttacked(board, 60, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                             {
                                 board.MakeMove(new(60, 61, 0, 0));
-                                if (!CheckKingInCheck(board, 61, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                                if (!IsSquareAttacked(board, 61, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
                                 {
                                     moves.Add(new(60, 62, Move.Flag.Castling)); // check at 62 will be checked later
                                 }
@@ -40,10 +40,10 @@ namespace MyChess.PossibleMoves.Pieces
                         {
                             if (board[57] == 0)
                             {
-                                if (!CheckKingInCheck(board, 60, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
+                                if (!IsSquareAttacked(board, 60, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                                 {
                                     board.MakeMove(new(60, 59, 0, 0));
-                                    if (!CheckKingInCheck(board, 59, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                                    if (!IsSquareAttacked(board, 59, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
                                     {
                                         moves.Add(new(60, 58, Move.Flag.Castling)); // check at 62 will be checked later
                                     }
@@ -62,10 +62,10 @@ namespace MyChess.PossibleMoves.Pieces
                     {
                         if (board[6] == 0)
                         {
-                            if (!CheckKingInCheck(board, 4, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
+                            if (!IsSquareAttacked(board, 4, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                             {
                                 board.MakeMove(new(4, 5, 0, 0));
-                                if (!CheckKingInCheck(board, 5, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                                if (!IsSquareAttacked(board, 5, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
                                 {
                                     moves.Add(new(4, 6, Move.Flag.Castling)); // check at 62 will be checked later
                                 }
@@ -82,10 +82,10 @@ namespace MyChess.PossibleMoves.Pieces
                         {
                             if (board[3] == 0)
                             {
-                                if (!CheckKingInCheck(board, 4, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
+                                if (!IsSquareAttacked(board, 4, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                                 {
                                     board.MakeMove(new(4, 3, 0, 0));
-                                    if (!CheckKingInCheck(board, 3, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                                    if (!IsSquareAttacked(board, 3, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
                                     {
                                         moves.Add(new(4, 2, Move.Flag.Castling)); // check at 62 will be checked later
                                     }
@@ -98,7 +98,7 @@ namespace MyChess.PossibleMoves.Pieces
             }
         }
 
-        private static bool CheckKingInCheck(Board board, int kingPos, int playerTurn, int opesitColor)
+        private static bool IsSquareAttacked(Board board, int kingPos, int playerTurn, int opesitColor)
         {
             if (kingPos == -1)
                 return true;

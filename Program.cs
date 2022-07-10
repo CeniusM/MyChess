@@ -1,12 +1,12 @@
 using System.Runtime.InteropServices;
-
+using System.Diagnostics;
 
 using MyChessGUI;
 
 namespace winForm;
 
 static class Program
-{    
+{
     private static GameOfChess? game;
     /// <summary>
     ///  The main entry point for the application.
@@ -27,8 +27,27 @@ static class Program
             gameThread.Join();
         };
 
+        // myForm.Load += Form1Load;
+
+        // var FileWriter = new Thread(() => {
+        //     Task.Delay(3000).GetAwaiter().GetResult();
+        //     Console.WriteLine("Hey!");
+        //     FileWriterApp("Hi");
+        //     });
+
         Application.Run(myForm);
     }
+
+    // private static void FileWriterApp(string str)
+    // {
+    //     Console.WriteLine(str);
+    // }
+
+    // private static void Form1Load(object? sender, EventArgs e)
+    // {
+    //     AllocConsole();
+    // }
+
     private static void StartGame(Form1 myForm)
     {
         // UnitTest
@@ -40,4 +59,8 @@ static class Program
         game = new GameOfChess(myForm);
         game.Play();
     }
+    // [DllImport("kernel32.dll", SetLastError = true)]
+    // [return: MarshalAs(UnmanagedType.Bool)]
+    // static extern bool AllocConsole();
+
 }

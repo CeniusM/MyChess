@@ -6,12 +6,13 @@ namespace MyChess
 {
     class ChessGame
     {
+        private const string InitialPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         public Board board;
         public PossibleMovesGenerator possibleMoves;
-        public ChessGame()
+        public  ChessGame()
         {
             MovesFromSquare.Init();
-            board = new Board();
+            board = MyFEN.GetBoardFromFEN(InitialPosition);
             possibleMoves = new PossibleMovesGenerator(board);
         }
         public ChessGame(string FEN)

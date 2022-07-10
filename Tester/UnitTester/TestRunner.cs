@@ -1,5 +1,5 @@
 using MyChess.UnitTester.Tests;
-using CS_MyConsole;
+using MyLib;
 
 namespace MyChess.UnitTester
 {
@@ -15,19 +15,19 @@ namespace MyChess.UnitTester
             switch (report.succesStatus)
             {
                 case TestReport.SuccesFlag.Succes:
-                    MyConsole.WriteLine("Succes!");
+                    FileWriter.WriteLine("Succes!");
                     break;
                 case TestReport.SuccesFlag.Undetermined:
-                    MyConsole.WriteLine("Undetermined-");
+                    FileWriter.WriteLine("Undetermined-");
                     break;
                 case TestReport.SuccesFlag.Failed:
-                    MyConsole.WriteLine("Failed...");
+                    FileWriter.WriteLine("Failed...");
                     break;
                 default:
                     break;
             }
-            MyConsole.WriteLine(report.strReport);
-            MyConsole.WriteLine("");
+            FileWriter.WriteLine(report.strReport);
+            FileWriter.WriteLine("");
         }
     }
 }

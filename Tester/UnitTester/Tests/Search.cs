@@ -44,7 +44,7 @@ namespace MyChess.UnitTester.Tests
 
             for (int i = 1; i < Depth + 1; i++)
             {
-                CS_MyConsole.MyConsole.WriteLine("" + moveCount[i]);
+                MyLib.FileWriter.WriteLine("" + moveCount[i]);
             }
         }
     }

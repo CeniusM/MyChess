@@ -68,7 +68,7 @@ namespace MyChessGUI
                 List<Move> moves = chessGame.GetPossibleMoves();
                 for (int i = 0; i < moves.Count; i++)
                 {
-                    CS_MyConsole.MyConsole.WriteLine((i + 1) + ": S: "
+                    MyLib.FileWriter.WriteLine((i + 1) + ": S: "
                     + Board.IntToLetterNum(moves[i].StartSquare)
                     + ", T: " + Board.IntToLetterNum(moves[i].TargetSquare)
                     + ", F: " + moves[i].MoveFlag
@@ -118,7 +118,7 @@ namespace MyChessGUI
             //}
             //else if (e.KeyChar == 's') // Saves board
             //{
-            //    CS_MyConsole.MyConsole.WriteLine(MyFEN.GetFENFromBoard(chessGame._board));
+            //    MyLib.FileWriter.WriteLine(MyFEN.GetFENFromBoard(chessGame._board));
             //}
             //else if (e.KeyChar == '1')
             //{
@@ -139,14 +139,14 @@ namespace MyChessGUI
             //    chessAPI.PrintBoard();
             //}
             //
-            //else if (e.KeyChar == '0') // reads the last line in MyConsole and takes it in as a fen string
+            //else if (e.KeyChar == '0') // reads the last line in FileWriter and takes it in as a fen string
             //{
-            //    chessGame = new ChessGame(CS_MyConsole.MyConsole.ReadLastLine());
+            //    chessGame = new ChessGame(MyLib.FileWriter.ReadLastLine());
             //    chessAPI = new ChessAPI(_form, chessGame);
             //    chessAPI.PrintBoard();
             //}
             //
-            //else if (e.KeyChar == 'l') // reads the last line in MyConsole and takes it in as a fen string
+            //else if (e.KeyChar == 'l') // reads the last line in FileWriter and takes it in as a fen string
             //{
             //    if (chessGame.gameMoves.Count != 0)
             //    {
