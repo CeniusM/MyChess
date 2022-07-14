@@ -2,7 +2,7 @@
 
 namespace MyLib
 {
-    public class FileWriter
+    class MyConsole
     {
 #if DEBUG
         public const string _path = @"MyConsole\Console.txt"; // for debugging
@@ -17,18 +17,48 @@ namespace MyLib
             lines.Add(text);
             File.WriteAllLines(_path, lines);
         }
-        public static void WriteLine(string text, string path)
+    }
+
+    class FileWriter
+    {
+        public bool IsOpen { get; private set; } = false;
+        private List<string> lines;
+        private string _path;
+        public FileWriter(string path)
         {
-            List<string> lines = new List<string>();
-            lines = File.ReadAllLines(path).ToList();
-            lines.Add(text);
-            File.WriteAllLines(path, lines);
+            try
+            {
+                lines = File.ReadAllLines(path).ToList();
+                _path = path;
+                IsOpen = true;
+            }
+            catch
+            {
+                lines = new List<string>();
+                _path = "\0";
+                IsOpen = false;
+            }
         }
-        public static void Write(string text)
+
+        public void OpenFile(string path)
         {
-            List<string> lines = new List<string>();
-            lines = File.ReadAllLines(_path).ToList();
-            lines[lines.Count() - 1] = lines[lines.Count() - 1] + text;
+            try
+            {
+                lines = File.ReadAllLines(path).ToList();
+                _path = path;
+                IsOpen = true;
+            }
+            catch
+            {
+                lines = new List<string>();
+                _path = "\0";
+                IsOpen = false;
+            }
+        }
+
+        public void WriteLine(string str)
+        {
+            lines.Add(str);
             File.WriteAllLines(_path, lines);
         }
     }

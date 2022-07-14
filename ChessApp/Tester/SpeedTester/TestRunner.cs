@@ -7,15 +7,17 @@ namespace MyChess.SpeedTester
     {
         public static void Run()
         {
-            PrintReport(Test.TestGeneratePossibleMoves());
+            // PrintReport(Test.TestGeneratePossibleMoves());
             //PrintReport(Test.OutOfBoundsCheck());
+
+            Test.TimeSearch();
         }
 
         private static void PrintReport(TestReport report)
         {
-            FileWriter.WriteLine(report.strReport);
-            FileWriter.WriteLine(report.ElaspedMS + "ms");
-            FileWriter.WriteLine("");
+            MyConsole.WriteLine(report.strReport);
+            MyConsole.WriteLine(report.ElaspedMS + "ms");
+            MyConsole.WriteLine("");
         }
 
         private static void PrintCompareReports(TestReport r1, TestReport r2)

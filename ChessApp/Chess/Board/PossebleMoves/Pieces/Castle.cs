@@ -2,10 +2,13 @@ using MyChess.ChessBoard;
 
 namespace MyChess.PossibleMoves.Pieces
 {
-  public class Castle
+    public class Castle
     {
         public static void AddMoves(Board board, List<Move> moves)
         {
+            Board original = Board.GetCopy(board);
+
+
             int castle = board.castle;
 
             if (castle == 0)
@@ -22,12 +25,10 @@ namespace MyChess.PossibleMoves.Pieces
                         {
                             if (!IsSquareAttacked(board, 60, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                             {
-                                board.MakeMove(new(60, 61, 0, 0));
-                                if (!IsSquareAttacked(board, 61, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                                if (!IsSquareAttacked(board, 61, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                                 {
                                     moves.Add(new(60, 62, Move.Flag.Castling)); // check at 62 will be checked later
                                 }
-                                board.UnMakeMove();
                             }
                         }
                     }
@@ -42,12 +43,10 @@ namespace MyChess.PossibleMoves.Pieces
                             {
                                 if (!IsSquareAttacked(board, 60, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                                 {
-                                    board.MakeMove(new(60, 59, 0, 0));
-                                    if (!IsSquareAttacked(board, 59, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                                    if (!IsSquareAttacked(board, 59, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                                     {
                                         moves.Add(new(60, 58, Move.Flag.Castling)); // check at 62 will be checked later
                                     }
-                                    board.UnMakeMove();
                                 }
                             }
                         }
@@ -64,12 +63,10 @@ namespace MyChess.PossibleMoves.Pieces
                         {
                             if (!IsSquareAttacked(board, 4, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                             {
-                                board.MakeMove(new(4, 5, 0, 0));
-                                if (!IsSquareAttacked(board, 5, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                                if (!IsSquareAttacked(board, 5, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                                 {
                                     moves.Add(new(4, 6, Move.Flag.Castling)); // check at 62 will be checked later
                                 }
-                                board.UnMakeMove();
                             }
                         }
                     }
@@ -84,12 +81,10 @@ namespace MyChess.PossibleMoves.Pieces
                             {
                                 if (!IsSquareAttacked(board, 4, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                                 {
-                                    board.MakeMove(new(4, 3, 0, 0));
-                                    if (!IsSquareAttacked(board, 3, (board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                                    if (!IsSquareAttacked(board, 3, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                                     {
                                         moves.Add(new(4, 2, Move.Flag.Castling)); // check at 62 will be checked later
                                     }
-                                    board.UnMakeMove();
                                 }
                             }
                         }

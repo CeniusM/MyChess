@@ -46,6 +46,8 @@ namespace MyChess.FEN
         }
         public static char GetCharFromPiece(int i)
         {
+            if (i == 0)
+                return ' ';
             switch (i)
             {
                 case Piece.WPawn:
@@ -76,9 +78,9 @@ namespace MyChess.FEN
                     return char.MaxValue;
             }
         }
-       
-       // all the methods Get from FEN/Board only work up too 99 full or half move...
-       public static Board GetBoardFromFEN(string FENString)
+
+        // all the methods Get from FEN/Board only work up too 99 full or half move...
+        public static Board GetBoardFromFEN(string FENString)
         {
             int FENPointer = 0;
             Board board = new Board();
@@ -196,7 +198,7 @@ namespace MyChess.FEN
         //     {
         //         for (int col = 0; col < 8; col++)
         //         {
-                    
+
         //         }
         //     }
 

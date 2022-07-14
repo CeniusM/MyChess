@@ -46,11 +46,12 @@ namespace MyChess.PossibleMoves
 
             KingCheckCheck();
         }
-        
+
         public int GetKingsPos(int color)
         {
+            int piece = (color | Piece.King);
             for (int i = 0; i < board.piecePoses.Count; i++)
-                if (board[board.piecePoses[i]] == (color | Piece.King))
+                if (board[board.piecePoses[i]] == piece)
                     return board.piecePoses[i];
             return -1;
         }
@@ -64,9 +65,14 @@ namespace MyChess.PossibleMoves
             {
                 board.MakeMove(moves[i]);
 
+                if (moves[i].MoveFlag == 3)
+                {
+
+                }
+
 
                 // save the new possible moves
-                if (!IsSquareAttacked(GetKingsPos(board.playerTurn ^ Board.ColorMask), board.playerTurn ^ Board.ColorMask))
+                if (!IsSquareAttacked(GetKingsPos(board.playerTurn ^ Board.ColorMask), board.playerTurn))
                     ValidMoves.Add(moves[i]);
 
                 // if (moves[i].MoveFlag != 0) // for debuging
@@ -136,7 +142,7 @@ namespace MyChess.PossibleMoves
             {
                 if (MovesFromSquare.KnightMoves[square, i] == MovesFromSquare.InvalidMove)
                     continue;
-                if (board[square + MovesFromSquare.KnightMoves[square, i]] == (Piece.Knight | board.playerTurn))
+                if (board[square + MovesFromSquare.KnightMoves[square, i]] == (Piece.Knight | opponentColor))
                     return true;
             }
 
@@ -145,7 +151,7 @@ namespace MyChess.PossibleMoves
             {
                 if (MovesFromSquare.KingMoves[square, i] == MovesFromSquare.InvalidMove)
                     continue;
-                if (board[square + MovesFromSquare.KingMoves[square, i]] == (Piece.King | board.playerTurn))
+                if (board[square + MovesFromSquare.KingMoves[square, i]] == (Piece.King | opponentColor))
                     return true;
             }
 
@@ -186,7 +192,7 @@ namespace MyChess.PossibleMoves
 
                     if (board[move] != 0)
                     {
-                        if ((board[move] & Board.ColorMask) == board.playerTurn)
+                        if ((board[move] & Board.ColorMask) == opponentColor)
                         {
                             switch (board[move] & Piece.PieceBits)
                             {

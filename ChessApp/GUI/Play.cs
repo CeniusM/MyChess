@@ -29,6 +29,7 @@ namespace MyChessGUI
             chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 0 8");
             chessGame = new ChessGame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
             chessGame = new ChessGame("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
+            chessGame = new ChessGame("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 0");
             Console.WriteLine("Hii");
 
             chessAPI = new ChessAPI(form, chessGame);
@@ -69,7 +70,7 @@ namespace MyChessGUI
                 List<Move> moves = chessGame.GetPossibleMoves();
                 for (int i = 0; i < moves.Count; i++)
                 {
-                    MyLib.FileWriter.WriteLine((i + 1) + ": S: "
+                    MyLib.MyConsole.WriteLine((i + 1) + ": S: "
                     + Board.IntToLetterNum(moves[i].StartSquare)
                     + ", T: " + Board.IntToLetterNum(moves[i].TargetSquare)
                     + ", F: " + moves[i].MoveFlag
@@ -119,7 +120,7 @@ namespace MyChessGUI
             //}
             //else if (e.KeyChar == 's') // Saves board
             //{
-            //    MyLib.FileWriter.WriteLine(MyFEN.GetFENFromBoard(chessGame._board));
+            //    MyLib.MyConsole.WriteLine(MyFEN.GetFENFromBoard(chessGame._board));
             //}
             //else if (e.KeyChar == '1')
             //{

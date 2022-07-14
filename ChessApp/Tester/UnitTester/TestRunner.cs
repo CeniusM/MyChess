@@ -8,6 +8,8 @@ namespace MyChess.UnitTester
         public static void Run()
         {
             Test.PerftResults();
+            // Test.CompareBoardsWithDepthAndMoves("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 0", 5);
+            //Test.CompareBoardsWithDepthAndMoves("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 5);
         }
 
         private static void PrintReport(TestReport report)
@@ -15,19 +17,19 @@ namespace MyChess.UnitTester
             switch (report.succesStatus)
             {
                 case TestReport.SuccesFlag.Succes:
-                    FileWriter.WriteLine("Succes!");
+                    MyConsole.WriteLine("Succes!");
                     break;
                 case TestReport.SuccesFlag.Undetermined:
-                    FileWriter.WriteLine("Undetermined-");
+                    MyConsole.WriteLine("Undetermined-");
                     break;
                 case TestReport.SuccesFlag.Failed:
-                    FileWriter.WriteLine("Failed...");
+                    MyConsole.WriteLine("Failed...");
                     break;
                 default:
                     break;
             }
-            FileWriter.WriteLine(report.strReport);
-            FileWriter.WriteLine("");
+            MyConsole.WriteLine(report.strReport);
+            MyConsole.WriteLine("");
         }
     }
 }

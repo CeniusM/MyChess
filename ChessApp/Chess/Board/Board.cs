@@ -29,13 +29,8 @@ namespace MyChess.ChessBoard
             enPassantPiece = EnPassantPiece;
         }
     }
-
-    /*
-    edge cases
-    if pawntwoforward flag is on the capturedpiece will store the enpassent place
-
-    */
-  public class Board
+    
+    public class Board
     {
         public Stack<DataICouldentGetToWork> gameData = new Stack<DataICouldentGetToWork>();
         public Stack<Move> moves = new Stack<Move>();
@@ -230,7 +225,7 @@ namespace MyChess.ChessBoard
                     Square[2] = Piece.BKing;
                     Square[0] = 0;
                 }
-                // enPassantPiece = 64;
+                enPassantPiece = 64;
             }
             else // promotion
             {
@@ -250,10 +245,6 @@ namespace MyChess.ChessBoard
 
         public void UnMakeMove()
         {
-            // if (fullMove == 0 && playerTurn != BlackMask || moves.Count == 0) // check if we are at the begining
-            //     return;
-            // else
-            //     fullMove--;
             Move move = moves.Pop();
             DataICouldentGetToWork data = gameData.Pop();
             fullMove = data.fullMove;
@@ -263,7 +254,7 @@ namespace MyChess.ChessBoard
 
             if ((move.CapturedPiece & Piece.King) == Piece.King)
             {
-                
+
             }
 
             ChangePlayer();
@@ -282,7 +273,7 @@ namespace MyChess.ChessBoard
                 piecePoses.MovePiece(move.TargetSquare, move.StartSquare);
                 Square[move.StartSquare] = Square[move.TargetSquare];
                 Square[move.TargetSquare] = 0;
-                enPassantPiece = 64;
+                // enPassantPiece = 64;
             }
             else if (move.MoveFlag == Move.Flag.EnPassantCapture)
             {
@@ -299,7 +290,7 @@ namespace MyChess.ChessBoard
                     Square[move.TargetSquare - 8] = Piece.WPawn;
                     piecePoses.AddPieceAtSquare(move.TargetSquare - 8);
                 }
-                enPassantPiece = move.TargetSquare;
+                // enPassantPiece = move.TargetSquare;
             }
             else if (move.MoveFlag == Move.Flag.Castling)
             {
@@ -354,17 +345,57 @@ namespace MyChess.ChessBoard
                 Square[move.StartSquare] = Piece.Pawn | playerTurn;
                 Square[move.TargetSquare] = move.CapturedPiece;
             }
-
-            // if (moves.Count != 0)
-            //     if (moves.Peek().MoveFlag == Move.Flag.PawnTwoForward)
-            //     {
-            //         if (playerTurn == WhiteMask)
-            //             enPassantPiece = moves.Peek().TargetSquare - 8;
-            //         else
-            //             enPassantPiece = moves.Peek().TargetSquare + 8;
-            //     }
         }
 
         public void ChangePlayer() => playerTurn ^= ColorMask;
+
+        public static string GetPrettyBoard(Board board)
+        {
+            string output = "";
+            const string line = "+---+---+---+---+---+---+---+---+";
+
+            for (int i = 0; i < 8; i++)
+            {
+                output += "   " + line + "\n";
+                output += " " + (8 - i) + " ";
+                for (int j = 0; j < 8; j++)
+                {
+                    output += "| " + MyChess.FEN.MyFEN.GetCharFromPiece(board[(i * 8) + j]) + " ";
+                }
+                output += "|\n";
+            }
+            output += "   " + line + "\n";
+            output += "     A   B   C   D   E   F   G   H" + "\n";
+            return output;
+        }
+        public static Board GetCopy(Board original)
+        {
+            Board board = new Board();
+            for (int i = 0; i < 64; i++)
+            {
+                board[i] = original[i];
+            }
+            board.castle = original.castle;
+            board.enPassantPiece = original.enPassantPiece;
+            board.GameStatus = original.GameStatus;
+            board.playerTurn = original.playerTurn;
+
+            for (int i = 0; i < original.piecePoses.Count; i++)
+                board.piecePoses.AddPieceAtSquare(original.piecePoses[i]);
+
+            DataICouldentGetToWork[] dataArray = new DataICouldentGetToWork[original.gameData.Count];
+            original.gameData.CopyTo(dataArray, 0);
+            for (int i = original.gameData.Count - 1; i > -1; i--)
+                board.gameData.Push(dataArray[i]);
+
+            Move[] movesArray = new Move[original.moves.Count];
+            original.moves.CopyTo(movesArray, 0);
+            for (int i = original.moves.Count - 1; i > -1; i--)
+                board.moves.Push(movesArray[i]);
+
+            // MyChess.UnitTester.Tests.Test.CompareBoardsWithMove(original, board, new(0, 0, 0, 0));
+
+            return board;
+        }
     }
 }
