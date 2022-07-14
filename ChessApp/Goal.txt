@@ -5,4 +5,6 @@ atlist 10 mil combinations a second without evaluation
 
 beat humans :D
 
-and 20 mil on c++ chess engine
+and 20 mil on c# bitboard chess engine
+
+and 30 mil on c++ chess engine

@@ -36,7 +36,6 @@ namespace MyChess.PossibleMoves
             // }
 
             King.AddMoves(board, moves);
-            //moves.AddRange(King.GetPossibleMoves(board));
             Knight.AddMoves(board, moves);
             Bishop.AddMoves(board, moves);
             Rook.AddMoves(board, moves);
@@ -61,24 +60,19 @@ namespace MyChess.PossibleMoves
             List<Move> ValidMoves = new List<Move>(moves.Count);
 
             // go through each move
+            int kingPos = GetKingsPos(board.playerTurn);
+            int kingPosTemp = kingPos;
+            int kingPiece = Piece.King | board.playerTurn;
             for (int i = 0; i < moves.Count; i++)
             {
                 board.MakeMove(moves[i]);
 
-                if (moves[i].MoveFlag == 3)
-                {
-
-                }
-
-
                 // save the new possible moves
-                if (!IsSquareAttacked(GetKingsPos(board.playerTurn ^ Board.ColorMask), board.playerTurn))
+                if (board[moves[i].TargetSquare] == kingPiece)
+                    kingPosTemp = GetKingsPos(board.playerTurn ^ Board.ColorMask);
+                if (!IsSquareAttacked(kingPosTemp, board.playerTurn))
                     ValidMoves.Add(moves[i]);
-
-                // if (moves[i].MoveFlag != 0) // for debuging
-                // {
-
-                // }
+                kingPosTemp = kingPos;
 
                 board.UnMakeMove();
             }
@@ -88,55 +82,6 @@ namespace MyChess.PossibleMoves
 
         public bool IsSquareAttacked(int square, int opponentColor)
         {
-            // test, and shouldent acktullay be needed
-            if (square == -1)
-                return true;
-
-
-
-
-
-
-
-
-            /*
-                for v2 note, also add in castle
-                here you can use magic bitboard, you can just AND operate a long that has bits on all the locations that the knight
-                can jump to from the square is on
-                so fx
-
-                    Long                   Magic bitboard with the knights
-                if ((KinghtMoves[square] & KnightPositions) != 0)
-                    KING IN CHECK
-
-                    example of a KnightMoves long on square 8, x is the square
-                    8 * 8 bits, 64 bit int
-                    00010000
-                    0x000000
-                    00010000
-                    10100000
-                    00000000
-                    00000000
-                    00000000
-                    00000000
-
-                King will look like
-                    00000000
-                    00011100
-                    0001x100
-                    00011100
-                    00000000
-                    00000000
-                    00000000
-                    00000000
-
-                can implement the exact same with atlist pawns and kings
-                and a modifyed version with the sliding pieces
-            */
-
-
-
-
             // check Knights
             for (int i = 0; i < 8; i++)
             {
@@ -213,8 +158,119 @@ namespace MyChess.PossibleMoves
                 }
             }
 
+            return false;
+        }
+
+        public bool IsSquareAttackedBySlidingPieces(int square, int opponentColor)
+        {
+            // check Sliding Pieces
+            for (int dir = 0; dir < 8; dir++)
+            {
+                int move = square;
+                for (int moveCount = 0; moveCount < 7; moveCount++)
+                {
+                    if (MovesFromSquare.SlidingpieceMoves[square, dir, moveCount] == MovesFromSquare.InvalidMove)
+                        break;
+                    move = MovesFromSquare.SlidingpieceMoves[square, dir, moveCount];
+
+
+                    if (board[move] != 0)
+                    {
+                        if ((board[move] & Board.ColorMask) == opponentColor)
+                        {
+                            switch (board[move] & Piece.PieceBits)
+                            {
+                                case Piece.Queen:
+                                    return true;
+                                case Piece.Rook:
+                                    if (dir < 4)
+                                        return true;
+                                    break;
+                                case Piece.Bishop:
+                                    if (dir > 3)
+                                        return true;
+                                    break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public bool IsSquareAttackedByKnights(int square, int opponentColor)
+        {
+            // check Knights
+            for (int i = 0; i < 8; i++)
+            {
+                if (MovesFromSquare.KnightMoves[square, i] == MovesFromSquare.InvalidMove)
+                    continue;
+                if (board[square + MovesFromSquare.KnightMoves[square, i]] == (Piece.Knight | opponentColor))
+                    return true;
+            }
+
+            // check King
+            for (int i = 0; i < 8; i++)
+            {
+                if (MovesFromSquare.KingMoves[square, i] == MovesFromSquare.InvalidMove)
+                    continue;
+                if (board[square + MovesFromSquare.KingMoves[square, i]] == (Piece.King | opponentColor))
+                    return true;
+            }
+
+            return false;
+        }
+        public bool IsSquareAttackedByKing(int square, int opponentColor)
+        {
+            // check King
+            for (int i = 0; i < 8; i++)
+            {
+                if (MovesFromSquare.KingMoves[square, i] == MovesFromSquare.InvalidMove)
+                    continue;
+                if (board[square + MovesFromSquare.KingMoves[square, i]] == (Piece.King | opponentColor))
+                    return true;
+            }
 
             return false;
         }
     }
 }
+
+
+
+/*
+    for v2 note, also add in castle
+    here you can use magic bitboard, you can just AND operate a long that has bits on all the locations that the knight
+    can jump to from the square is on
+    so fx
+
+        Long                   Magic bitboard with the knights
+    if ((KinghtMoves[square] & KnightPositions) != 0)
+        KING IN CHECK
+
+        example of a KnightMoves long on square 8, x is the square
+        8 * 8 bits, 64 bit int
+        00010000
+        0x000000
+        00010000
+        10100000
+        00000000
+        00000000
+        00000000
+        00000000
+
+    King will look like
+        00000000
+        00011100
+        0001x100
+        00011100
+        00000000
+        00000000
+        00000000
+        00000000
+
+    can implement the exact same with atlist pawns and kings
+    and a modifyed version with the sliding pieces
+*/

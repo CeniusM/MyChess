@@ -12,3 +12,10 @@ Time: 1ms, Depth: 2, MoveCount: 2039
 Time: 52ms, Depth: 3, MoveCount: 97862
 Time: 2282ms, Depth: 4, MoveCount: 4085603
 Time: 100860ms, Depth: 5, MoveCount: 193690690
+
+Test Casteling: Position 2
+Time: 0ms, Depth: 1, MoveCount: 48
+Time: 1ms, Depth: 2, MoveCount: 2039
+Time: 50ms, Depth: 3, MoveCount: 97862
+Time: 2153ms, Depth: 4, MoveCount: 4085603
+Time: 94556ms, Depth: 5, MoveCount: 193690690
