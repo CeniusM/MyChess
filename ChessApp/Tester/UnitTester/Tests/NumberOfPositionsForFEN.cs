@@ -85,14 +85,14 @@ namespace MyChess.UnitTester.Tests
             // long[] foo3 = { 14, 191, 2812, 43238, 674624, 11030083, 178633661, 3009794393 };
             // MyLib.MyConsole.WriteLine(FullSearchPrint("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 0", foo3, 6));
 
-            // MyLib.MyConsole.WriteLine("Standerd Pos: Initial Position");
-            // MyLib.MyConsole.WriteLine(PerftResultSearch(false, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 20, 1));
-            // MyLib.MyConsole.WriteLine(PerftResultSearch(false, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 400, 2));
-            // MyLib.MyConsole.WriteLine(PerftResultSearch(false, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8902, 3));
-            // MyLib.MyConsole.WriteLine(PerftResultSearch(false, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 197281, 4));
-            // MyLib.MyConsole.WriteLine(PerftResultSearch(false, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 4865609, 5));
-            // /*MyLib.MyConsole.WriteLine(PerftResultSearch(false, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 119060324, 6));*/
-            // /*MyLib.MyConsole.WriteLine(PerftResultSearch(false, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 3195901860, 7));*/
+            MyLib.MyConsole.WriteLine("Standerd Pos: Initial Position");
+            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 20, 1));
+            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 400, 2));
+            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8902, 3));
+            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 197281, 4));
+            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 4865609, 5));
+            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 119060324, 6));
+            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 3195901860, 7));
 
 
             // MyLib.MyConsole.WriteLine("");
