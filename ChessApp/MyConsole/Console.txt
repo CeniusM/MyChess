@@ -1,0 +1,7 @@
+
+Test Casteling: Position 2
+Time: 0ms, Depth: 1, MoveCount: 48
+Time: 1ms, Depth: 2, MoveCount: 2039
+Time: 53ms, Depth: 3, MoveCount: 97862
+Time: 2142ms, Depth: 4, MoveCount: 4085603
+Time: 96053ms, Depth: 5, MoveCount: 193690690

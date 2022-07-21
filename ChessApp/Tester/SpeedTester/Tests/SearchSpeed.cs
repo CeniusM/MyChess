@@ -79,7 +79,7 @@ namespace MyChess.SpeedTester.Tests
             // Print(PerftSearchWithTime("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10", 164075551, 5));
         }
 
-        public static string PerftSearchWithTime(string FEN, long ExpectedValue, int Depth)
+        public static string PerftSearchWithTime(string FEN, long ExpectedValue, int Depth, bool PrintReport = false)
         {
             Stopwatch st = new Stopwatch();
             ChessGame chessGame = new ChessGame(FEN);
@@ -113,7 +113,12 @@ namespace MyChess.SpeedTester.Tests
 
             long time = st.ElapsedMilliseconds;
 
-            return "Time: " + time + "ms" + ", Depth: " + Depth + ", MoveCount: " + moveCount + (moveCount == ExpectedValue ? "" : (", Expected: " + ExpectedValue + "!"));
+            string str = "Time: " + time + "ms" + ", Depth: " + Depth + ", MoveCount: " + moveCount + (moveCount == ExpectedValue ? "" : (", Expected: " + ExpectedValue + "!"));
+
+            if (PrintReport)
+                Console.WriteLine(str);
+
+            return str;
         }
     }
 }

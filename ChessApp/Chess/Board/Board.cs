@@ -1,3 +1,5 @@
+// V2, no full or half moves or repetision will be considerd
+
 namespace MyChess.ChessBoard
 {
     public readonly struct GameStatusFlag
