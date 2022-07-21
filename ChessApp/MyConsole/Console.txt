@@ -1,5 +1,5 @@
 
-Before
+Before 
 Test Casteling: Position 2
 Time: 0ms, Depth: 1, MoveCount: 48
 Time: 1ms, Depth: 2, MoveCount: 2039
@@ -7,7 +7,7 @@ Time: 53ms, Depth: 3, MoveCount: 97862
 Time: 2142ms, Depth: 4, MoveCount: 4085603
 Time: 96053ms, Depth: 5, MoveCount: 193690690
 
-After
+After Board Index propetie removed
 Test Casteling: Position 2
 Time: 0ms, Depth: 1, MoveCount: 48
 Time: 0ms, Depth: 2, MoveCount: 2039
@@ -15,15 +15,10 @@ Time: 44ms, Depth: 3, MoveCount: 97862
 Time: 1910ms, Depth: 4, MoveCount: 4085603
 Time: 80722ms, Depth: 5, MoveCount: 193690690
 
-Test Casteling: Position 2
-Time: 1ms, Depth: 1, MoveCount: 48
-Time: 0ms, Depth: 2, MoveCount: 2039
-Time: 17ms, Depth: 3, MoveCount: 97862
-Time: 761ms, Depth: 4, MoveCount: 4085603
-Time: 32048ms, Depth: 5, MoveCount: 193690690
-
+After Moving piece movement to possiblemoves
 Test Casteling: Position 2
 Time: 0ms, Depth: 1, MoveCount: 48
 Time: 0ms, Depth: 2, MoveCount: 2039
-Time: 42ms, Depth: 3, MoveCount: 97862
-Time: 7741ms, Depth: 4, MoveCount: 4085603
+Time: 38ms, Depth: 3, MoveCount: 97862
+Time: 1571ms, Depth: 4, MoveCount: 4085603
+Time: 72047ms, Depth: 5, MoveCount: 193690690

@@ -53,13 +53,25 @@ static class Program
 
     private static void StartGame(Form1 myForm)
     {
+        string s = Console.ReadLine()!;
+        if (s == "f")
+            FullTest(myForm);
+        else if (s == "u")
+            MyChess.UnitTester.TestRunner.Run();
+        else if (s == "s")
+            MyChess.SpeedTester.TestRunner.Run();
+        else if (s != "p")
+            FullTest(myForm);
+
+
+
         // FullTest(myForm);
 
         // UnitTest
         // MyChess.UnitTester.TestRunner.Run();
 
         // SpeedTest
-        MyChess.SpeedTester.TestRunner.Run();
+        //MyChess.SpeedTester.TestRunner.Run();
 
         game = new GameOfChess(myForm);
         game.Play();
@@ -131,6 +143,8 @@ static class Program
             myForm.graphicsObj.DrawImage(_bitmap, 0, 0);
             Thread.Sleep(100000);
         }
+        else
+            Console.WriteLine("Succes!");
     }
     private static void PerftSearch(string FEN, long ExpectedValue, int Depth, ref bool hasFailed)
     {

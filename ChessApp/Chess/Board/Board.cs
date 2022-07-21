@@ -19,21 +19,19 @@ namespace MyChess.ChessBoard
 
     public struct DataICouldentGetToWork
     {
-        public readonly int fullMove;
-        public readonly int halfMove;
         public readonly int castle;
         public readonly int enPassantPiece;
-        public DataICouldentGetToWork(int Full, int Half, int Castle, int EnPassantPiece)
+        public DataICouldentGetToWork(int Castle, int EnPassantPiece)
         {
-            fullMove = Full;
-            halfMove = Half;
             castle = Castle;
             enPassantPiece = EnPassantPiece;
         }
     }
-    
+
     public class Board
     {
+
+
         public Stack<DataICouldentGetToWork> gameData = new Stack<DataICouldentGetToWork>();
         public Stack<Move> moves = new Stack<Move>();
         public PieceList piecePoses = new PieceList();
@@ -42,16 +40,10 @@ namespace MyChess.ChessBoard
         // W KingSide = 0b1000, W QueenSide = 0b0100, B KingSide = 0b0010, B QueenSide = 0b0001
         public int castle = 0b1111;
         public int enPassantPiece = 64;
-
-        // how many moves both players have made since the last pawn advance or piece capture
-        public int halfMove = 0;
-        public int fullMove = 0;
-
         public const int WhiteMask = 0b00001000;
         public const int BlackMask = 0b00010000;
         public const int ColorMask = WhiteMask | BlackMask;
         public int playerTurn = 8; // 8 = white, 16 = black;
-
 
         // 2 = running
         // 1 = White Won
@@ -115,7 +107,7 @@ namespace MyChess.ChessBoard
             //     fullMove += 1;
 
             moves.Push(move);
-            gameData.Push(new(fullMove, halfMove, castle, enPassantPiece));
+            gameData.Push(new(castle, enPassantPiece));
 
 
 
@@ -154,7 +146,6 @@ namespace MyChess.ChessBoard
             }
             else if (move.MoveFlag == Move.Flag.PawnTwoForward)
             {
-                halfMove = 0;
                 piecePoses.MovePiece(move.StartSquare, move.TargetSquare);
                 Square[move.TargetSquare] = Square[move.StartSquare];
                 Square[move.StartSquare] = 0;
@@ -166,7 +157,6 @@ namespace MyChess.ChessBoard
             }
             else if (move.MoveFlag == Move.Flag.EnPassantCapture)
             {
-                halfMove = 0;
                 if (playerTurn == WhiteMask)
                 {
                     piecePoses.RemovePieceAtSquare(move.TargetSquare + 8);
@@ -231,8 +221,6 @@ namespace MyChess.ChessBoard
             }
             else // promotion
             {
-                halfMove = 0;
-
                 if (move.CapturedPiece != 0)
                     piecePoses.RemovePieceAtSquare(move.TargetSquare);
 
@@ -249,8 +237,6 @@ namespace MyChess.ChessBoard
         {
             Move move = moves.Pop();
             DataICouldentGetToWork data = gameData.Pop();
-            fullMove = data.fullMove;
-            halfMove = data.halfMove;
             castle = data.castle;
             enPassantPiece = data.enPassantPiece;
 

@@ -2,7 +2,7 @@ using MyChess.ChessBoard;
 
 namespace MyChess.PossibleMoves.Pieces
 {
-  public class King
+    public class King
     {
         public static void AddMoves(Board board, List<Move> moves)
         {

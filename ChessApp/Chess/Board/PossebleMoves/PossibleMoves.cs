@@ -7,9 +7,17 @@ using MyChess.PossibleMoves.Pieces;
 
 namespace MyChess.PossibleMoves
 {
+    public struct WaysKingIsUnderAtc
+    {
+
+    }
+
     public class PossibleMovesGenerator
     {
+        private int ThisKing = 0;
+        private int OpponentKing = 0;
         private Board board;
+        private WaysKingIsUnderAtc wKUA = new WaysKingIsUnderAtc();
         public List<Move> moves;
         public PossibleMovesGenerator(Board board)
         {
@@ -35,13 +43,30 @@ namespace MyChess.PossibleMoves
             //         Bishop.AddMoves(board, moves, board.piecePoses[i]);
             // }
 
-            King.AddMoves(board, moves);
-            Knight.AddMoves(board, moves);
-            Bishop.AddMoves(board, moves);
-            Rook.AddMoves(board, moves);
-            Queen.AddMoves(board, moves);
-            Pawn.AddMoves(board, moves);
-            Castle.AddMoves(board, moves);
+            if (board.playerTurn == 8)
+            {
+                ThisKing = Piece.WKing;
+                OpponentKing = Piece.BKing;
+            }
+            else
+            {
+                ThisKing = Piece.BKing;
+                OpponentKing = Piece.WKing;
+            }
+
+            // King.AddMoves(board, moves);
+            // Knight.AddMoves(board, moves);
+            // Bishop.AddMoves(board, moves);
+            // Rook.AddMoves(board, moves);
+            // Queen.AddMoves(board, moves);
+            // Pawn.AddMoves(board, moves);
+            // Castle.AddMoves(board, moves);
+
+            AddKingMoves();
+            AddKnightMoves();
+            AddSlidingPieces();
+            AddPawnMoves();
+            AddCastleMoves();
 
             KingCheckCheck();
         }
@@ -235,6 +260,344 @@ namespace MyChess.PossibleMoves
 
             return false;
         }
+
+        public void AddKingMoves()
+        {
+            for (int i = 0; i < board.piecePoses.Count; i++)
+            {
+                if (board.Square[board.piecePoses[i]] == ThisKing)
+                {
+                    int kingPos = board.piecePoses[i];
+                    for (int j = 0; j < 8; j++)
+                    {
+                        int kingMove = kingPos + MovesFromSquare.KingMoves[kingPos, j];
+                        if (MovesFromSquare.KingMoves[kingPos, j] == MovesFromSquare.InvalidMove)
+                            continue;
+                        else if ((board.Square[kingMove] & Piece.ColorBits) != board.playerTurn)
+                        {
+                            moves.Add(new(kingPos, kingMove, 0, board.Square[kingMove]));
+                        }
+                    }
+                }
+            }
+        }
+
+        public void AddKnightMoves()
+        {
+            int thisKnight = (Piece.Knight | board.playerTurn);
+            for (int i = 0; i < board.piecePoses.Count; i++)
+            {
+                if (board.Square[board.piecePoses[i]] == thisKnight)
+                {
+                    int knightPos = board.piecePoses[i];
+                    for (int j = 0; j < 8; j++)
+                    {
+                        int knightMove = knightPos + MovesFromSquare.KnightMoves[knightPos, j];
+                        if (MovesFromSquare.KnightMoves[knightPos, j] == MovesFromSquare.InvalidMove)
+                            continue;
+                        else if ((board.Square[knightMove] & Piece.ColorBits) != board.playerTurn)
+                        {
+                            moves.Add(new(knightPos, knightMove, 0, board.Square[knightMove]));
+                        }
+                    }
+                }
+            }
+        }
+
+        public void AddSlidingPieces()
+        {
+            int ThisQueen = Piece.Queen | board.playerTurn;
+            int ThisRook = Piece.Rook | board.playerTurn;
+            int ThisBishop = Piece.Bishop | board.playerTurn;
+
+            int fromDir = 0;
+            int toDir = 0;
+            for (int i = 0; i < board.piecePoses.Count; i++)
+            {
+                int piece = board.Square[board.piecePoses[i]];
+                if (piece == ThisQueen)
+                {
+                    fromDir = 0;
+                    toDir = 8;
+                }
+                else if (piece == ThisRook)
+                {
+                    fromDir = 0;
+                    toDir = 4;
+                }
+                else if (piece == ThisBishop)
+                {
+                    fromDir = 4;
+                    toDir = 8;
+                }
+                else
+                    continue;
+
+                int pos = board.piecePoses[i];
+                for (int dir = fromDir; dir < toDir; dir++)
+                {
+                    int move = pos;
+                    for (int moveCount = 0; moveCount < 7; moveCount++)
+                    {
+                        if (MovesFromSquare.SlidingpieceMoves[pos, dir, moveCount] == MovesFromSquare.InvalidMove)
+                            break;
+                        move = MovesFromSquare.SlidingpieceMoves[pos, dir, moveCount];
+
+                        if (board.Square[move] == 0)
+                        {
+                            moves.Add(new(pos, move, 0, board.Square[move]));
+                        }
+                        else if ((board.Square[move] & Piece.ColorBits) != board.playerTurn)
+                        {
+                            moves.Add(new(pos, move, 0, board.Square[move]));
+                            break;
+                        }
+                        else
+                            break;
+                    }
+                }
+            }
+        }
+
+        public void AddPawnMoves() // what a disaster
+        {
+            bool IsOponent(int p1, int p2) => ((p1 & Piece.ColorBits) != (p2 & Piece.ColorBits) && (p2 & Piece.PieceBits) != 0);
+            for (int i = 0; i < board.piecePoses.Count; i++)
+            {
+                int pos = board.piecePoses[i];
+                if (board.Square[pos] == (Piece.Pawn | board.playerTurn))
+                {
+                    if (board.playerTurn == Board.WhiteMask)
+                    {
+                        // two forward
+                        if (56 > pos && pos > 47)
+                            if (board.Square[pos - 16] == 0)
+                                if (board.Square[pos - 8] == 0)
+                                    moves.Add(new(pos, pos - 16, Move.Flag.PawnTwoForward));
+
+
+
+                        if (Board.IsPieceInBound(pos - 7)) // left
+                        {
+                            int inBoundPos = pos - 7;
+                            if ((inBoundPos) >> 3 == (pos >> 3) - 1)
+                            {
+                                if (inBoundPos == board.enPassantPiece)
+                                    moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture, Piece.BPawn));
+
+                                if (IsOponent(board.Square[pos], board.Square[inBoundPos]))
+                                {
+                                    if (inBoundPos > -1 && inBoundPos < 8) // check if its on promotion
+                                    {
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop, board.Square[inBoundPos]));
+                                    }
+                                    else if ((board.Square[inBoundPos] & Piece.PieceBits) != 0)
+                                        moves.Add(new(pos, inBoundPos, 0, board.Square[inBoundPos]));
+                                }
+                            }
+                        }
+                        if (Board.IsPieceInBound(pos - 8)) // foward
+                        {
+                            int inBoundPos = pos - 8;
+                            if (board.Square[inBoundPos] == 0)
+                            {
+                                if (inBoundPos > -1 && inBoundPos < 8) // check if its on promotion
+                                {
+                                    moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen));
+                                    moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight));
+                                    moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook));
+                                    moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop));
+                                }
+                                else
+                                    moves.Add(new(pos, inBoundPos, 0));
+                            }
+                        }
+                        if (Board.IsPieceInBound(pos - 9)) // right
+                        {
+                            int inBoundPos = pos - 9;
+                            if ((inBoundPos) >> 3 == (pos >> 3) - 1)
+                            {
+                                if (inBoundPos == board.enPassantPiece)
+                                    moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture, Piece.BPawn));
+
+                                if (IsOponent(board.Square[pos], board.Square[inBoundPos]))
+                                {
+                                    if (inBoundPos > -1 && inBoundPos < 8) // check if its on promotion
+                                    {
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop, board.Square[inBoundPos]));
+                                    }
+                                    else if ((board.Square[inBoundPos] & Piece.PieceBits) != 0)
+                                        moves.Add(new(pos, inBoundPos, 0, board.Square[inBoundPos]));
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // two forward
+                        if (16 > pos && pos > 7)
+                            if (board.Square[pos + 16] == 0)
+                                if (board.Square[pos + 8] == 0)
+                                    moves.Add(new(pos, pos + 16, Move.Flag.PawnTwoForward));
+
+
+
+                        if (Board.IsPieceInBound(pos + 7)) // left
+                        {
+                            int inBoundPos = pos + 7;
+                            if ((inBoundPos) >> 3 == (pos >> 3) + 1)
+                            {
+                                if (inBoundPos == board.enPassantPiece)
+                                    moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture, Piece.WPawn));
+
+                                if (IsOponent(board.Square[pos], board.Square[inBoundPos]))
+                                {
+                                    if (inBoundPos > 55 && inBoundPos < 64) // check if its on promotion
+                                    {
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop, board.Square[inBoundPos]));
+                                    }
+                                    else if ((board.Square[inBoundPos] & Piece.PieceBits) != 0)
+                                        moves.Add(new(pos, inBoundPos, 0, board.Square[inBoundPos]));
+                                }
+                            }
+                        }
+                        if (Board.IsPieceInBound(pos + 8)) // foward
+                        {
+                            int inBoundPos = pos + 8;
+                            if (board.Square[inBoundPos] == 0)
+                            {
+                                if (inBoundPos > 55 && inBoundPos < 64) // check if its on promotion
+                                {
+                                    moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen));
+                                    moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight));
+                                    moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook));
+                                    moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop));
+                                }
+                                else
+                                    moves.Add(new(pos, inBoundPos, 0, 0));
+                            }
+                        }
+                        if (Board.IsPieceInBound(pos + 9)) // right
+                        {
+                            int inBoundPos = pos + 9;
+                            if ((inBoundPos) >> 3 == (pos >> 3) + 1)
+                            {
+                                if (inBoundPos == board.enPassantPiece)
+                                    moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture, Piece.WPawn));
+
+                                if (IsOponent(board.Square[pos], board.Square[inBoundPos]))
+                                {
+                                    if (inBoundPos > 55 && inBoundPos < 64) // check if its on promotion
+                                    {
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop, board.Square[inBoundPos]));
+                                    }
+                                    else if ((board.Square[inBoundPos] & Piece.PieceBits) != 0)
+                                        moves.Add(new(pos, inBoundPos, 0, board.Square[inBoundPos]));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } // AddPawnMoves()
+
+        public void AddCastleMoves() // still uses the IsSquareAttacked
+        {
+            int castle = board.castle;
+
+            if (castle == 0)
+                return;
+
+            if (board.playerTurn == 8)
+            {
+                // only check the first and second square, the third will be checked later
+                if ((castle & CASTLE.W_King_Side) == CASTLE.W_King_Side)
+                {
+                    if (board.Square[61] == 0)
+                    {
+                        if (board.Square[62] == 0)
+                        {
+                            if (!IsSquareAttacked(60, 16))
+                            {
+                                if (!IsSquareAttacked(61, 16))
+                                {
+                                    moves.Add(new(60, 62, Move.Flag.Castling)); // check at 62 will be checked later
+                                }
+                            }
+                        }
+                    }
+                }
+                if ((castle & CASTLE.W_Queen_Side) == CASTLE.W_Queen_Side)
+                {
+                    if (board.Square[59] == 0)
+                    {
+                        if (board.Square[58] == 0)
+                        {
+                            if (board.Square[57] == 0)
+                            {
+                                if (!IsSquareAttacked(60, 16))
+                                {
+                                    if (!IsSquareAttacked(59, 16))
+                                    {
+                                        moves.Add(new(60, 58, Move.Flag.Castling)); // check at 62 will be checked later
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if ((castle & CASTLE.B_King_Side) == CASTLE.B_King_Side)
+                {
+                    if (board.Square[5] == 0)
+                    {
+                        if (board.Square[6] == 0)
+                        {
+                            if (!IsSquareAttacked(4, 8))
+                            {
+                                if (!IsSquareAttacked(5, 8))
+                                {
+                                    moves.Add(new(4, 6, Move.Flag.Castling)); // check at 62 will be checked later
+                                }
+                            }
+                        }
+                    }
+                }
+                if ((castle & CASTLE.B_Queen_Side) == CASTLE.B_Queen_Side)
+                {
+                    if (board.Square[1] == 0)
+                    {
+                        if (board.Square[2] == 0)
+                        {
+                            if (board.Square[3] == 0)
+                            {
+                                if (!IsSquareAttacked(4, 8))
+                                {
+                                    if (!IsSquareAttacked(3, 8))
+                                    {
+                                        moves.Add(new(4, 2, Move.Flag.Castling)); // check at 62 will be checked later
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } // AddCaslteMoves
     }
 }
 

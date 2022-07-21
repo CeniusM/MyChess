@@ -160,23 +160,23 @@ namespace MyChess.FEN
 
             if (FENString[FENPointer + 1] != ' ')
             {
-                board.halfMove += (FENString[FENPointer] - '0') * 10;
-                FENPointer++;
-                board.halfMove += (FENString[FENPointer] - '0');
+                // board.halfMove += (FENString[FENPointer] - '0') * 10;
+                // FENPointer++;
+                // board.halfMove += (FENString[FENPointer] - '0');
             }
             else
-                board.halfMove += (FENString[FENPointer] - '0');
+            {}// board.halfMove += (FENString[FENPointer] - '0');
             FENPointer++;
             FENPointer++;
 
             if (FENString.Length > FENPointer + 1 && FENString[FENPointer] + 1 != ' ')
             {
-                board.fullMove += (FENString[FENPointer] - '0') * 10;
-                FENPointer++;
-                board.fullMove += (FENString[FENPointer] - '0');
+                // board.fullMove += (FENString[FENPointer] - '0') * 10;
+                // FENPointer++;
+                // board.fullMove += (FENString[FENPointer] - '0');
             }
             else
-                board.fullMove += (FENString[FENPointer] - '0');
+            {}// board.fullMove += (FENString[FENPointer] - '0');
 
             board.InitPiecePoses();
 
@@ -284,14 +284,19 @@ namespace MyChess.FEN
             SetChar(' ');
 
 
-            if (board.halfMove > 9)
-                SetChar((char)((board.halfMove / 10) + (int)'0'));
-            SetChar((char)((board.halfMove % 10) + (int)'0'));
-            SetChar(' ');
+            // if (board.halfMove > 9)
+            //     SetChar((char)((board.halfMove / 10) + (int)'0'));
+            // SetChar((char)((board.halfMove % 10) + (int)'0'));
+            // SetChar(' ');
 
-            if (board.fullMove > 9)
-                SetChar((char)((board.fullMove / 10) + (int)'0'));
-            SetChar((char)((board.fullMove % 10) + (int)'0'));
+            // if (board.fullMove > 9)
+            //     SetChar((char)((board.fullMove / 10) + (int)'0'));
+            // SetChar((char)((board.fullMove % 10) + (int)'0'));
+
+            
+            SetChar('0');
+            SetChar(' ');
+            SetChar('0');
 
 
 
