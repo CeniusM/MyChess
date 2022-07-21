@@ -79,11 +79,11 @@ namespace MyChess.ChessBoard
             }
         }
 
-        public int this[int key]
-        {
-            get => Square[key];
-            set => Square[key] = value;
-        }
+        // public int this[int key]
+        // {
+        //     get => Square[key];
+        //     set => Square[key] = value;
+        // }board[]  = board.Square[]
 
         /// <summary> works up too 65535 and down too -65472 </summary>
         public static bool IsPieceInBound(int pos) => (pos & 0xFFC0) == 0;
@@ -362,7 +362,7 @@ namespace MyChess.ChessBoard
                 output += " " + (8 - i) + " ";
                 for (int j = 0; j < 8; j++)
                 {
-                    output += "| " + MyChess.FEN.MyFEN.GetCharFromPiece(board[(i * 8) + j]) + " ";
+                    output += "| " + MyChess.FEN.MyFEN.GetCharFromPiece(board.Square[(i * 8) + j]) + " ";
                 }
                 output += "|\n";
             }
@@ -375,7 +375,7 @@ namespace MyChess.ChessBoard
             Board board = new Board();
             for (int i = 0; i < 64; i++)
             {
-                board[i] = original[i];
+                board.Square[i] = original.Square[i];
             }
             board.castle = original.castle;
             board.enPassantPiece = original.enPassantPiece;

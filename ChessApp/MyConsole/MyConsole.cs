@@ -5,8 +5,8 @@ namespace MyLib
     class MyConsole
     {
 #if DEBUG
-        public const string _path = @"MyConsole\Console.txt"; // for standalone and VSC
-        // public const string _path = @"../../../MyConsole\Console.txt";
+        //public const string _path = @"MyConsole\Console.txt"; // for standalone and VSC
+         public const string _path = @"../../../MyConsole\Console.txt";
 #else
         public const string _path = @"../../../MyConsole\Console.txt"; // for standalone
 #endif

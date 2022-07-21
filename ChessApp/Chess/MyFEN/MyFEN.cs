@@ -106,7 +106,7 @@ namespace MyChess.FEN
                 else
                 {
                     if (!char.IsNumber(c) && c != ' ')
-                        board[boardPointer] = GetPieceFromChar(c);
+                        board.Square[boardPointer] = GetPieceFromChar(c);
                 }
                 if (c == ' ')
                     break;
@@ -234,7 +234,7 @@ namespace MyChess.FEN
                     SetChar('/');
                 }
 
-                if (board[i] == 0)
+                if (board.Square[i] == 0)
                 {
                     gap++;
                 }
@@ -245,7 +245,7 @@ namespace MyChess.FEN
                         SetChar((char)(gap + '0'));
                         gap = 0;
                     }
-                    CString[CStringPointer] = GetCharFromPiece(board[i]);
+                    CString[CStringPointer] = GetCharFromPiece(board.Square[i]);
                     CStringPointer++;
                 }
             }

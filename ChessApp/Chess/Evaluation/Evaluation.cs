@@ -80,8 +80,8 @@ namespace MyChess.ChessBoard.Evaluation
             int material = 0;
             for (int i = 0; i < board.piecePoses.Count; i++)
             {
-                if ((board[board.piecePoses[i]] & Piece.ColorBits) == color)
-                    material += PieceValue.Indexed[board[board.piecePoses[i]]];
+                if ((board.Square[board.piecePoses[i]] & Piece.ColorBits) == color)
+                    material += PieceValue.Indexed[board.Square[board.piecePoses[i]]];
             }
             return material;
         }

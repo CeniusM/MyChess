@@ -182,7 +182,7 @@ namespace MyChessGUI
             int pressedSquare = x + (y * 8);
             if (_selecktedSquare == -1)
             {
-                if ((chessGame.board[pressedSquare] & Piece.ColorBits) == chessGame.board.playerTurn)
+                if ((chessGame.board.Square[pressedSquare] & Piece.ColorBits) == chessGame.board.playerTurn)
                 {
                     _selecktedSquare = pressedSquare;
                 }
@@ -207,7 +207,7 @@ namespace MyChessGUI
 
                 if (movesCount == 0)
                 {
-                    if ((chessGame.board[pressedSquare] & Piece.ColorBits) == chessGame.board.playerTurn)
+                    if ((chessGame.board.Square[pressedSquare] & Piece.ColorBits) == chessGame.board.playerTurn)
                     {
                         _selecktedSquare = pressedSquare;
                     }

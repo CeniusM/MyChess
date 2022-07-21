@@ -10,14 +10,14 @@ namespace MyChess.PossibleMoves.Pieces
             for (int i = 0; i < board.piecePoses.Count; i++)
             {
                 int pos = board.piecePoses[i];
-                if (board[pos] == (Piece.Pawn | board.playerTurn))
+                if (board.Square[pos] == (Piece.Pawn | board.playerTurn))
                 {
                     if (board.playerTurn == Board.WhiteMask)
                     {
                         // two forward
                         if (56 > pos && pos > 47)
-                            if (board[pos - 16] == 0)
-                                if (board[pos - 8] == 0)
+                            if (board.Square[pos - 16] == 0)
+                                if (board.Square[pos - 8] == 0)
                                     moves.Add(new(pos, pos - 16, Move.Flag.PawnTwoForward));
 
 
@@ -30,24 +30,24 @@ namespace MyChess.PossibleMoves.Pieces
                                 if (inBoundPos == board.enPassantPiece)
                                     moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture, Piece.BPawn));
 
-                                if (IsOponent(board[pos], board[inBoundPos]))
+                                if (IsOponent(board.Square[pos], board.Square[inBoundPos]))
                                 {
                                     if (inBoundPos > -1 && inBoundPos < 8) // check if its on promotion
                                     {
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen, board[inBoundPos]));
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight, board[inBoundPos]));
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook, board[inBoundPos]));
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop, board[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop, board.Square[inBoundPos]));
                                     }
-                                    else if ((board[inBoundPos] & Piece.PieceBits) != 0)
-                                        moves.Add(new(pos, inBoundPos, 0, board[inBoundPos]));
+                                    else if ((board.Square[inBoundPos] & Piece.PieceBits) != 0)
+                                        moves.Add(new(pos, inBoundPos, 0, board.Square[inBoundPos]));
                                 }
                             }
                         }
                         if (Board.IsPieceInBound(pos - 8)) // foward
                         {
                             int inBoundPos = pos - 8;
-                            if (board[inBoundPos] == 0)
+                            if (board.Square[inBoundPos] == 0)
                             {
                                 if (inBoundPos > -1 && inBoundPos < 8) // check if its on promotion
                                 {
@@ -68,17 +68,17 @@ namespace MyChess.PossibleMoves.Pieces
                                 if (inBoundPos == board.enPassantPiece)
                                     moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture, Piece.BPawn));
 
-                                if (IsOponent(board[pos], board[inBoundPos]))
+                                if (IsOponent(board.Square[pos], board.Square[inBoundPos]))
                                 {
                                     if (inBoundPos > -1 && inBoundPos < 8) // check if its on promotion
                                     {
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen, board[inBoundPos]));
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight, board[inBoundPos]));
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook, board[inBoundPos]));
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop, board[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop, board.Square[inBoundPos]));
                                     }
-                                    else if ((board[inBoundPos] & Piece.PieceBits) != 0)
-                                        moves.Add(new(pos, inBoundPos, 0, board[inBoundPos]));
+                                    else if ((board.Square[inBoundPos] & Piece.PieceBits) != 0)
+                                        moves.Add(new(pos, inBoundPos, 0, board.Square[inBoundPos]));
                                 }
                             }
                         }
@@ -87,8 +87,8 @@ namespace MyChess.PossibleMoves.Pieces
                     {
                         // two forward
                         if (16 > pos && pos > 7)
-                            if (board[pos + 16] == 0)
-                                if (board[pos + 8] == 0)
+                            if (board.Square[pos + 16] == 0)
+                                if (board.Square[pos + 8] == 0)
                                     moves.Add(new(pos, pos + 16, Move.Flag.PawnTwoForward));
 
 
@@ -101,24 +101,24 @@ namespace MyChess.PossibleMoves.Pieces
                                 if (inBoundPos == board.enPassantPiece)
                                     moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture, Piece.WPawn));
 
-                                if (IsOponent(board[pos], board[inBoundPos]))
+                                if (IsOponent(board.Square[pos], board.Square[inBoundPos]))
                                 {
                                     if (inBoundPos > 55 && inBoundPos < 64) // check if its on promotion
                                     {
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen, board[inBoundPos]));
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight, board[inBoundPos]));
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook, board[inBoundPos]));
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop, board[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop, board.Square[inBoundPos]));
                                     }
-                                    else if ((board[inBoundPos] & Piece.PieceBits) != 0)
-                                        moves.Add(new(pos, inBoundPos, 0, board[inBoundPos]));
+                                    else if ((board.Square[inBoundPos] & Piece.PieceBits) != 0)
+                                        moves.Add(new(pos, inBoundPos, 0, board.Square[inBoundPos]));
                                 }
                             }
                         }
                         if (Board.IsPieceInBound(pos + 8)) // foward
                         {
                             int inBoundPos = pos + 8;
-                            if (board[inBoundPos] == 0)
+                            if (board.Square[inBoundPos] == 0)
                             {
                                 if (inBoundPos > 55 && inBoundPos < 64) // check if its on promotion
                                 {
@@ -139,17 +139,17 @@ namespace MyChess.PossibleMoves.Pieces
                                 if (inBoundPos == board.enPassantPiece)
                                     moves.Add(new(pos, inBoundPos, Move.Flag.EnPassantCapture, Piece.WPawn));
 
-                                if (IsOponent(board[pos], board[inBoundPos]))
+                                if (IsOponent(board.Square[pos], board.Square[inBoundPos]))
                                 {
                                     if (inBoundPos > 55 && inBoundPos < 64) // check if its on promotion
                                     {
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen, board[inBoundPos]));
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight, board[inBoundPos]));
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook, board[inBoundPos]));
-                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop, board[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToQueen, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToKnight, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToRook, board.Square[inBoundPos]));
+                                        moves.Add(new Move(pos, inBoundPos, Move.Flag.PromoteToBishop, board.Square[inBoundPos]));
                                     }
-                                    else if ((board[inBoundPos] & Piece.PieceBits) != 0)
-                                        moves.Add(new(pos, inBoundPos, 0, board[inBoundPos]));
+                                    else if ((board.Square[inBoundPos] & Piece.PieceBits) != 0)
+                                        moves.Add(new(pos, inBoundPos, 0, board.Square[inBoundPos]));
                                 }
                             }
                         }
@@ -187,7 +187,7 @@ namespace MyChess.PossibleMoves.Pieces
             // for (int i = 0; i < board.piecePoses.Count; i++)
             // {
             //     int pos = board.piecePoses[i];
-            //     if (board[pos] == (Piece.Pawn | board.playerTurn))
+            //     if (board.Square[pos] == (Piece.Pawn | board.playerTurn))
             //     {
 
             //         // walks towards negativ
@@ -196,18 +196,18 @@ namespace MyChess.PossibleMoves.Pieces
             //             // two forward
             //             if (56 > pos && pos > 47)
             //                 if (Board.IsPieceInBound(pos - 16))
-            //                     if (board[pos - 16] == 0)
+            //                     if (board.Square[pos - 16] == 0)
             //                         moves.Add(new(pos, pos - 16, Move.Flag.PawnTwoForward));
 
             //             // right
             //             if (Board.IsPieceInBound(pos - 7))
-            //                 if ((board[pos - 7] & Piece.ColorBits) == Piece.Black)
+            //                 if ((board.Square[pos - 7] & Piece.ColorBits) == Piece.Black)
             //                     if ((pos - 7) >> 3 == (pos >> 3) - 1)
             //                         moves.Add(new(pos, pos - 7, Move.Flag.None));
 
             //             // left
             //             if (Board.IsPieceInBound(pos - 9))
-            //                 if ((board[pos - 9] & Piece.ColorBits) == Piece.Black)
+            //                 if ((board.Square[pos - 9] & Piece.ColorBits) == Piece.Black)
             //                     if ((pos - 9) >> 3 == (pos >> 3) - 1)
             //                         moves.Add(new(pos, pos - 9, Move.Flag.None));
 
@@ -234,7 +234,7 @@ namespace MyChess.PossibleMoves.Pieces
             //                     moves.Add(new Move(pos, pos - 8, Move.Flag.PromoteToBishop));
             //                 }
             //                 // one forward
-            //                 else if (board[pos - 8] == Piece.None)
+            //                 else if (board.Square[pos - 8] == Piece.None)
             //                     moves.Add(new(pos, pos - 8, Move.Flag.None));
             //             }
 
@@ -245,17 +245,17 @@ namespace MyChess.PossibleMoves.Pieces
             //             // two forward
             //             if (16 > pos && pos > 7)
             //                 if (Board.IsPieceInBound(pos + 16))
-            //                     if (board[pos + 16] == 0)
+            //                     if (board.Square[pos + 16] == 0)
             //                         moves.Add(new(pos, pos + 16, Move.Flag.PawnTwoForward));
 
             //             // right
             //             if (Board.IsPieceInBound(pos + 7))
-            //                 if ((board[pos + 7] & Piece.ColorBits) == Piece.White)
+            //                 if ((board.Square[pos + 7] & Piece.ColorBits) == Piece.White)
             //                     moves.Add(new(pos, pos + 7, Move.Flag.None));
 
             //             // left
             //             if (Board.IsPieceInBound(pos + 9))
-            //                 if ((board[pos + 9] & Piece.ColorBits) == Piece.White)
+            //                 if ((board.Square[pos + 9] & Piece.ColorBits) == Piece.White)
             //                     moves.Add(new(pos, pos + 9, Move.Flag.None));
 
             //             // enpassent left
@@ -281,7 +281,7 @@ namespace MyChess.PossibleMoves.Pieces
             //                     moves.Add(new Move(pos, pos + 8, Move.Flag.PromoteToBishop));
             //                 }
             //                 // one forward
-            //                 else if (board[pos + 8] == Piece.None)
+            //                 else if (board.Square[pos + 8] == Piece.None)
             //                     moves.Add(new(pos, pos + 8, Move.Flag.None));
             //             }
             //         }

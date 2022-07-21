@@ -25,7 +25,7 @@ namespace MyChess.PossibleMoves
             // so we dont need to loop over all square everytime we try and fint the right piece
             // for (int i = 0; i < board.piecePoses.Count; i++)
             // {
-            //     int piece = board[board.piecePoses[i]] & Piece.PieceBits;
+            //     int piece = board.Square[board.piecePoses[i]] & Piece.PieceBits;
 
             //     if (piece == Piece.None)
             //         continue;
@@ -50,7 +50,7 @@ namespace MyChess.PossibleMoves
         {
             int piece = (color | Piece.King);
             for (int i = 0; i < board.piecePoses.Count; i++)
-                if (board[board.piecePoses[i]] == piece)
+                if (board.Square[board.piecePoses[i]] == piece)
                     return board.piecePoses[i];
             return -1;
         }
@@ -68,7 +68,7 @@ namespace MyChess.PossibleMoves
                 board.MakeMove(moves[i]);
 
                 // save the new possible moves
-                if (board[moves[i].TargetSquare] == kingPiece)
+                if (board.Square[moves[i].TargetSquare] == kingPiece)
                     kingPosTemp = GetKingsPos(board.playerTurn ^ Board.ColorMask);
                 if (!IsSquareAttacked(kingPosTemp, board.playerTurn))
                     ValidMoves.Add(moves[i]);
@@ -87,7 +87,7 @@ namespace MyChess.PossibleMoves
             {
                 if (MovesFromSquare.KnightMoves[square, i] == MovesFromSquare.InvalidMove)
                     continue;
-                if (board[square + MovesFromSquare.KnightMoves[square, i]] == (Piece.Knight | opponentColor))
+                if (board.Square[square + MovesFromSquare.KnightMoves[square, i]] == (Piece.Knight | opponentColor))
                     return true;
             }
 
@@ -96,7 +96,7 @@ namespace MyChess.PossibleMoves
             {
                 if (MovesFromSquare.KingMoves[square, i] == MovesFromSquare.InvalidMove)
                     continue;
-                if (board[square + MovesFromSquare.KingMoves[square, i]] == (Piece.King | opponentColor))
+                if (board.Square[square + MovesFromSquare.KingMoves[square, i]] == (Piece.King | opponentColor))
                     return true;
             }
 
@@ -105,22 +105,22 @@ namespace MyChess.PossibleMoves
             {
                 if (Board.IsPieceInBound(square - 7))
                     if ((square - 7) >> 3 == (square >> 3) - 1)
-                        if (board[square - 7] == Piece.BPawn)
+                        if (board.Square[square - 7] == Piece.BPawn)
                             return true;
                 if (Board.IsPieceInBound(square - 9))
                     if ((square - 9) >> 3 == (square >> 3) - 1)
-                        if (board[square - 9] == Piece.BPawn)
+                        if (board.Square[square - 9] == Piece.BPawn)
                             return true;
             }
             else
             {
                 if (Board.IsPieceInBound(square + 7))
                     if ((square + 7) >> 3 == (square >> 3) + 1)
-                        if (board[square + 7] == Piece.WPawn)
+                        if (board.Square[square + 7] == Piece.WPawn)
                             return true;
                 if (Board.IsPieceInBound(square + 9))
                     if ((square + 9) >> 3 == (square >> 3) + 1)
-                        if (board[square + 9] == Piece.WPawn)
+                        if (board.Square[square + 9] == Piece.WPawn)
                             return true;
             }
 
@@ -135,11 +135,11 @@ namespace MyChess.PossibleMoves
                     move = MovesFromSquare.SlidingpieceMoves[square, dir, moveCount];
 
 
-                    if (board[move] != 0)
+                    if (board.Square[move] != 0)
                     {
-                        if ((board[move] & Board.ColorMask) == opponentColor)
+                        if ((board.Square[move] & Board.ColorMask) == opponentColor)
                         {
-                            switch (board[move] & Piece.PieceBits)
+                            switch (board.Square[move] & Piece.PieceBits)
                             {
                                 case Piece.Queen:
                                     return true;
@@ -174,11 +174,11 @@ namespace MyChess.PossibleMoves
                     move = MovesFromSquare.SlidingpieceMoves[square, dir, moveCount];
 
 
-                    if (board[move] != 0)
+                    if (board.Square[move] != 0)
                     {
-                        if ((board[move] & Board.ColorMask) == opponentColor)
+                        if ((board.Square[move] & Board.ColorMask) == opponentColor)
                         {
-                            switch (board[move] & Piece.PieceBits)
+                            switch (board.Square[move] & Piece.PieceBits)
                             {
                                 case Piece.Queen:
                                     return true;
@@ -207,7 +207,7 @@ namespace MyChess.PossibleMoves
             {
                 if (MovesFromSquare.KnightMoves[square, i] == MovesFromSquare.InvalidMove)
                     continue;
-                if (board[square + MovesFromSquare.KnightMoves[square, i]] == (Piece.Knight | opponentColor))
+                if (board.Square[square + MovesFromSquare.KnightMoves[square, i]] == (Piece.Knight | opponentColor))
                     return true;
             }
 
@@ -216,7 +216,7 @@ namespace MyChess.PossibleMoves
             {
                 if (MovesFromSquare.KingMoves[square, i] == MovesFromSquare.InvalidMove)
                     continue;
-                if (board[square + MovesFromSquare.KingMoves[square, i]] == (Piece.King | opponentColor))
+                if (board.Square[square + MovesFromSquare.KingMoves[square, i]] == (Piece.King | opponentColor))
                     return true;
             }
 
@@ -229,7 +229,7 @@ namespace MyChess.PossibleMoves
             {
                 if (MovesFromSquare.KingMoves[square, i] == MovesFromSquare.InvalidMove)
                     continue;
-                if (board[square + MovesFromSquare.KingMoves[square, i]] == (Piece.King | opponentColor))
+                if (board.Square[square + MovesFromSquare.KingMoves[square, i]] == (Piece.King | opponentColor))
                     return true;
             }
 

@@ -19,9 +19,9 @@ namespace MyChess.PossibleMoves.Pieces
                 // only check the first and second square, the third will be checked later
                 if ((castle & CASTLE.W_King_Side) == CASTLE.W_King_Side)
                 {
-                    if (board[61] == 0)
+                    if (board.Square[61] == 0)
                     {
-                        if (board[62] == 0)
+                        if (board.Square[62] == 0)
                         {
                             if (!IsSquareAttacked(board, 60, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                             {
@@ -35,11 +35,11 @@ namespace MyChess.PossibleMoves.Pieces
                 }
                 if ((castle & CASTLE.W_Queen_Side) == CASTLE.W_Queen_Side)
                 {
-                    if (board[59] == 0)
+                    if (board.Square[59] == 0)
                     {
-                        if (board[58] == 0)
+                        if (board.Square[58] == 0)
                         {
-                            if (board[57] == 0)
+                            if (board.Square[57] == 0)
                             {
                                 if (!IsSquareAttacked(board, 60, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                                 {
@@ -57,9 +57,9 @@ namespace MyChess.PossibleMoves.Pieces
             {
                 if ((castle & CASTLE.B_King_Side) == CASTLE.B_King_Side)
                 {
-                    if (board[5] == 0)
+                    if (board.Square[5] == 0)
                     {
-                        if (board[6] == 0)
+                        if (board.Square[6] == 0)
                         {
                             if (!IsSquareAttacked(board, 4, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                             {
@@ -73,11 +73,11 @@ namespace MyChess.PossibleMoves.Pieces
                 }
                 if ((castle & CASTLE.B_Queen_Side) == CASTLE.B_Queen_Side)
                 {
-                    if (board[1] == 0)
+                    if (board.Square[1] == 0)
                     {
-                        if (board[2] == 0)
+                        if (board.Square[2] == 0)
                         {
-                            if (board[3] == 0)
+                            if (board.Square[3] == 0)
                             {
                                 if (!IsSquareAttacked(board, 4, board.playerTurn, (board.playerTurn ^ Board.ColorMask)))
                                 {
@@ -103,7 +103,7 @@ namespace MyChess.PossibleMoves.Pieces
             {
                 if (MovesFromSquare.KnightMoves[kingPos, i] == MovesFromSquare.InvalidMove)
                     continue;
-                if (board[kingPos + MovesFromSquare.KnightMoves[kingPos, i]] == (Piece.Knight | opesitColor))
+                if (board.Square[kingPos + MovesFromSquare.KnightMoves[kingPos, i]] == (Piece.Knight | opesitColor))
                     return true;
             }
 
@@ -112,7 +112,7 @@ namespace MyChess.PossibleMoves.Pieces
             {
                 if (MovesFromSquare.KingMoves[kingPos, i] == MovesFromSquare.InvalidMove)
                     continue;
-                if (board[kingPos + MovesFromSquare.KingMoves[kingPos, i]] == (Piece.King | opesitColor))
+                if (board.Square[kingPos + MovesFromSquare.KingMoves[kingPos, i]] == (Piece.King | opesitColor))
                     return true;
             }
 
@@ -120,19 +120,19 @@ namespace MyChess.PossibleMoves.Pieces
             if (playerTurn == Board.WhiteMask)
             {
                 if (Board.IsPieceInBound(kingPos - 7))
-                    if (board[kingPos - 7] == Piece.BPawn)
+                    if (board.Square[kingPos - 7] == Piece.BPawn)
                         return true;
                 if (Board.IsPieceInBound(kingPos - 9))
-                    if (board[kingPos - 9] == Piece.BPawn)
+                    if (board.Square[kingPos - 9] == Piece.BPawn)
                         return true;
             }
             else
             {
                 if (Board.IsPieceInBound(kingPos + 7))
-                    if (board[kingPos + 7] == Piece.WPawn)
+                    if (board.Square[kingPos + 7] == Piece.WPawn)
                         return true;
                 if (Board.IsPieceInBound(kingPos + 9))
-                    if (board[kingPos + 9] == Piece.WPawn)
+                    if (board.Square[kingPos + 9] == Piece.WPawn)
                         return true;
             }
 
@@ -147,11 +147,11 @@ namespace MyChess.PossibleMoves.Pieces
                     move = MovesFromSquare.SlidingpieceMoves[kingPos, dir, moveCount];
 
 
-                    if (board[move] != 0)
+                    if (board.Square[move] != 0)
                     {
-                        if ((board[move] & Board.ColorMask) == opesitColor)
+                        if ((board.Square[move] & Board.ColorMask) == opesitColor)
                         {
-                            switch (board[move] & Piece.PieceBits)
+                            switch (board.Square[move] & Piece.PieceBits)
                             {
                                 case Piece.Queen:
                                     return true;

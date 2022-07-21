@@ -8,7 +8,7 @@ namespace MyChess.PossibleMoves.Pieces
         {
             for (int i = 0; i < board.piecePoses.Count; i++)
             {
-                if (board[board.piecePoses[i]] == (Piece.Bishop | board.playerTurn))
+                if (board.Square[board.piecePoses[i]] == (Piece.Bishop | board.playerTurn))
                 {
                     int pos = board.piecePoses[i];
                     for (int dir = 4; dir < 8; dir++)
@@ -20,13 +20,13 @@ namespace MyChess.PossibleMoves.Pieces
                                 break;
                             move = MovesFromSquare.SlidingpieceMoves[pos, dir, moveCount];
 
-                            if (board[move] == 0)
+                            if (board.Square[move] == 0)
                             {
                                 moves.Add(new(pos, move, 0));
                             }
-                            else if ((board[move] & Piece.ColorBits) != board.playerTurn)
+                            else if ((board.Square[move] & Piece.ColorBits) != board.playerTurn)
                             {
-                                moves.Add(new(pos, move, 0, board[move]));
+                                moves.Add(new(pos, move, 0, board.Square[move]));
                                 break;
                             }
                             else
@@ -52,11 +52,11 @@ namespace MyChess.PossibleMoves.Pieces
 
         //             move = nextMoves;
 
-        //             if (board[move] == 0)
+        //             if (board.Square[move] == 0)
         //             {
         //                 moves.Add(new(pos, move, 0));
         //             }
-        //             else if ((board[move] & Piece.ColorBits) != board.playerTurn)
+        //             else if ((board.Square[move] & Piece.ColorBits) != board.playerTurn)
         //             {
         //                 moves.Add(new(pos, move, 0));
         //                 break;

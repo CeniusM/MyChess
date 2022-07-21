@@ -8,7 +8,7 @@ namespace MyChess.PossibleMoves.Pieces
         {
             for (int i = 0; i < board.piecePoses.Count; i++)
             {
-                if (board[board.piecePoses[i]] == (Piece.King | board.playerTurn))
+                if (board.Square[board.piecePoses[i]] == (Piece.King | board.playerTurn))
                 {
                     int kingPos = board.piecePoses[i];
                     for (int j = 0; j < 8; j++)
@@ -16,9 +16,9 @@ namespace MyChess.PossibleMoves.Pieces
                         int kingMove = kingPos + MovesFromSquare.KingMoves[kingPos, j];
                         if (MovesFromSquare.KingMoves[kingPos, j] == MovesFromSquare.InvalidMove)
                             continue;
-                        else if ((board[kingMove] & Piece.ColorBits) != board.playerTurn)
+                        else if ((board.Square[kingMove] & Piece.ColorBits) != board.playerTurn)
                         {
-                            moves.Add(new(kingPos, kingMove, 0, board[kingMove]));
+                            moves.Add(new(kingPos, kingMove, 0, board.Square[kingMove]));
                         }
                     }
                 }
@@ -39,7 +39,7 @@ namespace MyChess.PossibleMoves.Pieces
 //    int kingeMove = kingPos + MovesFromSquare.KingMoves[kingPos, i];
 //    if (MovesFromSquare.KingMoves[kingPos, i] == MovesFromSquare.InvalidMove)
 //        continue;
-//    else if ((board[kingeMove] & Piece.ColorBits) != board.playerTurn)
+//    else if ((board.Square[kingeMove] & Piece.ColorBits) != board.playerTurn)
 //    {
 //        moves.Add(new(kingPos, kingeMove, 0));
 //    }                

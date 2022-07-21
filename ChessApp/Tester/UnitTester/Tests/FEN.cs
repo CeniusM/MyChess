@@ -27,25 +27,25 @@ namespace MyChess.UnitTester.Tests
                 succes = Failed;
 
             // random pieces
-            if (board[0] != Piece.BRook)
+            if (board.Square[0] != Piece.BRook)
                 succes = Failed;
-            if (board[1] != Piece.BKnight)
+            if (board.Square[1] != Piece.BKnight)
                 succes = Failed;
-            if (board[8] != Piece.BPawn)
+            if (board.Square[8] != Piece.BPawn)
                 succes = Failed;
-            if (board[9] != Piece.BPawn)
+            if (board.Square[9] != Piece.BPawn)
                 succes = Failed;
-            if (board[19] != Piece.BPawn)
+            if (board.Square[19] != Piece.BPawn)
                 succes = Failed;
-            if (board[43] != Piece.WQueen)
+            if (board.Square[43] != Piece.WQueen)
                 succes = Failed;
-            if (board[45] != Piece.WKnight)
+            if (board.Square[45] != Piece.WKnight)
                 succes = Failed;
-            if (board[56] != Piece.WRook)
+            if (board.Square[56] != Piece.WRook)
                 succes = Failed;
-            if (board[60] != Piece.WKing)
+            if (board.Square[60] != Piece.WKing)
                 succes = Failed;
-            if (board[63] != Piece.WRook)
+            if (board.Square[63] != Piece.WRook)
                 succes = Failed;
 
             return new("Get Board from FEN Test", succes);

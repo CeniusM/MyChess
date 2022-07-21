@@ -47,8 +47,8 @@ namespace MyChessGUI
                         _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.LimeGreen);
                     }
 
-                    if ((chessGame.board[i + (j * 8)] & 31) != 0)
-                        PrintPeice(i, j, chessGame.board[i + (j * 8)]);
+                    if ((chessGame.board.Square[i + (j * 8)] & 31) != 0)
+                        PrintPeice(i, j, chessGame.board.Square[i + (j * 8)]);
                 }
             }
 
@@ -93,8 +93,8 @@ namespace MyChessGUI
                             _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.Red);
                         }
 
-                        if ((chessGame.board[i + (j * 8)] & 31) != 0) // checks if there is a peice
-                            PrintPeice(i, j, chessGame.board[i + (j * 8)]);
+                        if ((chessGame.board.Square[i + (j * 8)] & 31) != 0) // checks if there is a peice
+                            PrintPeice(i, j, chessGame.board.Square[i + (j * 8)]);
                     }
                 }
             }

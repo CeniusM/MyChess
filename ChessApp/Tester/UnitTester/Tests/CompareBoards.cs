@@ -59,7 +59,7 @@ namespace MyChess.UnitTester.Tests
             {
                     if (move.StartSquare == 4)
                         continue;
-                if (before[i] != after[i])
+                if (before.Square[i] != after.Square[i])
                 {
                     isBoardsEquel = false;
                     break;
