@@ -1,3 +1,5 @@
+Make my own stack and list data type
+
 atlist 10 mil combinations a second inside vsc
 
 beat humans :D
