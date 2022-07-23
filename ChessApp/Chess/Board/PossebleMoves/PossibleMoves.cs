@@ -9,6 +9,12 @@ namespace MyChess.PossibleMoves
 {
     public class PossibleMovesGenerator
     {
+        enum AttackType
+        {
+            Sliding, // Rook, Bishop, Queen
+            Step, // King, Pawn
+            Jump // Knight
+        }
         // private struct kingAttacker
         // {
         //     int pieceType;

@@ -1,19 +1,3 @@
-VSC debuging mode
-Test Casteling: Position 2
-Time: 0ms, Depth: 1, MoveCount: 48
-Time: 1ms, Depth: 2, MoveCount: 2039
-Time: 52ms, Depth: 3, MoveCount: 97862
-Time: 2215ms, Depth: 4, MoveCount: 4085603
-Time: 95322ms, Depth: 5, MoveCount: 193690690
-
-VSC without debuging mode
-Test Casteling: Position 2
-Time: 0ms, Depth: 1, MoveCount: 48
-Time: 1ms, Depth: 2, MoveCount: 2039
-Time: 55ms, Depth: 3, MoveCount: 97862
-Time: 2192ms, Depth: 4, MoveCount: 4085603
-Time: 95282ms, Depth: 5, MoveCount: 193690690
-
 VS Release mode
 Test Casteling: Position 2
 Time: 0ms, Depth: 1, MoveCount: 48

@@ -2,6 +2,33 @@
 
 namespace MyLib
 {
+    class DebugConsole
+    {
+        public static void WriteLine(string str)
+        {
+#if DEBUG
+            Console.WriteLine("str");
+#endif
+        }
+        public static string ReadLine()
+        {
+#if DEBUG
+            return Console.ReadLine()!;
+#else
+            return "Debug Console not available";
+#endif
+        }
+
+        public static bool IsOn()
+        {
+#if DEBUG
+            return true;
+#else
+            return false;
+#endif
+        }
+    }
+
     class MyConsole
     {
 #if vsc

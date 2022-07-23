@@ -4,12 +4,13 @@ using MyChess.PossibleMoves;
 
 namespace MyChess
 {
-  public class ChessGame
+    public class ChessGame
     {
         private const string InitialPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         public Board board;
         public PossibleMovesGenerator possibleMoves;
-        public  ChessGame()
+        public Move lastMove = new Move(-1, -1, -1, -1);
+        public ChessGame()
         {
             MovesFromSquare.Init();
             board = MyFEN.GetBoardFromFEN(InitialPosition);
@@ -24,9 +25,6 @@ namespace MyChess
 
         public void MakeMove(Move move)
         {
-            // if (possibleMoves.moves.Count == 0)
-            //     throw new Exception("Can not make a move when there is none");
-            
             if (possibleMoves.moves.Count == 0)
                 return;
             board.MakeMove(move);

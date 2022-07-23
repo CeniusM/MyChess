@@ -2,14 +2,15 @@ using winForm;
 
 namespace MyChessGUI
 {
-    public class FormGUI // just for taking simple form instruction that will be printed to the form
+    // just for taking simple form instruction that will be printed to the form
+    public class FormAPI
     {
         private Form1 _form;
         private Bitmap _bitmap;
         private Graphics _graphicsObj;
         private Pen _pen;
         private System.Drawing.SolidBrush _brush;
-        public FormGUI(Form1 form)
+        public FormAPI(Form1 form)
         {
             _form = form;
             _bitmap = new Bitmap(900, 800);

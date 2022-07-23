@@ -23,7 +23,7 @@ namespace MyChessGUI.Sprites
             "Bking"
         };
         
-        public static List<Bitmap> GetSprites()
+        public static List<Bitmap> GetSprites(int width, int height)
         {
             List<Bitmap> sprites = new List<Bitmap>();
 
