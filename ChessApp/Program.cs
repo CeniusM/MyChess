@@ -54,15 +54,15 @@ static class Program
     private static void StartGame(Form1 myForm)
     {
 #if DEBUG
-        string s = Console.ReadLine()!;
-        if (s == "f")
-            FullTest(myForm);
-        else if (s == "u")
-            MyChess.UnitTester.TestRunner.Run();
-        else if (s == "s")
-            MyChess.SpeedTester.TestRunner.Run();
-        else if (s != "p")
-            FullTest(myForm);
+        // string s = Console.ReadLine()!;
+        // if (s == "f")
+        //     FullTest(myForm);
+        // else if (s == "u")
+        //     MyChess.UnitTester.TestRunner.Run();
+        // else if (s == "s")
+        //     MyChess.SpeedTester.TestRunner.Run();
+        // else if (s != "p")
+        // FullTest(myForm);
 #else
             MyChess.SpeedTester.TestRunner.Run();
 #endif

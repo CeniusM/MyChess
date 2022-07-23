@@ -2,7 +2,7 @@ using MyChess.ChessBoard;
 using winForm;
 using MyChess;
 using CS_Math;
-using MyChess.ChessBoard.Evaluation;
+using MyChess.ChessBoard.Evaluators;
 using MyChess.PossibleMoves;
 
 namespace MyChessGUI
@@ -66,8 +66,8 @@ namespace MyChessGUI
             {
                 if (move.StartSquare != selecktedPiece)
                     continue;
-                int x = move.TargetSquare % 3;
-                int y = move.TargetSquare >> 8;
+                int x = move.TargetSquare % 8;
+                int y = move.TargetSquare >> 3;
 
                 _formGUI.DrawSquare(x * 100, y * 100, 100, 100,
                 ((x + y) % 2 == 0) ? Settings.Colors.LightPossibleMoveSquare : Settings.Colors.DarkPossibleMoveSquare);
@@ -101,7 +101,7 @@ namespace MyChessGUI
         {
             _formGUI.DrawSquare(Settings.Dimensions.ScreenWidth - Settings.Dimensions.EvalBarWidth, 0, Settings.Dimensions.ScreenHeight, Settings.Dimensions.EvalBarWidth, Color.White);
 
-            float evaluation = MyEvaluater.EvaluateBoard(chessGame.board, chessGame.GetPossibleMoves()) / 300f; // idk 
+            float evaluation = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count) / 300f; // idk 
 
             float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f, 15); // returs a num between -15 and 15
 

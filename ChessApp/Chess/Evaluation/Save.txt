@@ -2,7 +2,7 @@
 
 namespace MyChess.ChessBoard.Evaluation
 {
-    public class MyEvaluater
+    public partial class MyEvaluater
     {
         const int PawnValue = 100;
         const int knightValue = 300;
@@ -22,23 +22,23 @@ namespace MyChess.ChessBoard.Evaluation
             {
                 // so we dont need if statements too get he piece type
                 // becous just use the piece as an idexer to get the value
-                0, // nothing
-                0, // nothing
-                0, // nothing
-                0, // nothing
-                0, // nothing
-                0, // nothing
-                0, // nothing
-                0, // nothing
-                0, // nothing
+                0, // NULL
+                0, // NULL
+                0, // NULL
+                0, // NULL
+                0, // NULL
+                0, // NULL
+                0, // NULL
+                0, // NULL
+                0, // NULL
                 Pawn, // wPawn
                 Rook, // wRook
                 Knight, // wKnight
                 Bishop, // wBishop
                 Queen, // wQueen
                 0, // wKing
-                0, // nothing
-                0, // nothing
+                0, // NULL
+                0, // NULL
                 Pawn, // bPawn
                 Rook, // bRook
                 Knight, // bKnight
@@ -51,7 +51,7 @@ namespace MyChess.ChessBoard.Evaluation
         /// <summary>
         /// This returns a positiv number for white winning and a negativ number if black is winning
         /// </summary>
-        public static int EvaluateBoard(Board board, List<Move> moves)
+        public static int EvaluateBoardLight(Board board, List<Move> moves)
         {
             if (moves.Count == 0)
             {
@@ -75,6 +75,32 @@ namespace MyChess.ChessBoard.Evaluation
             return evaluation;
         }
 
+        public static int EvaluateBoardMinMax(Board board)
+        { throw new NotImplementedException(""); } // this will evaluate with a min max search instead of just a postion
+    }
+}
+
+/*
+Ideers:
+
+Multiply the piece by some amount depending on where on the board it is so it will gain more value if standing in the middle
+
+Get possible moves and if the moves amount is 0 its either stalemate or chackmate depending on if the king is in check
+
+?
+Give pawn extra value if they defend eachother?
+
+Get a list of all the possible moves and give maby like 10? for all the possible moves one side have
+And maby give point for if the piece attacks a piece or defends a pikece?
+
+*/
+
+
+
+namespace MyChess.ChessBoard.Evaluation
+{
+    public partial class MyEvaluater
+    {
         private static int CountMaterial(Board board, int color)
         {
             int material = 0;
@@ -85,9 +111,6 @@ namespace MyChess.ChessBoard.Evaluation
             }
             return material;
         }
-
-        public static int EvaluateBoardMinMax(Board board)
-        { throw new NotImplementedException(""); } // this will evaluate with a min max search instead of just a postion
     }
 }
 

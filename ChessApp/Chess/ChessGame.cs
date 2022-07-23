@@ -1,6 +1,7 @@
 using MyChess.ChessBoard;
 using MyChess.FEN;
 using MyChess.PossibleMoves;
+using MyChess.ChessBoard.Evaluators;
 
 namespace MyChess
 {
@@ -9,18 +10,21 @@ namespace MyChess
         private const string InitialPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         public Board board;
         public PossibleMovesGenerator possibleMoves;
+        public Evaluator evaluator;
         public Move lastMove = new Move(-1, -1, -1, -1);
         public ChessGame()
         {
             MovesFromSquare.Init();
             board = MyFEN.GetBoardFromFEN(InitialPosition);
             possibleMoves = new PossibleMovesGenerator(board);
+            evaluator = new(this);
         }
         public ChessGame(string FEN)
         {
             MovesFromSquare.Init();
             board = MyFEN.GetBoardFromFEN(FEN);
             possibleMoves = new PossibleMovesGenerator(board);
+            evaluator = new(this);
         }
 
         public void MakeMove(Move move)
