@@ -7,17 +7,18 @@ using MyChess.PossibleMoves.Pieces;
 
 namespace MyChess.PossibleMoves
 {
-    public struct WaysKingIsUnderAtc
-    {
-
-    }
-
     public class PossibleMovesGenerator
     {
+        // private struct kingAttacker
+        // {
+        //     int pieceType;
+        //     int pos;
+        // }
+        // private List<kingAttacker> kingAttackers = new List<kingAttacker>();
+
         private int ThisKing = 0;
         private int OpponentKing = 0;
         private Board board;
-        private WaysKingIsUnderAtc wKUA = new WaysKingIsUnderAtc();
         public List<Move> moves;
         public PossibleMovesGenerator(Board board)
         {
@@ -53,14 +54,6 @@ namespace MyChess.PossibleMoves
                 ThisKing = Piece.BKing;
                 OpponentKing = Piece.WKing;
             }
-
-            // King.AddMoves(board, moves);
-            // Knight.AddMoves(board, moves);
-            // Bishop.AddMoves(board, moves);
-            // Rook.AddMoves(board, moves);
-            // Queen.AddMoves(board, moves);
-            // Pawn.AddMoves(board, moves);
-            // Castle.AddMoves(board, moves);
 
             AddKingMoves();
             AddKnightMoves();

@@ -22,18 +22,3 @@ Time: 0ms, Depth: 2, MoveCount: 2039
 Time: 38ms, Depth: 3, MoveCount: 97862
 Time: 1571ms, Depth: 4, MoveCount: 4085603
 Time: 72047ms, Depth: 5, MoveCount: 193690690
-
-
-Test Casteling: Position 2, ??? first time i ran it
-Time: 0ms, Depth: 1, MoveCount: 48
-Time: 0ms, Depth: 2, MoveCount: 2039
-Time: 36ms, Depth: 3, MoveCount: 97862
-Time: 1613ms, Depth: 4, MoveCount: 4085603
-Time: 84891ms, Depth: 5, MoveCount: 193690690
-
-Test Casteling: Position 2, ??? second time i ran it
-Time: 0ms, Depth: 1, MoveCount: 48
-Time: 0ms, Depth: 2, MoveCount: 2039
-Time: 34ms, Depth: 3, MoveCount: 97862
-Time: 1556ms, Depth: 4, MoveCount: 4085603
-Time: 71901ms, Depth: 5, MoveCount: 193690690
