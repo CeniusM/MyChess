@@ -1,3 +1,5 @@
-atlist 10 mil combinations a second inside vsc
+atlist 10 mil combinations a second in vs relese mode
 
-beat humans :D
+make an algorithm that can beat atlist some humans
+
+make a mailbox chess engine in c++

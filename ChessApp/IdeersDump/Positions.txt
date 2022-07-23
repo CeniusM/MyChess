@@ -1,0 +1,5 @@
+have the castle as a 4 byte array
+
+so if you want to see if White King is set you go like Castle[0] == 1
+but if you wanna make it so only the black side can castle you
+can have a int pointer to castle[0] and set it to 00000000_00000000_00000001_00000001
