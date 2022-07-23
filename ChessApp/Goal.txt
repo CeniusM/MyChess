@@ -1,6 +1,7 @@
 Make my own stack and list data type
 
-atlist 20 mil combinations a second inside vs relese
+atlist 20 mil combinations a second inside vsc relese
+(ctrl + shift + b) + dotnet run -c release
 
 beat humans :D
 

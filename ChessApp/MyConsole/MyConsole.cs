@@ -1,12 +1,11 @@
-
+#define vsc // if this is in vsc
 
 namespace MyLib
 {
     class MyConsole
     {
-#if DEBUG
-        public const string _path = @"MyConsole\Console.txt"; // for standalone and VSC
-        //  public const string _path = @"../../../MyConsole\Console.txt";
+#if vsc
+        public const string _path = @"MyConsole\Console.txt";
 #else
         public const string _path = @"../../../MyConsole\Console.txt"; // for standalone
 #endif

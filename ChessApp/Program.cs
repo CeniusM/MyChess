@@ -53,6 +53,7 @@ static class Program
 
     private static void StartGame(Form1 myForm)
     {
+#if DEBUG
         string s = Console.ReadLine()!;
         if (s == "f")
             FullTest(myForm);
@@ -62,6 +63,10 @@ static class Program
             MyChess.SpeedTester.TestRunner.Run();
         else if (s != "p")
             FullTest(myForm);
+#else
+            MyChess.SpeedTester.TestRunner.Run();
+#endif
+
 
 
 
