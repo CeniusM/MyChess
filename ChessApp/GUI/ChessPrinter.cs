@@ -4,6 +4,7 @@ using MyChess;
 using CS_Math;
 using MyChess.ChessBoard.Evaluators;
 using MyChess.PossibleMoves;
+using MyChess.ChessBoard.AIs;
 
 namespace MyChessGUI
 {
@@ -102,6 +103,7 @@ namespace MyChessGUI
             _formGUI.DrawSquare(Settings.Dimensions.ScreenWidth - Settings.Dimensions.EvalBarWidth, 0, Settings.Dimensions.ScreenHeight, Settings.Dimensions.EvalBarWidth, Color.White);
 
             float evaluation = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count) / 300f; // idk 
+            // float evaluation = new OnlyMinMax(chessGame).minimax(OnlyMinMax.Depth, chessGame.GetPossibleMoves().Count) / 300f;
 
             float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f, 15); // returs a num between -15 and 15
 

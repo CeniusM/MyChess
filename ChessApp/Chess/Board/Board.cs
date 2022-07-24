@@ -1,4 +1,6 @@
 // V2, no full or half moves or repetision will be considerd
+// or maby make chessGame take care of that
+// while this is only used for a quick engine
 
 namespace MyChess.ChessBoard
 {

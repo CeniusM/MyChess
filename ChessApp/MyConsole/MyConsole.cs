@@ -7,7 +7,7 @@ namespace MyLib
         public static void WriteLine(string str)
         {
 #if DEBUG
-            Console.WriteLine("str");
+            Console.WriteLine(str);
 #endif
         }
         public static string ReadLine()

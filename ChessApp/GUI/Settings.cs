@@ -6,6 +6,10 @@ namespace MyChessGUI
 {
     class Settings
     {
+        public class Game
+        {
+            public static bool PlayingAI = true;
+        }
         public class Dimensions
         {
             public const int FeildWidth = 100;

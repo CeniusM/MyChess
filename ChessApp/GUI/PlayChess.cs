@@ -19,11 +19,15 @@ namespace MyChessGUI
         private GameStates _GameState = GameStates.None;
 
         // ai used
-        private OnlyMinMax ai;
+        private
+        OnlyMinMax
+        // MisterRandom
+        ai;
 
 
         private const int SquareDimensions = 100;
-        private ChessGame chessGame = new ChessGame();
+        // private ChessGame chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B1n3/8/PPP1N1PP/RNBQK2R b KQ - 1 8");
+        private ChessGame chessGame = new ChessGame("8/8/8/8/7k/8/5r2/7K w - - 3 2");
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;
@@ -60,9 +64,15 @@ namespace MyChessGUI
                         chessGame.UnMakeMove();
                         _chessPrinter.PrintBoard(_selecktedSquare);
                         break;
-                    case 'r':
-                        AIMove();
+                    case 'a':
                         _chessPrinter.PrintBoard(_selecktedSquare);
+                        AIMoveStart();
+                        break;
+                    case 'o':
+                        AIDuel();
+                        break;
+                    case 'g':
+                        chessGame.possibleMoves.GenerateMoves();
                         break;
                     default:
                         break;
@@ -101,11 +111,11 @@ namespace MyChessGUI
                     break;
                 case GameStates.AIPlaying:
                     // some kind of options while the ai is playing or thinking
+                    MyLib.DebugConsole.WriteLine("AI Thinking");
                     break;
                 default:
                     throw new NotImplementedException("This GameState has not been implementet some how");
             }
-
         }
 
         private bool makingAMove = false;
@@ -140,6 +150,7 @@ namespace MyChessGUI
                 if (!move.HasValue)
                 {
                     makingAMove = false;
+                    _selecktedSquare = -1;
                     return;
                 }
 
@@ -153,10 +164,7 @@ namespace MyChessGUI
                 }
 
                 chessGame.MakeMove(move.Value);
-                _GameState = GameStates.AIPlaying;
-                _chessPrinter.PrintBoard(_selecktedSquare);
-                AIThinking = true;
-                Task.Run(AIMove);
+                AIMoveStart();
                 _selecktedSquare = -1;
             }
 
@@ -172,23 +180,103 @@ namespace MyChessGUI
             makingAMove = true;
 
             chessGame.MakeMove(new(StartSquareOfPromotionPiece, TargetSquareOfPromotionPiece, Move.Flag.PromoteToQueen, chessGame.board.Square[TargetSquareOfPromotionPiece]));
-            _GameState = GameStates.AIPlaying;
-            _chessPrinter.PrintBoard(_selecktedSquare);
-            AIThinking = true;
-            Task.Run(AIMove);
+            AIMoveStart();
+            _selecktedSquare = -1;
 
             makingAMove = false;
         }
 
 
         private bool AIThinking = false;
-        private void AIMove()
+        private void AIMoveStart()
         {
-            chessGame.MakeMove(ai.GetMove());
-            _GameState = GameStates.PlayingMove;
+            if (!Settings.Game.PlayingAI)
+            {
+                _GameState = GameStates.PlayingMove;
+                return;
+            }
+            if (AIThinking)
+                return;
+            AIThinking = true;
+            _GameState = GameStates.AIPlaying;
 
             _chessPrinter.PrintBoard(_selecktedSquare);
+            Task.Run(AIThinkingOfMove);
+            // Task.WaitAll(Task.Run(() => chessGame.MakeMove(ai.GetMove())));
+        }
+
+        private void AIThinkingOfMove()
+        {
+            chessGame.MakeMove(ai.GetMove());
+            _chessPrinter.PrintBoard(_selecktedSquare);
+            _GameState = GameStates.PlayingMove;
             AIThinking = false;
         }
+
+
+        int gamesToPlay = 20;
+        private void AIDuel()
+        {
+            // ChessGame cg = new("r2qk2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/5N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
+            ChessGame cg = new();
+            ChessPrinter cp = new(_form, cg);
+            OnlyMinMax ai1 = new(cg);
+            MisterRandom ai2 = new(cg);
+
+
+
+            //repetetion detecktion
+            int gamesPtr = 0;
+            int[,] games = new int[6, 64]; // first: the amount of saved games, second: game
+            bool same = true;
+            bool AddAndDeteckt()
+            {
+                gamesPtr++;
+                if (gamesPtr == 6)
+                    gamesPtr = 0;
+                for (int i = 0; i < 64; i++)
+                    games[gamesPtr, i] = cg.board.Square[i];
+
+
+                same = true;
+                for (int i = 0; i < 64; i++)
+                {
+                    if (games[0, i] == games[2, i] && games[2, i] == games[4, i]) same = false;
+                    if (games[1, i] == games[3, i] && games[3, i] == games[5, i]) same = false;
+                }
+                return same;
+            }
+
+            while (true)
+            {
+                cp.PrintBoard(-1);
+                cg.MakeMove(ai1.GetMove());
+                if (cg.GetPossibleMoves().Count == 0)
+                    break;
+                if (AddAndDeteckt())
+                    break;
+
+                cp.PrintBoard(-1);
+                cg.MakeMove(ai2.GetMove());
+                if (cg.GetPossibleMoves().Count == 0)
+                    break;
+                if (AddAndDeteckt())
+                    break;
+
+            }
+            cp.PrintBoard(-1);
+            // Thread.Sleep(5000);
+            if (same)
+                MyLib.DebugConsole.WriteLine("Draw due to repetition");
+            else if (cg.evaluator.EvaluateBoardLight(0) == 0)
+                MyLib.DebugConsole.WriteLine("Draw");
+            else
+                MyLib.DebugConsole.WriteLine("Winner: " + ((cg.evaluator.EvaluateBoardLight(0) == int.MaxValue) ? "White" : "Black"));
+            gamesToPlay--;
+            if (gamesToPlay == 0)
+                return;
+            AIDuel();
+        }
+
     }
 }
