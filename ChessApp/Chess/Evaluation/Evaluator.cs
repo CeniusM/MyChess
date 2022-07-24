@@ -14,7 +14,7 @@ namespace MyChess.ChessBoard.Evaluators
             matCounter = new(board);
         }
 
-        public int EvaluateBoardLight(int moveCount)
+        public int EvaluateBoardLight(int moveCount, bool evaluateMatPlacement = false)
         {
             if (moveCount == 0)
             {
@@ -25,7 +25,7 @@ namespace MyChess.ChessBoard.Evaluators
                     return 0;
             }
 
-            int evaluation = matCounter.GetMaterialAdvantage(chessGame);
+            int evaluation = matCounter.GetMaterialAdvantage(chessGame, evaluateMatPlacement);
 
             return evaluation;
         }

@@ -116,3 +116,19 @@ Winner: White
 Winner: White
 Winner: White
 Player 1: 99/0 Won
+Winner: Black
+Winner: White
+Draw due to repetition
+Draw due to repetition
+Winner: White
+Draw due to repetition
+Draw due to repetition
+Draw due to repetition
+Draw due to repetition
+Draw due to repetition
+Winner: Black
+Winner: White
+AI Thinking
+AI Thinking
+AI Thinking
+AI Thinking

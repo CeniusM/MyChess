@@ -78,10 +78,10 @@ static class Program
         // SpeedTest
         //MyChess.SpeedTester.TestRunner.Run();
 
-        // game = new GameOfChess(myForm);
-        // game.Play();
-        MakePiecePlain m = new(myForm);
-        m.Start();
+        game = new GameOfChess(myForm);
+        game.Play();
+        // MakePiecePlain m = new(myForm);
+        // m.Start();
     }
     // [DllImport("kernel32.dll", SetLastError = true)]
     // [return: MarshalAs(UnmanagedType.Bool)]

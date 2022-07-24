@@ -44,14 +44,15 @@ namespace MyChessGUI
 
         // int[] currenPlain = new int[64];
         int[] currenPlain =
-        {-30,-40,-40,-50,-50,-40,-40,-30,
--30,-40,-40,-50,-50,-40,-40,-30,
--30,-40,-40,-50,-50,-40,-40,-30,
--30,-40,-40,-50,-50,-40,-40,-30,
--20,-30,-30,-40,-40,-30,-30,-20,
--10,-20,-20,-20,-20,-20,-20,-10,
- 20, 20,  0,  0,  0,  0, 20, 20,
- 20, 30, 10,  0,  0, 10, 30, 20
+        {
+                    0,0,0,0,0,0,0,0
+                ,5,10,10,-20,-20,10,10,5
+                ,5,-5,-10,0,0,-10,-5,5
+                ,0,0,0,20,20,0,0,0
+                ,5,5,10,25,25,10,5,5
+                ,10,10,20,30,30,20,10,10
+                ,50,50,50,50,50,50,50,50
+                ,0,0,0,0,0,0,0,0
         };
 
         int myIndex = 0;
@@ -88,7 +89,7 @@ namespace MyChessGUI
                 for (int i = 0; i < 64; i++)
                     currenPlain[i] = Fliped[i];
             }
-            if (e.KeyChar == ' ')
+            if (e.KeyChar == 'n')
             {
                 for (int i = 0; i < 64; i++)
                     currenPlain[i] = PiecePosesBonus.PieceBonuses[myIndex, i];
@@ -111,8 +112,8 @@ namespace MyChessGUI
             if (pressedSquare > 63 || pressedSquare < 0)
                 return;
 
-            currenPlain[pressedSquare] += 50;
-            if (currenPlain[pressedSquare] > 350)
+            currenPlain[pressedSquare] += 5;
+            if (currenPlain[pressedSquare] > 50)
                 currenPlain[pressedSquare] = 0;
 
             MyLib.DebugConsole.WriteLine(currenPlain[pressedSquare] + "");
@@ -128,7 +129,7 @@ namespace MyChessGUI
                     for (int j = 0; j < 8; j++)
                     {
                         int place = currenPlain[i + (j * 8)];
-                        if (place > 350)
+                        if (place > 100)
                             _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.DarkRed);
                         else if (place == 0)
                             _formGUI.DrawSquare(i * 100, j * 100, 100, 100, Color.Black);
@@ -137,16 +138,16 @@ namespace MyChessGUI
                             place = Math.Abs(place);
                             _formGUI.DrawSquare(i * 100, j * 100, 100, 100,
                             // Color.FromArgb(255, 0, (351 / place), (351 / place)));
-                            Color.FromArgb(255, (int)(((float)place / (float)350) * 255f * 4), 0, 0));
-                            // MyLib.DebugConsole.WriteLine(((int)((float)place / (float)350) * 255) + " " + place);
+                            Color.FromArgb(255, (int)(((float)place / (float)50) * 255f), 0, 0));
+                            // MyLib.DebugConsole.WriteLine(((int)((float)place / (float)100) * 255) + " " + place);
                         }
 
                         else
                         {
                             _formGUI.DrawSquare(i * 100, j * 100, 100, 100,
                             // Color.FromArgb(255, 0, (351 / place), (351 / place)));
-                            Color.FromArgb(255, 0, 0, (int)(((float)place / (float)350) * 255f)));
-                            // MyLib.DebugConsole.WriteLine(((int)((float)place / (float)350) * 255) + " " + place);
+                            Color.FromArgb(255, 0, 0, (int)(((float)place / (float)50) * 255f)));
+                            // MyLib.DebugConsole.WriteLine(((int)((float)place / (float)100) * 255) + " " + place);
                         }
 
                     }

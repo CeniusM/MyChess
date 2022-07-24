@@ -41,12 +41,12 @@ namespace MyChess.ChessBoard.Evaluators.Methods
             };
         }
         public Board board;
-        public MaterialCounterBase(Board board)
+        public MaterialCounterBase(Board board, bool evaluateMatPlacement = false)
         {
             this.board = board;
         }
 
-        public abstract int GetMaterialAdvantage(ChessGame chessGame);
+        public abstract int GetMaterialAdvantage(ChessGame chessGame, bool evaluateMatPlacement = false);
     }
 
 
@@ -54,30 +54,41 @@ namespace MyChess.ChessBoard.Evaluators.Methods
     {
         public MaterialCounterV1(Board board) : base(board) { }
 
-        public override int GetMaterialAdvantage(ChessGame chessGame)
+        public override int GetMaterialAdvantage(ChessGame chessGame, bool evaluateMatPlacement = false)
         {
-            int whiteEval = CountMaterial(board, Piece.White);
-            int blackEval = CountMaterial(board, Piece.Black);
+            int whiteEval = CountMaterial(board, Piece.White, evaluateMatPlacement);
+            int blackEval = CountMaterial(board, Piece.Black, evaluateMatPlacement);
 
 
-            whiteEval += LateGameKingToEadge.GetBonus(chessGame, blackEval /*currently material*/, 16);
-            blackEval += LateGameKingToEadge.GetBonus(chessGame, whiteEval /*currently material*/, 8);
+            blackEval += LateGameKingToEadge.GetBonus(chessGame, chessGame.board.piecePoses.Count, 16);
+            whiteEval += LateGameKingToEadge.GetBonus(chessGame, chessGame.board.piecePoses.Count, 8);
 
             return whiteEval - blackEval;
         }
 
-        private static int CountMaterial(Board board, int color)
+        private static int CountMaterial(Board board, int color, bool evaluateMatPlacement = false)
         {
             int material = 0;
             for (int i = 0; i < board.piecePoses.Count; i++)
             {
-                if ((board.Square[board.piecePoses[i]] & Piece.ColorBits) == color)
-                    material += PieceValue.Indexed[board.Square[board.piecePoses[i]]];
+                int piece = board.Square[board.piecePoses[i]];
+                if ((piece & Piece.ColorBits) == color)
+                {
+                    material += PieceValue.Indexed[piece];
+                    if (evaluateMatPlacement)
+                    {
+                        material += PiecePosesBonus.PieceBonuses[piece, board.piecePoses[i]];
+                        // if (color == 8 && piece == 9)
+                        //     MyLib.DebugConsole.WriteLine("Piece: " + piece + " + " + PiecePosesBonus.PieceBonuses[piece, board.piecePoses[i]] + " Cord: " + board.piecePoses[i]);
+                    }
+                }
             }
+            // if (evaluateMatPlacement)
+            //     MyLib.DebugConsole.WriteLine("");
             return material;
         }
 
-        
+
     }
 }
 

@@ -3,6 +3,14 @@ using winForm;
 using MyChess.ChessBoard;
 using MyChess.ChessBoard.AIs;
 
+/*
+Ideers:
+Save replay
+make an evaluation function to only look at the moves where you can take another piece
+
+*/
+
+
 namespace MyChessGUI
 {
     public enum GameStates
@@ -21,14 +29,14 @@ namespace MyChessGUI
 
         // ai used
         private
-        OnlyMinMax
+        OnlyMinMax1
         // MisterRandom
         ai;
 
 
         private const int SquareDimensions = 100;
         // private ChessGame chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B1n3/8/PPP1N1PP/RNBQK2R b KQ - 1 8");
-        // private ChessGame chessGame = new ChessGame("8/8/8/8/7k/8/5r2/7K w - - 3 2");
+        // private ChessGame chessGame = new ChessGame("8/8/8/8/7k/8/5r2/7K w - - 0 1");
         private ChessGame chessGame = new ChessGame();
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
@@ -68,11 +76,13 @@ namespace MyChessGUI
                         break;
                     case 'r':
                         chessGame = new ChessGame();
+                        _chessPrinter = new ChessPrinter(_form, chessGame);
+                        ai = new(chessGame);
                         _chessPrinter.PrintBoard(_selecktedSquare);
                         break;
                     case 'a':
                         _chessPrinter.PrintBoard(_selecktedSquare);
-                        AIMoveStart();
+                        AIMoveStart(true);
                         break;
                     case 'o':
                         await Task.Run(AIDuel);
@@ -195,9 +205,9 @@ namespace MyChessGUI
 
 
         private bool AIThinking = false;
-        private void AIMoveStart()
+        private void AIMoveStart(bool overrideSetting = false)
         {
-            if (!Settings.Game.PlayingAI)
+            if (!Settings.Game.PlayingAI && !overrideSetting)
             {
                 _GameState = GameStates.PlayingMove;
                 return;
@@ -231,9 +241,27 @@ namespace MyChessGUI
             // ChessGame cg = new("r2qk2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/5N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
             ChessGame cg = new();
             ChessPrinter cp = new(_form, cg);
-            OnlyMinMax ai1 = new(cg);
-            MisterRandom ai2 = new(cg);
+            OnlyMinMax ai1 = new(cg); // white
+            OnlyMinMax1 ai2 = new(cg); // black
+            // MisterRandom ai2 = new(cg);
             // AlphaBetaPruning ai2 = new(cg);
+
+
+
+
+
+
+            // starts of with 2 random moves for each couse its all detemenistik
+            int randomMoves = 4;
+            var r = new Random();
+            for (int i = 0; i < randomMoves; i++)
+                cg.MakeMove(cg.GetPossibleMoves()[r.Next(0, cg.GetPossibleMoves().Count())]);
+
+
+
+
+
+
 
 
 

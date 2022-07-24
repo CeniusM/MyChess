@@ -13,7 +13,7 @@ namespace MyChessGUI
         public FormAPI(Form1 form)
         {
             _form = form;
-            _bitmap = new Bitmap(900, 800);
+            _bitmap = new Bitmap(form.Width, form.Height);
             _graphicsObj = Graphics.FromImage(_bitmap);
             _pen = new Pen(Color.Black);
             _brush = new System.Drawing.SolidBrush(Color.White);

@@ -16,7 +16,7 @@ namespace MyChessGUI
             public const int FeildHeight = 100;
             public const int PieceWidth = FeildWidth;
             public const int PieceHeight = FeildHeight;
-            public const int EvalBarWidth = 100;
+            public const int EvalBarWidth = 200;
             public const int ScreenWidth = FeildWidth * 8 + EvalBarWidth;
             public const int ScreenHeight = FeildHeight * 8;
         }
