@@ -25,7 +25,7 @@ namespace MyChess.ChessBoard.Evaluators
                     return 0;
             }
 
-            int evaluation = matCounter.GetMaterialAdvantage();
+            int evaluation = matCounter.GetMaterialAdvantage(chessGame);
 
             return evaluation;
         }

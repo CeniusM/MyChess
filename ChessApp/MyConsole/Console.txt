@@ -1,0 +1,118 @@
+
+Test Casteling: Position 2
+Time: 0ms, Depth: 1, MoveCount: 48
+Time: 1ms, Depth: 2, MoveCount: 2039
+Time: 43ms, Depth: 3, MoveCount: 97862
+Time: 1154ms, Depth: 4, MoveCount: 4085603
+Time: 54183ms, Depth: 5, MoveCount: 193690690
+
+Test Casteling: Position 2
+Time: 1ms, Depth: 1, MoveCount: 48
+Time: 0ms, Depth: 2, MoveCount: 2039
+Time: 26ms, Depth: 3, MoveCount: 97862
+Time: 803ms, Depth: 4, MoveCount: 4085603
+Time: 31988ms, Depth: 5, MoveCount: 193690690
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Draw due to repetition
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Winner: White
+Player 1: 99/0 Won

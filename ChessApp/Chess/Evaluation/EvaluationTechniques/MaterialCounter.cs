@@ -12,7 +12,7 @@ namespace MyChess.ChessBoard.Evaluators.Methods
             const int Rook = 500;
             const int Queen = 900;
             public static readonly int[] Indexed =
-            {
+            {   
                 // so we dont need if statements too get he piece type
                 // becous just use the piece as an idexer to get the value
                 0, // NULL
@@ -46,7 +46,7 @@ namespace MyChess.ChessBoard.Evaluators.Methods
             this.board = board;
         }
 
-        public abstract int GetMaterialAdvantage();
+        public abstract int GetMaterialAdvantage(ChessGame chessGame);
     }
 
 
@@ -54,10 +54,14 @@ namespace MyChess.ChessBoard.Evaluators.Methods
     {
         public MaterialCounterV1(Board board) : base(board) { }
 
-        public override int GetMaterialAdvantage()
+        public override int GetMaterialAdvantage(ChessGame chessGame)
         {
             int whiteEval = CountMaterial(board, Piece.White);
             int blackEval = CountMaterial(board, Piece.Black);
+
+
+            whiteEval += LateGameKingToEadge.GetBonus(chessGame, blackEval /*currently material*/, 16);
+            blackEval += LateGameKingToEadge.GetBonus(chessGame, whiteEval /*currently material*/, 8);
 
             return whiteEval - blackEval;
         }
@@ -72,6 +76,8 @@ namespace MyChess.ChessBoard.Evaluators.Methods
             }
             return material;
         }
+
+        
     }
 }
 

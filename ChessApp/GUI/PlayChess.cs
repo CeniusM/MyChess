@@ -11,6 +11,7 @@ namespace MyChessGUI
         PlayingMove,
         PlayingChosingPiece,
         AIPlaying,
+        AIDueling,
         Settings,
         SelectionScreen1
     }
@@ -27,7 +28,8 @@ namespace MyChessGUI
 
         private const int SquareDimensions = 100;
         // private ChessGame chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B1n3/8/PPP1N1PP/RNBQK2R b KQ - 1 8");
-        private ChessGame chessGame = new ChessGame("8/8/8/8/7k/8/5r2/7K w - - 3 2");
+        // private ChessGame chessGame = new ChessGame("8/8/8/8/7k/8/5r2/7K w - - 3 2");
+        private ChessGame chessGame = new ChessGame();
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;
@@ -54,7 +56,7 @@ namespace MyChessGUI
             _chessPrinter.PrintBoard(_selecktedSquare);
         }
 
-        private void KeyPress(object? sender, KeyPressEventArgs e)
+        private async void KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (_GameState != GameStates.AIPlaying)
             {
@@ -64,12 +66,17 @@ namespace MyChessGUI
                         chessGame.UnMakeMove();
                         _chessPrinter.PrintBoard(_selecktedSquare);
                         break;
+                    case 'r':
+                        chessGame = new ChessGame();
+                        _chessPrinter.PrintBoard(_selecktedSquare);
+                        break;
                     case 'a':
                         _chessPrinter.PrintBoard(_selecktedSquare);
                         AIMoveStart();
                         break;
                     case 'o':
-                        AIDuel();
+                        await Task.Run(AIDuel);
+                        _chessPrinter.PrintBoard(_selecktedSquare);
                         break;
                     case 'g':
                         chessGame.possibleMoves.GenerateMoves();
@@ -214,21 +221,26 @@ namespace MyChessGUI
         }
 
 
-        int gamesToPlay = 20;
+        int gamesToPlay = 100;
+        int gamesPlayed = 0;
+        int player1Win = 0;
+        int player2Win = 0;
         private void AIDuel()
         {
+            _GameState = GameStates.AIDueling;
             // ChessGame cg = new("r2qk2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/5N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
             ChessGame cg = new();
             ChessPrinter cp = new(_form, cg);
             OnlyMinMax ai1 = new(cg);
             MisterRandom ai2 = new(cg);
+            // AlphaBetaPruning ai2 = new(cg);
 
 
 
-            //repetetion detecktion
+            //repetetion detecktiond
             int gamesPtr = 0;
             int[,] games = new int[6, 64]; // first: the amount of saved games, second: game
-            bool same = true;
+            bool same = false;
             bool AddAndDeteckt()
             {
                 gamesPtr++;
@@ -238,12 +250,18 @@ namespace MyChessGUI
                     games[gamesPtr, i] = cg.board.Square[i];
 
 
-                same = true;
+                same = false;
+                int sameSquares1 = 0;
+                int sameSquares2 = 0;
                 for (int i = 0; i < 64; i++)
                 {
-                    if (games[0, i] == games[2, i] && games[2, i] == games[4, i]) same = false;
-                    if (games[1, i] == games[3, i] && games[3, i] == games[5, i]) same = false;
+                    if (games[0, i] == games[2, i] && games[2, i] == games[4, i]) sameSquares1++;
+                    if (games[1, i] == games[3, i] && games[3, i] == games[5, i]) sameSquares2++;
+                    // if (games[1, i] == games[3, i] && games[3, i] == games[5, i]) same = false;
                 }
+
+                if (sameSquares1 == 64 && sameSquares2 == 64)
+                    same = true;
                 return same;
             }
 
@@ -260,8 +278,8 @@ namespace MyChessGUI
                 cg.MakeMove(ai2.GetMove());
                 if (cg.GetPossibleMoves().Count == 0)
                     break;
-                if (AddAndDeteckt())
-                    break;
+                // if (AddAndDeteckt())
+                //     break;
 
             }
             cp.PrintBoard(-1);
@@ -272,11 +290,22 @@ namespace MyChessGUI
                 MyLib.DebugConsole.WriteLine("Draw");
             else
                 MyLib.DebugConsole.WriteLine("Winner: " + ((cg.evaluator.EvaluateBoardLight(0) == int.MaxValue) ? "White" : "Black"));
+
+            if (cg.evaluator.EvaluateBoardLight(0) == int.MaxValue)
+                player1Win++;
+            else if (cg.evaluator.EvaluateBoardLight(0) == int.MinValue)
+                player2Win++;
+
+            gamesPlayed++;
+
             gamesToPlay--;
             if (gamesToPlay == 0)
+            {
+                MyLib.DebugConsole.WriteLine("Player 1: " + player1Win + "/" + gamesToPlay + " Won");
+                _GameState = GameStates.PlayingMove;
                 return;
+            }
             AIDuel();
         }
-
     }
 }

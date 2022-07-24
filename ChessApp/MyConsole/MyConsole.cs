@@ -8,6 +8,16 @@ namespace MyLib
         {
 #if DEBUG
             Console.WriteLine(str);
+#else
+            MyConsole.WriteLine(str);
+#endif
+        }
+        public static void Write(string str)
+        {
+#if DEBUG
+            Console.Write(str);
+#else
+            // MyConsole.Write(str);
 #endif
         }
         public static string ReadLine()

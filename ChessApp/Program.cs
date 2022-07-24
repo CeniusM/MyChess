@@ -64,7 +64,7 @@ static class Program
         // else if (s != "p")
         // FullTest(myForm);
 #else
-            MyChess.SpeedTester.TestRunner.Run();
+            // MyChess.SpeedTester.TestRunner.Run();
 #endif
 
 
@@ -78,8 +78,10 @@ static class Program
         // SpeedTest
         //MyChess.SpeedTester.TestRunner.Run();
 
-        game = new GameOfChess(myForm);
-        game.Play();
+        // game = new GameOfChess(myForm);
+        // game.Play();
+        MakePiecePlain m = new(myForm);
+        m.Start();
     }
     // [DllImport("kernel32.dll", SetLastError = true)]
     // [return: MarshalAs(UnmanagedType.Bool)]

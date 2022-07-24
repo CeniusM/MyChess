@@ -61,11 +61,11 @@ namespace MyChess.PossibleMoves
                 OpponentKing = Piece.WKing;
             }
 
-            AddKingMoves();
+            AddCastleMoves();
+            AddPawnMoves();
             AddKnightMoves();
             AddSlidingPieces();
-            AddPawnMoves();
-            AddCastleMoves();
+            AddKingMoves();
 
             KingCheckCheck();
         }
