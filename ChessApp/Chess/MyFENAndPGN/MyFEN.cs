@@ -44,7 +44,7 @@ namespace MyChess.FEN
                     return -1;
             }
         }
-        public static char GetCharFromPiece(int i)
+        public static char GetCharFromPiece(int i) // to make this faster index it
         {
             if (i == 0)
                 return ' ';
