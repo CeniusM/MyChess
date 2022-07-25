@@ -231,7 +231,7 @@ namespace MyChessGUI
         }
 
 
-        int gamesToPlay = 100;
+        int gamesToPlay = 10;
         int gamesPlayed = 0;
         int player1Win = 0;
         int player2Win = 0;
@@ -241,8 +241,12 @@ namespace MyChessGUI
             // ChessGame cg = new("r2qk2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/5N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
             ChessGame cg = new();
             ChessPrinter cp = new(_form, cg);
-            OnlyMinMax ai1 = new(cg); // white
-            OnlyMinMax1 ai2 = new(cg); // black
+            OnlyMinMax1 ai1 = new(cg); // white
+            AlphaBetaPruning ai2 = new(cg); // black
+
+            OnlyMinMax1 ai1SideKick = new(cg);
+            AlphaBetaPruning ai2SideKick = new(cg);
+
             // MisterRandom ai2 = new(cg);
             // AlphaBetaPruning ai2 = new(cg);
 
@@ -296,14 +300,25 @@ namespace MyChessGUI
             while (true)
             {
                 cp.PrintBoard(-1);
-                cg.MakeMove(ai1.GetMove());
+                Move move1 = ai1.GetMove();
+                // Move move2 = ai1SideKick.GetMove();
+
+
+                // if (move1 != move2)
+                //     MyLib.DebugConsole.WriteLine("Move Failed\n" + move1.ToString() + "\n" + move2.ToString());
+
+                cg.MakeMove(move1);
                 if (cg.GetPossibleMoves().Count == 0)
                     break;
                 if (AddAndDeteckt())
                     break;
 
+
+                move1 = ai2.GetMove();
+                // move2 = ai2SideKick.GetMove();
+
                 cp.PrintBoard(-1);
-                cg.MakeMove(ai2.GetMove());
+                cg.MakeMove(move1);
                 if (cg.GetPossibleMoves().Count == 0)
                     break;
                 // if (AddAndDeteckt())
@@ -329,7 +344,8 @@ namespace MyChessGUI
             gamesToPlay--;
             if (gamesToPlay == 0)
             {
-                MyLib.DebugConsole.WriteLine("Player 1: " + player1Win + "/" + gamesToPlay + " Won");
+                MyLib.DebugConsole.WriteLine("Player 1: " + player1Win + "/" + gamesPlayed + " Won");
+                MyLib.DebugConsole.WriteLine("Player 2: " + player2Win + "/" + gamesPlayed + " Won");
                 _GameState = GameStates.PlayingMove;
                 return;
             }

@@ -19,6 +19,10 @@ namespace MyChess.ChessBoard.AIs
                 return new(0, 0, 0, board.Square[0]);
 
 
+            // maby needs to be a ref? prb not tho
+            int alpha = int.MinValue;
+            int beta = int.MinValue;
+
             int bestMove = 0;
             int bestMoveEval = (board.playerTurn == 8) ? int.MinValue : int.MaxValue;
             int eval = 0;
@@ -30,6 +34,9 @@ namespace MyChess.ChessBoard.AIs
 
                 if (board.playerTurn == 8) // max
                 {
+                    // alpha = Math.Max(alpha, eval);
+                    // if (beta <= alpha)
+                    //     break;
                     if (eval > bestMoveEval)
                     {
                         bestMoveEval = eval;
@@ -38,6 +45,9 @@ namespace MyChess.ChessBoard.AIs
                 }
                 else    // min
                 {
+                    // beta = Math.Min(beta, eval);
+                    // if (alpha <= beta)
+                    //     break;
                     if (eval < bestMoveEval)
                     {
                         bestMoveEval = eval;
@@ -53,7 +63,7 @@ namespace MyChess.ChessBoard.AIs
         public int AlphaBeta(int depth, int LASTMOVECOUNT, bool maxPlayer, int alpha, int beta)
         {
             if (depth == 0)
-                return evaluator.EvaluateBoardLight(LASTMOVECOUNT);
+                return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
 
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesRef = chessGame.GetPossibleMoves();
@@ -72,9 +82,9 @@ namespace MyChess.ChessBoard.AIs
                     int eval = AlphaBeta(depth - 1, Count, false, alpha, beta);
                     board.UnMakeMove();
                     maxEval = Math.Max(maxEval, eval);
-                    alpha = Math.Max(alpha, eval);
-                    if (beta <= alpha)
-                        break;
+                    // alpha = Math.Max(alpha, eval);
+                    // if (beta >= alpha)
+                    //     break;
                 }
                 return maxEval;
             }
@@ -87,9 +97,9 @@ namespace MyChess.ChessBoard.AIs
                     int eval = AlphaBeta(depth - 1, Count, true, alpha, beta);
                     board.UnMakeMove();
                     minEval = Math.Min(minEval, eval);
-                    beta = Math.Min(beta, eval);
-                    if (alpha <= beta)
-                        break;
+                    // beta = Math.Min(beta, eval);
+                    // if (alpha >= beta)
+                    //     break;
                 }
                 return minEval;
             }

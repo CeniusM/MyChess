@@ -132,3 +132,18 @@ AI Thinking
 AI Thinking
 AI Thinking
 AI Thinking
+Winner: White
+Draw due to repetition
+Draw due to repetition
+Draw due to repetition
+Draw due to repetition
+Draw due to repetition
+Winner: Black
+Draw due to repetition
+Winner: White
+Winner: Black
+Winner: Black
+Player 1: 3/0 Won
+Winner: White
+Draw due to repetition
+Draw due to repetition

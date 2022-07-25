@@ -4,7 +4,7 @@ namespace MyChess.ChessBoard.AIs
 {
     public class OnlyMinMax1 : ChessAIBase
     {
-        public const int Depth = 5; // rather have id even so the last move is from the oppenent
+        public const int Depth = 4; // rather have id even so the last move is from the oppenent
         public OnlyMinMax1(ChessGame chessGame) : base(chessGame)
         {
         }

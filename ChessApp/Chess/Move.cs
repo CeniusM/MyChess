@@ -44,5 +44,28 @@ namespace MyChess
                     return 0;
             }
         }
+
+        public static bool operator ==(Move m1, Move m2)
+        {
+            return (m1.StartSquare == m2.StartSquare &&
+            m1.TargetSquare == m2.TargetSquare &&
+            m1.MoveFlag == m2.MoveFlag &&
+            m1.CapturedPiece == m2.CapturedPiece
+            );
+        }
+
+        public static bool operator !=(Move m1, Move m2)
+        {
+            return (m1.StartSquare != m2.StartSquare ||
+            m1.TargetSquare != m2.TargetSquare ||
+            m1.MoveFlag != m2.MoveFlag ||
+            m1.CapturedPiece != m2.CapturedPiece
+            );
+        }
+
+        public override string ToString()
+        {
+            return "{S:" + StartSquare + ", T:" + TargetSquare + ", F:" + MoveFlag + ", C:" + CapturedPiece + "}";
+        }
     }
 }
