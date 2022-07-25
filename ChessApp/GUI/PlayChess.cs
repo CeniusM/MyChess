@@ -29,7 +29,7 @@ namespace MyChessGUI
 
         // ai used
         private
-        OnlyMinMax1
+        AlphaBetaPruning
         // MisterRandom
         ai;
 
@@ -66,30 +66,44 @@ namespace MyChessGUI
 
         private async void KeyPress(object? sender, KeyPressEventArgs e)
         {
+            if (_chessPrinter._isPrinting)
+                return;
             if (_GameState != GameStates.AIPlaying)
             {
                 switch (e.KeyChar)
                 {
                     case ' ':
                         chessGame.UnMakeMove();
-                        _chessPrinter.PrintBoard(_selecktedSquare);
+                        if (!AIThinking)
+                            _chessPrinter.PrintBoard(_selecktedSquare);
                         break;
                     case 'r':
                         chessGame = new ChessGame();
                         _chessPrinter = new ChessPrinter(_form, chessGame);
                         ai = new(chessGame);
-                        _chessPrinter.PrintBoard(_selecktedSquare);
+                        if (!AIThinking)
+                            _chessPrinter.PrintBoard(_selecktedSquare);
                         break;
                     case 'a':
-                        _chessPrinter.PrintBoard(_selecktedSquare);
+                        if (!AIThinking)
+                            _chessPrinter.PrintBoard(_selecktedSquare);
                         AIMoveStart(true);
                         break;
                     case 'o':
-                        await Task.Run(AIDuel);
-                        _chessPrinter.PrintBoard(_selecktedSquare);
+                        gamesToPlay = 100;
+                        await Task.Run(() => AIDuel(new AlphaBetaPruning(null!), new OnlyMinMax1(null!), true));
+                        if (!AIThinking)
+                            _chessPrinter.PrintBoard(_selecktedSquare);
+                        break;
+                    case 'p':
+                        gamesToPlay = 0;
                         break;
                     case 'g':
                         chessGame.possibleMoves.GenerateMoves();
+                        break;
+                    case 'e':
+                        if (!AIThinking)
+                            _chessPrinter.PrintBoard(_selecktedSquare, true);
                         break;
                     default:
                         break;
@@ -181,6 +195,8 @@ namespace MyChessGUI
                 }
 
                 chessGame.MakeMove(move.Value);
+                if (!AIThinking)
+                    _chessPrinter.PrintBoard(_selecktedSquare);
                 AIMoveStart();
                 _selecktedSquare = -1;
             }
@@ -197,6 +213,9 @@ namespace MyChessGUI
             makingAMove = true;
 
             chessGame.MakeMove(new(StartSquareOfPromotionPiece, TargetSquareOfPromotionPiece, Move.Flag.PromoteToQueen, chessGame.board.Square[TargetSquareOfPromotionPiece]));
+
+            if (!AIThinking)
+                _chessPrinter.PrintBoard(_selecktedSquare);
             AIMoveStart();
             _selecktedSquare = -1;
 
@@ -217,7 +236,8 @@ namespace MyChessGUI
             AIThinking = true;
             _GameState = GameStates.AIPlaying;
 
-            _chessPrinter.PrintBoard(_selecktedSquare);
+            if (!AIThinking)
+                _chessPrinter.PrintBoard(_selecktedSquare);
             Task.Run(AIThinkingOfMove);
             // Task.WaitAll(Task.Run(() => chessGame.MakeMove(ai.GetMove())));
         }
@@ -231,20 +251,41 @@ namespace MyChessGUI
         }
 
 
-        int gamesToPlay = 10;
+        int gamesToPlay;
         int gamesPlayed = 0;
         int player1Win = 0;
         int player2Win = 0;
-        private void AIDuel()
+        private void AIDuel(IChessAI ai1, IChessAI ai2, bool onlyPlayFENs = false)
         {
             _GameState = GameStates.AIDueling;
             // ChessGame cg = new("r2qk2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/5N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
-            ChessGame cg = new();
-            ChessPrinter cp = new(_form, cg);
-            OnlyMinMax1 ai1 = new(cg); // white
-            AlphaBetaPruning ai2 = new(cg); // black
+            ChessGame cg;
+            if (gamesPlayed < MyChess.FEN.RandomFENList.GetLenght())
+                cg = new(MyChess.FEN.RandomFENList.GetFEN(gamesPlayed));
+            else if (onlyPlayFENs)
+            {
+                MyLib.DebugConsole.WriteLine("Player 1: " + player1Win + "/" + gamesPlayed + " Won");
+                MyLib.DebugConsole.WriteLine("Player 2: " + player2Win + "/" + gamesPlayed + " Won");
+                _GameState = GameStates.PlayingMove;
+                player1Win = 0;
+                player2Win = 0;
+                gamesPlayed = 0;
+                return;
+            }
+            else
+                cg = new();
 
-            OnlyMinMax1 ai1SideKick = new(cg);
+
+
+            ChessPrinter cp = new(_form, cg);
+            // ai1 = white
+            // ai2 = black
+            // AlphaBetaPruning 
+            // OnlyMinMax1 
+            ai1.SetChessGame(cg);
+            ai2.SetChessGame(cg);
+
+            OnlyMinMax1 ai1SiddeKick = new(cg);
             AlphaBetaPruning ai2SideKick = new(cg);
 
             // MisterRandom ai2 = new(cg);
@@ -256,10 +297,11 @@ namespace MyChessGUI
 
 
             // starts of with 2 random moves for each couse its all detemenistik
-            int randomMoves = 4;
-            var r = new Random();
-            for (int i = 0; i < randomMoves; i++)
-                cg.MakeMove(cg.GetPossibleMoves()[r.Next(0, cg.GetPossibleMoves().Count())]);
+            // int randomMoves = 4;
+            // var r = new Random();
+            // for (int i = 0; i < randomMoves; i++)
+            //     if (cg.GetPossibleMoves().Count() > randomMoves)
+            //         cg.MakeMove(cg.GetPossibleMoves()[r.Next(0, cg.GetPossibleMoves().Count())]);
 
 
 
@@ -273,6 +315,8 @@ namespace MyChessGUI
             int gamesPtr = 0;
             int[,] games = new int[6, 64]; // first: the amount of saved games, second: game
             bool same = false;
+
+            bool toManyMoves = false;
             bool AddAndDeteckt()
             {
                 gamesPtr++;
@@ -299,7 +343,8 @@ namespace MyChessGUI
 
             while (true)
             {
-                cp.PrintBoard(-1);
+                if (!AIThinking)
+                    cp.PrintBoard(-1);
                 Move move1 = ai1.GetMove();
                 // Move move2 = ai1SideKick.GetMove();
 
@@ -317,20 +362,28 @@ namespace MyChessGUI
                 move1 = ai2.GetMove();
                 // move2 = ai2SideKick.GetMove();
 
-                cp.PrintBoard(-1);
+                if (!AIThinking)
+                    cp.PrintBoard(-1);
                 cg.MakeMove(move1);
                 if (cg.GetPossibleMoves().Count == 0)
                     break;
                 // if (AddAndDeteckt())
                 //     break;
-
+                if (cg.board.moves.Count > 1000)
+                {
+                    toManyMoves = true;
+                    break;
+                }
             }
-            cp.PrintBoard(-1);
+            if (!AIThinking)
+                cp.PrintBoard(-1);
             // Thread.Sleep(5000);
             if (same)
                 MyLib.DebugConsole.WriteLine("Draw due to repetition");
             else if (cg.evaluator.EvaluateBoardLight(0) == 0)
                 MyLib.DebugConsole.WriteLine("Draw");
+            else if (toManyMoves)
+                MyLib.DebugConsole.WriteLine("Draw due to to many moves");
             else
                 MyLib.DebugConsole.WriteLine("Winner: " + ((cg.evaluator.EvaluateBoardLight(0) == int.MaxValue) ? "White" : "Black"));
 
@@ -349,7 +402,7 @@ namespace MyChessGUI
                 _GameState = GameStates.PlayingMove;
                 return;
             }
-            AIDuel();
+            AIDuel(ai1, ai2, onlyPlayFENs);
         }
     }
 }

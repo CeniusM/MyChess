@@ -10,10 +10,13 @@ namespace MyChess.ChessBoard.AIs
         public ChessAIBase(ChessGame chessGame)
         {
             this.chessGame = chessGame;
-            board = chessGame.board;
-            evaluator = new(chessGame);
+            if (chessGame is not null)
+            {
+                board = chessGame.board;
+                evaluator = new(chessGame);
+            }
         }
         public abstract Move GetMove();
-        public abstract void SetChessGame();
+        public abstract void SetChessGame(ChessGame chessGame);
     }
 }

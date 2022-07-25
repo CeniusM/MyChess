@@ -15,9 +15,11 @@ namespace MyChess.ChessBoard.AIs
             return chessGame.GetPossibleMoves()[new Random().Next(0, chessGame.GetPossibleMoves().Count())];
         }
 
-        public override void SetChessGame()
+        public override void SetChessGame(ChessGame chessGame)
         {
-            throw new NotImplementedException();
+            this.chessGame = chessGame;
+            board = chessGame.board;
+            evaluator = new(chessGame);
         }
     }
 }
