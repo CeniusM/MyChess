@@ -1,0 +1,21 @@
+
+Test Casteling: Position 2
+Time: 0ms, Depth: 1, MoveCount: 48
+Time: 0ms, Depth: 2, MoveCount: 2039
+Time: 15ms, Depth: 3, MoveCount: 97862
+Time: 686ms, Depth: 4, MoveCount: 4085603
+Time: 30408ms, Depth: 5, MoveCount: 193690690
+
+Test Casteling: Position 2
+Time: 0ms, Depth: 1, MoveCount: 48
+Time: 0ms, Depth: 2, MoveCount: 2039
+Time: 15ms, Depth: 3, MoveCount: 97862
+Time: 723ms, Depth: 4, MoveCount: 4085603
+Time: 30586ms, Depth: 5, MoveCount: 193690690
+
+Test Casteling: Position 2
+Time: 0ms, Depth: 1, MoveCount: 48
+Time: 0ms, Depth: 2, MoveCount: 2039
+Time: 14ms, Depth: 3, MoveCount: 97862
+Time: 646ms, Depth: 4, MoveCount: 4085603
+Time: 28498ms, Depth: 5, MoveCount: 193690690

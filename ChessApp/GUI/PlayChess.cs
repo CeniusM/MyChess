@@ -192,9 +192,9 @@ namespace MyChessGUI
                 Move? move = null;
                 for (int i = 0; i < moves.Count; i++)
                 {
-                    if (moves[i].StartSquare == _selecktedSquare && moves[i].TargetSquare == pressedSquare)
+                    if (moves.MoveArr[i].StartSquare == _selecktedSquare && moves.MoveArr[i].TargetSquare == pressedSquare)
                     {
-                        move = moves[i];
+                        move = moves.MoveArr[i];
                         break;
                     }
                 }
@@ -325,8 +325,8 @@ namespace MyChessGUI
             int randomMoves = 4;
             var r = new Random();
             for (int i = 0; i < randomMoves; i++)
-                if (cg.GetPossibleMoves().Count() > randomMoves)
-                    cg.MakeMove(cg.GetPossibleMoves()[r.Next(0, cg.GetPossibleMoves().Count())]);
+                if (cg.GetPossibleMoves().Count > randomMoves)
+                    cg.MakeMove(cg.GetPossibleMoves().MoveArr[r.Next(0, cg.GetPossibleMoves().Count)]);
 
 
 

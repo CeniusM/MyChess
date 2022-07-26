@@ -1,6 +1,7 @@
 using MyChess;
 using MyChess.ChessBoard;
 using MyChess.FEN;
+using MyChess.PossibleMoves;
 
 namespace MyChess.UnitTester.Tests
 {
@@ -20,10 +21,9 @@ namespace MyChess.UnitTester.Tests
                 //     return;
 
                 chessGame.possibleMoves.GenerateMoves();
-                List<Move> movesRef = chessGame.GetPossibleMoves();
-                int Count = movesRef.Count();
-                Move[] moves = new Move[Count];
-                movesRef.CopyTo(moves);
+                MoveList movesRef = chessGame.GetPossibleMoves();
+                int Count = movesRef.Count;
+                Move[] moves = movesRef.MoveArr;
 
                 Board Original = Board.GetCopy(chessGame.board);
 
@@ -57,8 +57,8 @@ namespace MyChess.UnitTester.Tests
             bool isBoardsEquel = true;
             for (int i = 0; i < 64; i++)
             {
-                    if (move.StartSquare == 4)
-                        continue;
+                if (move.StartSquare == 4)
+                    continue;
                 if (before.Square[i] != after.Square[i])
                 {
                     isBoardsEquel = false;

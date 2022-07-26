@@ -13,7 +13,7 @@
 //         public override Move GetMove()
 //         {
 //             chessGame.possibleMoves.GenerateMoves();
-//             List<Move> movesRef = chessGame.GetPossibleMoves();
+//             MoveList movesRef = chessGame.GetPossibleMoves();
 //             int Count = movesRef.Count();
 //             Move[] moves = new Move[Count];
 //             movesRef.CopyTo(moves);
@@ -58,7 +58,7 @@
 //                 return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
 
 //             chessGame.possibleMoves.GenerateMoves();
-//             List<Move> movesRef = chessGame.GetPossibleMoves();
+//             MoveList movesRef = chessGame.GetPossibleMoves();
 //             int Count = movesRef.Count();
 //             Move[] moves = new Move[Count];
 //             movesRef.CopyTo(moves);

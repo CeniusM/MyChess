@@ -1,4 +1,5 @@
 
+using MyChess.PossibleMoves;
 
 namespace MyChess.ChessBoard.AIs
 {
@@ -13,10 +14,10 @@ namespace MyChess.ChessBoard.AIs
         public override Move GetMove()
         {
             chessGame.possibleMoves.GenerateMoves();
-            List<Move> movesRef = chessGame.GetPossibleMoves();
-            int Count = movesRef.Count();
-            Move[] moves = new Move[Count];
-            movesRef.CopyTo(moves);
+            MoveList movesRef = chessGame.GetPossibleMoves();
+            int Count = movesRef.Count;
+            Move[] moves = movesRef.MoveArr;
+
             if (Count == 0)
                 return new(0, 0, 0, board.Square[0]);
 
@@ -58,10 +59,9 @@ namespace MyChess.ChessBoard.AIs
                 return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
 
             chessGame.possibleMoves.GenerateMoves();
-            List<Move> movesRef = chessGame.GetPossibleMoves();
-            int Count = movesRef.Count();
-            Move[] moves = new Move[Count];
-            movesRef.CopyTo(moves);
+            MoveList movesRef = chessGame.GetPossibleMoves();
+            int Count = movesRef.Count;
+            Move[] moves = movesRef.MoveArr;
             if (Count == 0)
                 return evaluator.EvaluateBoardLight(0, true);
 
@@ -123,7 +123,7 @@ namespace MyChess.ChessBoard.AIs
 
 
 //             chessGame.possibleMoves.GenerateMoves();
-//             List<Move> movesRef = chessGame.GetPossibleMoves();
+//             MoveList movesRef = chessGame.GetPossibleMoves();
 //             int Count = movesRef.Count();
 //             Move[] moves = new Move[Count];
 //             movesRef.CopyTo(moves);
@@ -174,7 +174,7 @@ namespace MyChess.ChessBoard.AIs
 
 
 //             chessGame.possibleMoves.GenerateMoves();
-//             List<Move> movesRef = chessGame.GetPossibleMoves();
+//             MoveList movesRef = chessGame.GetPossibleMoves();
 //             int Count = movesRef.Count();
 //             Move[] moves = new Move[Count];
 //             movesRef.CopyTo(moves);

@@ -99,7 +99,7 @@ namespace MyChessGUI
         {
             if (selecktedPiece == -1)
                 return;
-            foreach (Move move in chessGame.GetPossibleMoves())
+            foreach (Move move in chessGame.GetPossibleMoves().MoveArr)
             {
                 if (move.StartSquare != selecktedPiece)
                     continue;

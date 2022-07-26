@@ -1,4 +1,5 @@
 
+using MyChess.PossibleMoves;
 
 namespace MyChess.ChessBoard.AIs
 {
@@ -10,9 +11,9 @@ namespace MyChess.ChessBoard.AIs
 
         public override Move GetMove()
         {
-            if (chessGame.GetPossibleMoves().Count() == 0)
+            if (chessGame.GetPossibleMoves().Count == 0)
                 return new Move(0, 0, 0, chessGame.board.Square[0]);
-            return chessGame.GetPossibleMoves()[new Random().Next(0, chessGame.GetPossibleMoves().Count())];
+            return chessGame.GetPossibleMoves().MoveArr[new Random().Next(0, chessGame.GetPossibleMoves().Count)];
         }
 
         public override void SetChessGame(ChessGame chessGame)

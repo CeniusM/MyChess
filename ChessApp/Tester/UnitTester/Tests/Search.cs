@@ -1,6 +1,7 @@
 using MyChess;
 using MyChess.ChessBoard;
 using MyChess.FEN;
+using MyChess.PossibleMoves;
 
 // https://en.wikipedia.org/wiki/Shannon_number
 // https://www.chessprogramming.org/Perft_Results
@@ -28,10 +29,9 @@ namespace MyChess.UnitTester.Tests
                     return;
 
                 chessGame.possibleMoves.GenerateMoves();
-                List<Move> movesRef = chessGame.GetPossibleMoves();
-                int Count = movesRef.Count();
-                Move[] moves = new Move[Count];
-                movesRef.CopyTo(moves);
+                MoveList movesRef = chessGame.GetPossibleMoves();
+                int Count = movesRef.Count;
+                Move[] moves = movesRef.MoveArr;
 
                 for (int i = 0; i < Count; i++)
                 {

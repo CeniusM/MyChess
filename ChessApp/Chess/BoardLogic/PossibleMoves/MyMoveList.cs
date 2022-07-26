@@ -7,13 +7,13 @@ namespace MyChess.PossibleMoves
     /// </summary>
     public class MoveList
     {
-        private int Capacity;
+        private int Capacity = 40; // needs to be tested for speed
         public int Count = 0;
-        Move[] moves;
-        public MoveList(int Capacity = 40) // needs to be tested for speed
+        public Move[] MoveArr;
+        public MoveList()
         {
-            this.Capacity = Capacity;
-            moves = new Move[Capacity];
+        //     this.Capacity = Capacity;
+            MoveArr = new Move[Capacity];
         }
 
         public void Add(Move move)
@@ -23,11 +23,11 @@ namespace MyChess.PossibleMoves
                 Capacity = 80;
                 Move[] temp = new Move[Capacity];
                 for (int i = 0; i < 40; i++)
-                    temp[i] = moves[i];
-                moves = temp;
+                    temp[i] = MoveArr[i];
+                MoveArr = temp;
             }
 
-            moves[Count] = move;
+            MoveArr[Count] = move;
             Count++;
         }
     }

@@ -11,17 +11,17 @@ namespace MyChess.PossibleMoves
         private int ThisKing = 0;
         private int OpponentKing = 0;
         private Board board;
-        public List<Move> moves;
+        public MoveList moves;
         public PossibleMovesGenerator(Board board)
         {
-            moves = new List<Move>();
+            moves = new MoveList();
             this.board = board;
             GenerateMoves();
         }
 
         public void GenerateMoves()
         {
-            moves = new List<Move>(30); // avg moves for random pos
+            moves = new MoveList(); // avg moves for random pos
 
             // so we dont need to loop over all square everytime we try and fint the right piece
             // for (int i = 0; i < board.piecePoses.Count; i++)
@@ -67,7 +67,8 @@ namespace MyChess.PossibleMoves
 
         private void KingCheckCheck()
         {
-            List<Move> ValidMoves = new List<Move>(moves.Count);
+            // MoveList ValidMoves = new MoveList(moves.Count);
+            MoveList ValidMoves = new MoveList();
 
             // go through each move
             int kingPos = GetKingsPos(board.playerTurn);
@@ -75,13 +76,13 @@ namespace MyChess.PossibleMoves
             int kingPiece = Piece.King | board.playerTurn;
             for (int i = 0; i < moves.Count; i++)
             {
-                board.MakeMove(moves[i]);
+                board.MakeMove(moves.MoveArr[i]);
 
                 // save the new possible moves
-                if (board.Square[moves[i].TargetSquare] == kingPiece)
+                if (board.Square[moves.MoveArr[i].TargetSquare] == kingPiece)
                     kingPosTemp = GetKingsPos(board.playerTurn ^ Board.ColorMask);
                 if (!IsSquareAttacked(kingPosTemp, board.playerTurn))
-                    ValidMoves.Add(moves[i]);
+                    ValidMoves.Add(moves.MoveArr[i]);
                 kingPosTemp = kingPos;
 
                 board.UnMakeMove();

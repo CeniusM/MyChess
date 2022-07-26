@@ -51,7 +51,7 @@ namespace MyChess.ChessBoard.Evaluation
         /// <summary>
         /// This returns a positiv number for white winning and a negativ number if black is winning
         /// </summary>
-        public static int EvaluateBoardLight(Board board, List<Move> moves)
+        public static int EvaluateBoardLight(Board board, MoveList moves)
         {
             if (moves.Count == 0)
             {

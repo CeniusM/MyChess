@@ -68,7 +68,7 @@
 //         {
 //             if (e.KeyChar == 'p')
 //             {
-//                 List<Move> moves = chessGame.GetPossibleMoves();
+//                 MoveList moves = chessGame.GetPossibleMoves();
 //                 for (int i = 0; i < moves.Count; i++)
 //                 {
 //                     MyLib.MyConsole.WriteLine((i + 1) + ": S: "
@@ -194,7 +194,7 @@
 //             }
 //             else
 //             {
-//                 List<Move> moves = chessGame.GetPossibleMoves();
+//                 MoveList moves = chessGame.GetPossibleMoves();
 //                 int movesCount = 0;
 //                 int index = 0;
 //                 for (var i = 0; i < moves.Count(); i++)
@@ -267,14 +267,14 @@
 //                 const int timePerMove = 100;
 //                 if (chessGame.board.playerTurn == Piece.White) // play vs completly random ai
 //                 {
-//                     List<Move> moves = chessGame.GetPossibleMoves();
+//                     MoveList moves = chessGame.GetPossibleMoves();
 //                     chessGame.MakeMove(moves[rnd.Next(0, moves.Count)]);
 //                     chessAPI.PrintBoard(_selecktedSquare);
 //                     Thread.Sleep(timePerMove);
 //                 }
 //                 else if (chessGame.board.playerTurn == Piece.Black) // play vs completly random ai
 //                 {
-//                     List<Move> moves = chessGame.GetPossibleMoves();
+//                     MoveList moves = chessGame.GetPossibleMoves();
 //                     chessGame.MakeMove(moves[rnd.Next(0, moves.Count)]);
 //                     chessAPI.PrintBoard(_selecktedSquare);
 //                     Thread.Sleep(timePerMove);
@@ -287,7 +287,7 @@
 
 //         private int GetIndexOfMove(int startSquare, int targetSquare)
 //         {
-//             List<Move> moves = chessGame.GetPossibleMoves();
+//             MoveList moves = chessGame.GetPossibleMoves();
 
 //             for (int i = 0; i < moves.Count; i++)
 //             {

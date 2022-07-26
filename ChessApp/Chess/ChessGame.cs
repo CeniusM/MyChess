@@ -43,6 +43,6 @@ namespace MyChess
             possibleMoves.GenerateMoves();
         }
 
-        public List<Move> GetPossibleMoves() => possibleMoves.moves;
+        public MoveList GetPossibleMoves() => possibleMoves.moves;
     }
 }

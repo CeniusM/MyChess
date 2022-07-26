@@ -3,7 +3,7 @@ so fx a value for the kin could be {-1,-7,-8,-9,1,7,8,9} but instead give the sq
 so like if at 10 {9,3,4,5,11,17,18,19}
 
 
-Make your own List<Move>/stack code
+Make your own MoveList/stack code
 
 
 

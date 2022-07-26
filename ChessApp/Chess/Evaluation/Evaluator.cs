@@ -1,4 +1,5 @@
 using MyChess.ChessBoard.Evaluators.Methods;
+using MyChess.PossibleMoves;
 
 namespace MyChess.ChessBoard.Evaluators
 {
@@ -43,7 +44,7 @@ namespace MyChess.ChessBoard.Evaluators
         {
             var evaluator = chessGame.evaluator;
 
-            return minimax(DEPTH, chessGame.GetPossibleMoves().Count(), (chessGame.board.playerTurn == 8));
+            return minimax(DEPTH, chessGame.GetPossibleMoves().Count, (chessGame.board.playerTurn == 8));
 
             int minimax(int depth, int LASTMOVECOUNT, bool maxPlayer)
             {
@@ -51,10 +52,9 @@ namespace MyChess.ChessBoard.Evaluators
                     return evaluator!.EvaluateBoardLight(LASTMOVECOUNT, true);
 
                 chessGame.possibleMoves.GenerateMoves();
-                List<Move> movesRef = chessGame.GetPossibleMoves();
-                int Count = movesRef.Count();
-                Move[] moves = new Move[Count];
-                movesRef.CopyTo(moves);
+                MoveList movesRef = chessGame.GetPossibleMoves();
+                int Count = movesRef.Count;
+                Move[] moves = movesRef.MoveArr;
                 if (Count == 0)
                     return evaluator!.EvaluateBoardLight(0, true);
 

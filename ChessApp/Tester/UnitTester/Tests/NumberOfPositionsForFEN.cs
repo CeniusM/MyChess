@@ -2,6 +2,7 @@ using MyChess;
 using MyChess.ChessBoard;
 using MyChess.FEN;
 using System.Diagnostics;
+using MyChess.PossibleMoves;
 
 // https://en.wikipedia.org/wiki/Shannon_number
 // https://www.chessprogramming.org/Perft_Results
@@ -45,7 +46,7 @@ namespace MyChess.UnitTester.Tests
 
 
             // chessGame.possibleMoves.GenerateMoves();
-            // List<Move> movesRef = chessGame.GetPossibleMoves();
+            // MoveList movesRef = chessGame.GetPossibleMoves();
             // int Count = movesRef.Count();
             // Move[] moves = new Move[Count];
             // movesRef.CopyTo(moves);
@@ -193,10 +194,9 @@ namespace MyChess.UnitTester.Tests
                 //     return;
 
                 chessGame.possibleMoves.GenerateMoves();
-                List<Move> movesRef = chessGame.GetPossibleMoves();
-                int Count = movesRef.Count();
-                Move[] moves = new Move[Count];
-                movesRef.CopyTo(moves);
+                MoveList movesRef = chessGame.GetPossibleMoves();
+                int Count = movesRef.Count;
+                Move[] moves = movesRef.MoveArr;
 
                 for (int i = 0; i < Count; i++)
                 {
@@ -250,10 +250,9 @@ namespace MyChess.UnitTester.Tests
                     return;
 
                 chessGame.possibleMoves.GenerateMoves();
-                List<Move> movesRef = chessGame.GetPossibleMoves();
-                int Count = movesRef.Count();
-                Move[] moves = new Move[Count];
-                movesRef.CopyTo(moves);
+                MoveList movesRef = chessGame.GetPossibleMoves();
+                int Count = movesRef.Count;
+                Move[] moves = movesRef.MoveArr;
 
                 for (int i = 0; i < Count; i++)
                 {
@@ -316,10 +315,9 @@ namespace MyChess.UnitTester.Tests
                 //     return;
 
                 chessGame.possibleMoves.GenerateMoves();
-                List<Move> movesRef = chessGame.GetPossibleMoves();
-                int Count = movesRef.Count();
-                Move[] moves = new Move[Count];
-                movesRef.CopyTo(moves);
+                MoveList movesRef = chessGame.GetPossibleMoves();
+                int Count = movesRef.Count;
+                Move[] moves = movesRef.MoveArr;
 
                 for (int i = 0; i < Count; i++)
                 {
@@ -351,10 +349,9 @@ namespace MyChess.UnitTester.Tests
             void SearchMove(int depth)
             {
                 chessGame.possibleMoves.GenerateMoves();
-                List<Move> movesRef = chessGame.GetPossibleMoves();
-                int Count = movesRef.Count();
-                Move[] moves = new Move[Count];
-                movesRef.CopyTo(moves);
+                MoveList movesRef = chessGame.GetPossibleMoves();
+                int Count = movesRef.Count;
+                Move[] moves = movesRef.MoveArr;
 
                 for (int i = 0; i < Count; i++)
                 {
@@ -387,10 +384,9 @@ namespace MyChess.UnitTester.Tests
             void SearchMove(int depth)
             {
                 chessGame.possibleMoves.GenerateMoves();
-                List<Move> movesRef = chessGame.GetPossibleMoves();
-                int Count = movesRef.Count();
-                Move[] moves = new Move[Count];
-                movesRef.CopyTo(moves);
+                MoveList movesRef = chessGame.GetPossibleMoves();
+                int Count = movesRef.Count;
+                Move[] moves = movesRef.MoveArr;
 
                 MovesAVG += (ulong)Count;
                 MovesRecorded++;
@@ -480,7 +476,7 @@ namespace MyChess.UnitTester.Tests
 
             // int[] moveCount = new int[Depth + 1];
 
-            //List<Move> moves = chessGame.GetPossibleMoves();
+            //MoveList moves = chessGame.GetPossibleMoves();
 
 
 
@@ -494,10 +490,9 @@ namespace MyChess.UnitTester.Tests
                     return;
 
                 chessGame.possibleMoves.GenerateMoves();
-                List<Move> movesRef = chessGame.GetPossibleMoves();
-                int Count = movesRef.Count();
-                Move[] moves = new Move[Count];
-                movesRef.CopyTo(moves);
+                MoveList movesRef = chessGame.GetPossibleMoves();
+                int Count = movesRef.Count;
+                Move[] moves = movesRef.MoveArr;
 
                 for (int i = 0; i < Count; i++)
                 {

@@ -66,8 +66,8 @@
 //             //for debugging
 //             //chessGame.possibleMoves.GenerateMoves();
 
-//             List<Move> listOfMoves = chessGame.GetPossibleMoves();
-//             List<Move> moves = new List<Move>();
+//             MoveList listOfMoves = chessGame.GetPossibleMoves();
+//             MoveList moves = new MoveList();
 //             for (int i = 0; i < listOfMoves.Count; i++)
 //             {
 //                 if (listOfMoves[i].StartSquare == selecktedPiece)

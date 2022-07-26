@@ -165,10 +165,9 @@ static class Program
         void SearchMove(int depth)
         {
             chessGame.possibleMoves.GenerateMoves();
-            List<Move> movesRef = chessGame.GetPossibleMoves();
-            int Count = movesRef.Count();
-            Move[] moves = new Move[Count];
-            movesRef.CopyTo(moves);
+            MoveList movesRef = chessGame.GetPossibleMoves();
+            int Count = movesRef.Count;
+            Move[] moves = movesRef.MoveArr;
 
             for (int i = 0; i < Count; i++)
             {

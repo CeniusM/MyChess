@@ -1,5 +1,6 @@
 using MyChess.FEN;
 using System.Diagnostics;
+using MyChess.PossibleMoves;
 
 namespace MyChess.SpeedTester.Tests
 {
@@ -96,10 +97,9 @@ namespace MyChess.SpeedTester.Tests
             void SearchMove(int depth)
             {
                 chessGame.possibleMoves.GenerateMoves();
-                List<Move> movesRef = chessGame.GetPossibleMoves();
-                int Count = movesRef.Count();
-                Move[] moves = new Move[Count];
-                movesRef.CopyTo(moves);
+                MoveList movesRef = chessGame.GetPossibleMoves();
+                int Count = movesRef.Count;
+                Move[] moves = movesRef.MoveArr;
 
                 for (int i = 0; i < Count; i++)
                 {
