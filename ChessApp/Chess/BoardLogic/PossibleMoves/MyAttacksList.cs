@@ -4,9 +4,23 @@ namespace MyChess.PossibleMoves
 {
     public class AttackList
     {
-        public AttackList(MoveList moveList)
+        public struct Attacks
         {
-
+            public Attacks(bool slider, int start, int target)
+            {
+                this.slider = slider;
+                this.start = start;
+                this.target = target;
+            }
+            public bool slider;
+            public int start;
+            public int target;
+        }
+        public Move[] attacks;
+        public AttackList(List<Move> moveList)
+        {
+            attacks = new Move[moveList.Count];
+            moveList.CopyTo(attacks, 0);
         }
     }
 }
