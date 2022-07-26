@@ -6,31 +6,88 @@ namespace MyChess.PossibleMoves
     {
         public struct Attacks
         {
-            public Attacks(bool slider, int start, int target)
+            public Attacks(int sliderID, int start, int target)
             {
-                this.slider = slider;
+                this.sliderID = sliderID;
                 this.start = start;
                 this.target = target;
             }
-            public bool slider;
+            public int sliderID; // 0 = king, pawn, knight, 1 = ROOK?BISHOP, 2 = ROOK?BISHOP, 3 = Queen
+                                 // make a 3d array, IsSquaresALined[64](Start)[64](Target)[4](SlidingID)
+                                 // so you can easely look up if its in the right line or row or any of that
             public int start;
             public int target;
         }
-        public Move[] attacks;
+        public int Color;
+        public Attacks[] attacks;
+        public int[] piecePoses;
         public AttackList(List<Move> moveList)
         {
-            attacks = new Move[moveList.Count];
-            moveList.CopyTo(attacks, 0);
+            // attacks = new Move[moveList.Count];
+            // moveList.CopyTo(attacks, 0);
+            throw new NotImplementedException();
         }
 
-        public bool IsSquareAttacked()
+        public bool IsSquareAttacked(int square)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsSquareAttacked(int movedPieceStart, int movedPieceTarget) // to see if a square is stil attacked
+        public bool IsSquareAttacked(int square, int movedPieceStart, int movedPieceTarget, int moveFlag) // to see if a square is stil attacked
         {
+            // edge case enpassent, moveFlag
+
+
+
+
+            /*
+                if the slider id is 0, we can allways asume its a valid attack unless the attacker is the piece that got moved to
+
+                for i in attacks
+                    if attacks[i].slidingID == 0   
+                        if attacks[i].start == movedPieceTarget
+                            return false
+                        else
+                            return true
+
+                    else // sliding piece
+
+
+
+
+                if(enpassent)
+                    doStuff
+                    return
+
+                for i in attacks
+                    if attacks[i].target = square
+                        if attacks[i].slidingID == 0   
+                            return
+
+                        else
+                            if IsSquaresALined[squre // king][attacks[i].start // attacker][ // slider id]
+                                for j in attacksFromThisPiece
+                                    check if piece in the way
+
+
+                for i in attacks // combine later and see if any of the checking code overlaps in funcktionalety
+                    if attacks[i].tagert == movedpieceStart
+                        if IsSquaresALined[squre // king][attacks[i].start // attacker][ // slider id]
+                            check across and if anything is in the way of king
+                    
+                    if attacks[i].tagert == movedpieceTarget
+                        if attacks[i].slidingID != 0   
+                            some how ignore this pieces moves
+                    
+
+
+
+
+            */
+
+
             throw new NotImplementedException();
         }
     }
 }
+
