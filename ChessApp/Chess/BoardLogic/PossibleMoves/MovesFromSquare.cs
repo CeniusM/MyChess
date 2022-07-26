@@ -110,7 +110,7 @@ namespace MyChess.PossibleMoves
                 -1,
                 1,
                 1,
-                -1           
+                -1
             };
             for (int square = 0; square < 64; square++)
             {
@@ -126,16 +126,16 @@ namespace MyChess.PossibleMoves
 
                         if (!IsInBounds(move))
                         {
-                            SlidingpieceMoves[square, dir, moveCount] = InvalidMove; 
+                            SlidingpieceMoves[square, dir, moveCount] = InvalidMove;
                             break;
                         }
                         if (lindDiff != lineDiffs[dir])
                         {
-                            SlidingpieceMoves[square, dir, moveCount] = InvalidMove; 
+                            SlidingpieceMoves[square, dir, moveCount] = InvalidMove;
                             break;
                         }
 
-                        SlidingpieceMoves[square, dir, moveCount] = move; 
+                        SlidingpieceMoves[square, dir, moveCount] = move;
                     }
                 }
             }

@@ -26,6 +26,9 @@ namespace MyChess.ChessBoard.Evaluators
             }
 
             // later game give king bonus for being close to each other i think
+            // later game give bonus for pawn movement to encurage pawn promotions
+
+            // make it so the king prefer spots where it cant get checked?
 
             // idk if this a good way of gaginng if its late game
             // gives you a range between 0 - 1

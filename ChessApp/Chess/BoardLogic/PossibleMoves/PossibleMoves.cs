@@ -1,5 +1,4 @@
 using MyChess.ChessBoard;
-using MyChess.PossibleMoves.Pieces;
 
 // maby put all the piece movement code in here for speed?
 // implement and test the loop inside Generate the loop
@@ -9,19 +8,6 @@ namespace MyChess.PossibleMoves
 {
     public class PossibleMovesGenerator
     {
-        enum AttackType
-        {
-            Sliding, // Rook, Bishop, Queen
-            Step, // King, Pawn
-            Jump // Knight
-        }
-        // private struct kingAttacker
-        // {
-        //     int pieceType;
-        //     int pos;
-        // }
-        // private List<kingAttacker> kingAttackers = new List<kingAttacker>();
-
         private int ThisKing = 0;
         private int OpponentKing = 0;
         private Board board;

@@ -76,7 +76,7 @@ static class Program
         // MyChess.UnitTester.TestRunner.Run();
 
         // SpeedTest
-        //MyChess.SpeedTester.TestRunner.Run();
+        MyChess.SpeedTester.TestRunner.Run();
 
         game = new GameOfChess(myForm);
         game.Play();

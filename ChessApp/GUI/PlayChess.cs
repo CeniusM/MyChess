@@ -68,7 +68,26 @@ namespace MyChessGUI
         {
             if (_chessPrinter._isPrinting)
                 return;
-            if (_GameState != GameStates.AIPlaying)
+
+
+            if (_GameState == GameStates.AIDueling)
+            {
+                switch (e.KeyChar)
+                {
+                    case 'p':
+                        AIPause = !AIPause;
+                        break;
+                    case ' ':
+                        if (!AIPause)
+                            break;
+                        chessGame.UnMakeMove(); // for both players
+                        chessGame.UnMakeMove();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (_GameState != GameStates.AIPlaying)
             {
                 switch (e.KeyChar)
                 {
@@ -91,7 +110,9 @@ namespace MyChessGUI
                         break;
                     case 'o':
                         gamesToPlay = 100;
-                        await Task.Run(() => AIDuel(new AlphaBetaPruning(null!), new OnlyMinMax1(null!), true));
+                        // await Task.Run(() => AIDuel(new OnlyMinMax1(null!),new AlphaBetaPruning(null!),  true));
+                        await Task.Run(() => AIDuel(new OnlyMinMax1(null!, 2), new OnlyMinMax1(null!, 4), true));
+                        // await Task.Run(() => AIDuel(new OnlyMinMax1(null!, 4), new OnlyMinMax1(null!, 2), true));
                         if (!AIThinking)
                             _chessPrinter.PrintBoard(_selecktedSquare);
                         break;
@@ -101,10 +122,10 @@ namespace MyChessGUI
                     case 'g':
                         chessGame.possibleMoves.GenerateMoves();
                         break;
-                    case 'e':
-                        if (!AIThinking)
-                            _chessPrinter.PrintBoard(_selecktedSquare, true);
-                        break;
+                    // case 'e':
+                    //     if (!AIThinking)
+                    //         _chessPrinter.PrintBoard(_selecktedSquare, true);
+                    //     break;
                     default:
                         break;
                 }
@@ -255,29 +276,33 @@ namespace MyChessGUI
         int gamesPlayed = 0;
         int player1Win = 0;
         int player2Win = 0;
+        bool AIPause = false;
         private void AIDuel(IChessAI ai1, IChessAI ai2, bool onlyPlayFENs = false)
         {
             _GameState = GameStates.AIDueling;
             // ChessGame cg = new("r2qk2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/5N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
-            ChessGame cg;
-            if (gamesPlayed < MyChess.FEN.RandomFENList.GetLenght())
-                cg = new(MyChess.FEN.RandomFENList.GetFEN(gamesPlayed));
-            else if (onlyPlayFENs)
-            {
-                MyLib.DebugConsole.WriteLine("Player 1: " + player1Win + "/" + gamesPlayed + " Won");
-                MyLib.DebugConsole.WriteLine("Player 2: " + player2Win + "/" + gamesPlayed + " Won");
-                _GameState = GameStates.PlayingMove;
-                player1Win = 0;
-                player2Win = 0;
-                gamesPlayed = 0;
-                return;
-            }
-            else
-                cg = new();
+            ChessGame cg = new();
+            // if (gamesPlayed < MyChess.FEN.RandomFENList.GetLenght())
+            //     cg = new(MyChess.FEN.RandomFENList.GetFEN(gamesPlayed));
+            // else if (onlyPlayFENs)
+            // {
+            //     MyLib.DebugConsole.WriteLine("Player 1: " + player1Win + "/" + gamesPlayed + " Won");
+            //     MyLib.DebugConsole.WriteLine("Player 2: " + player2Win + "/" + gamesPlayed + " Won");
+            //     _GameState = GameStates.PlayingMove;
+            //     player1Win = 0;
+            //     player2Win = 0;
+            //     gamesPlayed = 0;
+            //     return;
+            // }
+            // else
+            //     cg = new();
 
 
 
             ChessPrinter cp = new(_form, cg);
+            chessGame = cg;
+            _chessPrinter = cp;
+            cp.PrintBoard(-1);
             // ai1 = white
             // ai2 = black
             // AlphaBetaPruning 
@@ -285,8 +310,8 @@ namespace MyChessGUI
             ai1.SetChessGame(cg);
             ai2.SetChessGame(cg);
 
-            OnlyMinMax1 ai1SiddeKick = new(cg);
-            AlphaBetaPruning ai2SideKick = new(cg);
+            // OnlyMinMax1 ai1SideKick = new(cg, 4);
+            // AlphaBetaPruning ai2SideKick = new(cg);
 
             // MisterRandom ai2 = new(cg);
             // AlphaBetaPruning ai2 = new(cg);
@@ -297,11 +322,11 @@ namespace MyChessGUI
 
 
             // starts of with 2 random moves for each couse its all detemenistik
-            // int randomMoves = 4;
-            // var r = new Random();
-            // for (int i = 0; i < randomMoves; i++)
-            //     if (cg.GetPossibleMoves().Count() > randomMoves)
-            //         cg.MakeMove(cg.GetPossibleMoves()[r.Next(0, cg.GetPossibleMoves().Count())]);
+            int randomMoves = 4;
+            var r = new Random();
+            for (int i = 0; i < randomMoves; i++)
+                if (cg.GetPossibleMoves().Count() > randomMoves)
+                    cg.MakeMove(cg.GetPossibleMoves()[r.Next(0, cg.GetPossibleMoves().Count())]);
 
 
 
@@ -343,10 +368,8 @@ namespace MyChessGUI
 
             while (true)
             {
-                if (!AIThinking)
-                    cp.PrintBoard(-1);
                 Move move1 = ai1.GetMove();
-                // Move move2 = ai1SideKick.GetMove();
+                // Move move2 = ai1.GetMove();
 
 
                 // if (move1 != move2)
@@ -357,19 +380,29 @@ namespace MyChessGUI
                     break;
                 if (AddAndDeteckt())
                     break;
+                if (!AIThinking)
+                    cp.PrintBoard(-1);
 
+                while (AIPause)
+                {
+                    Thread.Sleep(20);
+                }
 
                 move1 = ai2.GetMove();
                 // move2 = ai2SideKick.GetMove();
 
-                if (!AIThinking)
-                    cp.PrintBoard(-1);
                 cg.MakeMove(move1);
                 if (cg.GetPossibleMoves().Count == 0)
                     break;
-                // if (AddAndDeteckt())
-                //     break;
-                if (cg.board.moves.Count > 1000)
+                if (!AIThinking)
+                    cp.PrintBoard(-1);
+
+                while (AIPause)
+                {
+                    Thread.Sleep(20);
+                }
+
+                if (cg.board.moves.Count > 80)
                 {
                     toManyMoves = true;
                     break;

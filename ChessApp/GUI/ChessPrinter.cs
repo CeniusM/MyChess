@@ -31,7 +31,7 @@ namespace MyChessGUI
 
         public void PrintBoard(int selecktedPiece, bool useMiniMaxEval = false)
         {
-            useMiniMaxEval = false; // DOSENT WORK
+            // useMiniMaxEval = false; // DOSENT WORK
 
 
             if (_isPrinting)
