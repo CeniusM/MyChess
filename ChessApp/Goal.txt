@@ -1,10 +1,11 @@
-Make my own stack and list data type
-
 atlist 20 mil combinations a second inside vsc relese
 (ctrl + shift + b) + dotnet run -c release
 
-beat humans :D
+Make a good Search function (alphabeta pruning, move ordering, the search depth ((start at)2-6) 7 8 9 10 11 12 and so on so you can cancel and get better move ordering)
 
 Rewrite the whole GUI system
+
+beat humans :D
+
 
 make a mailbox chess engine in c++
