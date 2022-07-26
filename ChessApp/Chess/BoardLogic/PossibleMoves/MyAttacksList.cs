@@ -81,6 +81,8 @@ namespace MyChess.PossibleMoves
                     
 
 
+                or maby not use slider id or Attackers Struck and just use the list of moves
+                and use a 3d array, IsSquaresALined[64](Start)[64](Target)[17 (last piece BKing = 16)](PieceTypes)
 
 
             */
