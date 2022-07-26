@@ -22,5 +22,15 @@ namespace MyChess.PossibleMoves
             attacks = new Move[moveList.Count];
             moveList.CopyTo(attacks, 0);
         }
+
+        public bool IsSquareAttacked()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsSquareAttacked(int movedPieceStart, int movedPieceTarget) // to see if a square is stil attacked
+        {
+            throw new NotImplementedException();
+        }
     }
 }
