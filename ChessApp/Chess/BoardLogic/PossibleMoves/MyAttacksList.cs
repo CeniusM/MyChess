@@ -4,15 +4,15 @@ namespace MyChess.PossibleMoves
 {
     public class AttackList
     {
-        public struct Attacks
+        public class Attacks
         {
-            public Attacks(int sliderID, int start, int target)
+            public Attacks(int pieceID, int start, int target)
             {
-                this.sliderID = sliderID;
+                this.pieceID = pieceID;
                 this.start = start;
                 this.target = target;
             }
-            public int sliderID; // 0 = king, pawn, knight, 1 = ROOK?BISHOP, 2 = ROOK?BISHOP, 3 = Queen
+            public int pieceID; // 0 = king, pawn, knight, 1 = ROOK?BISHOP, 2 = ROOK?BISHOP, 3 = Queen
                                  // make a 3d array, IsSquaresALined[64](Start)[64](Target)[4](SlidingID)
                                  // so you can easely look up if its in the right line or row or any of that
             public int start;
@@ -21,8 +21,10 @@ namespace MyChess.PossibleMoves
         public int Color;
         public Attacks[] attacks;
         public int[] piecePoses;
-        public AttackList(List<Move> moveList)
+        public AttackList(Attacks[] a, PieceList pieces)
         {
+            attacks = a;
+            pieces.GetOccupiedSquares(piecePoses!);
             // attacks = new Move[moveList.Count];
             // moveList.CopyTo(attacks, 0);
             throw new NotImplementedException();

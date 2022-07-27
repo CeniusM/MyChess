@@ -2,7 +2,7 @@ using MyChess;
 using winForm;
 using MyChess.ChessBoard;
 
-namespace MyChessGUI
+namespace winForm
 {
     class Settings
     {

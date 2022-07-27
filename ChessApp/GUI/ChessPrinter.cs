@@ -1,4 +1,3 @@
-using MyChess.ChessBoard;
 using winForm;
 using MyChess;
 using CS_Math;
@@ -6,6 +5,7 @@ using MyChess.ChessBoard.Evaluators;
 using MyChess.PossibleMoves;
 using MyChess.ChessBoard.AIs;
 using MyChess.ChessBoard.Evaluators.Methods;
+using Chess;
 
 namespace MyChessGUI
 {
@@ -124,7 +124,7 @@ namespace MyChessGUI
                 x = pos % 8;
                 y = pos >> 3;
 
-                if ((piece & Piece.White) == Piece.White)
+                if (Piece.IsColour(piece, Piece.White))
                     PrintWSprite((piece & 0b111));
                 else if ((piece & Piece.Black) == Piece.Black)
                     PrintBSprite((piece & 0b111));
