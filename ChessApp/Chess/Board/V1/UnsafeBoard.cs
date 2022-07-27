@@ -14,7 +14,12 @@ namespace ChessV1
         // ideer
         // public List<List<Move>> possibleMoves = new List<List<Move>>(100) { new List<Move>(100) };
 
-        public PieceList piecePoses = new PieceList();
+        public PieceList[] AllPiecePoses;
+        public PieceList[] AllPiecePoses;
+        public PieceList[] AllPiecePoses;
+        public PieceList[] AllPiecePoses;
+        public PieceList[] AllPiecePoses;
+        public PieceList[] AllPiecePoses;
         public byte[] square = new byte[64];
         public int castle = 0b1111;
         public int enPassantPiece = 64;
