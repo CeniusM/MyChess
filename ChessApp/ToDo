@@ -1,3 +1,59 @@
+Make a board engine that can make a hash, possible moves, and acually do the moves 20 mil a second
+
+make a good search function (evaluation fucktion that just count material)
+// hashing, alpha beta, move ordering
+
+make a evalutaion fucktion that only looks at attacks
+
+make the best evaluation function you can
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Make it so the Knight and King moves dosent give the + or - value but just the pos for the next move
 so fx a value for the kin could be {-1,-7,-8,-9,1,7,8,9} but instead give the square for the position
 so like if at 10 {9,3,4,5,11,17,18,19}

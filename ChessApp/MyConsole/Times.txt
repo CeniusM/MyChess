@@ -1,8 +1,0 @@
-
-14-07-2022
-Test Casteling: Position 2
-Time: 0ms, Depth: 1, MoveCount: 48
-Time: 1ms, Depth: 2, MoveCount: 2039
-Time: 59ms, Depth: 3, MoveCount: 97862
-Time: 2422ms, Depth: 4, MoveCount: 4085603
-Time: 113972ms, Depth: 5, MoveCount: 193690690

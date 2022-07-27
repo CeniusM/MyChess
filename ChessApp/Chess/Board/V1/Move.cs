@@ -1,6 +1,6 @@
-using MyChess.ChessBoard;
+// --- by Sebastian Lague ---
 
-namespace MyChess
+namespace ChessV1
 {
     public readonly struct Move
     {
@@ -19,16 +19,14 @@ namespace MyChess
         public readonly byte StartSquare;
         public readonly byte TargetSquare;
         public readonly byte MoveFlag;
-        public readonly byte CapturedPiece;
-        public Move(int s, int t, int f, int cp = 0)
+        public Move(byte s, byte t, byte f)
         {
             StartSquare = (byte)s;
             TargetSquare = (byte)t;
             MoveFlag = (byte)f;
-            CapturedPiece = (byte)cp;
         }
 
-        public int PromotionPiece()
+        public byte PromotionPiece()
         {
             switch (MoveFlag)
             {
@@ -43,29 +41,6 @@ namespace MyChess
                 default:
                     return 0;
             }
-        }
-
-        public static bool operator ==(Move m1, Move m2)
-        {
-            return (m1.StartSquare == m2.StartSquare &&
-            m1.TargetSquare == m2.TargetSquare &&
-            m1.MoveFlag == m2.MoveFlag &&
-            m1.CapturedPiece == m2.CapturedPiece
-            );
-        }
-
-        public static bool operator !=(Move m1, Move m2)
-        {
-            return (m1.StartSquare != m2.StartSquare ||
-            m1.TargetSquare != m2.TargetSquare ||
-            m1.MoveFlag != m2.MoveFlag ||
-            m1.CapturedPiece != m2.CapturedPiece
-            );
-        }
-
-        public override string ToString()
-        {
-            return "{S:" + StartSquare + ", T:" + TargetSquare + ", F:" + MoveFlag + ", C:" + CapturedPiece + "}";
         }
     }
 }

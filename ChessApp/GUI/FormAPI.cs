@@ -1,6 +1,6 @@
 using winForm;
 
-namespace MyChessGUI
+namespace ChessGUI
 {
     // just for taking simple form instruction that will be printed to the form
     public class FormAPI

@@ -1,7 +1,4 @@
-﻿using MyChessGUI;
-using Chess;
-
-namespace winForm;
+﻿namespace winForm;
 
 partial class Form1
 {

@@ -1,1 +1,0 @@
-This is my first attempt at making a chess ai, later versions will use magic bitboards(still in c#), and some time way out will use c++ and gpu... hopefully

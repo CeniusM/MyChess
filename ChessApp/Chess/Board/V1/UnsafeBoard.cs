@@ -4,7 +4,7 @@ namespace ChessV1
 {
     public unsafe class UnsafeBoard
     {
-        // ---by Sebastian---
+        // --- by Sebastian Lague ---
         // Bits 0-3 store castles
         // Bits 4-7 store file of ep square (starting at 1, so 0 = no ep square)
         // Bits 8-13 captured piece
@@ -22,7 +22,7 @@ namespace ChessV1
 
         public UnsafeBoard()
         {
-            InitFEN(MyChess.FEN.MyFEN.StartPostion);
+            InitFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         }
         public UnsafeBoard(string FEN)
         {
@@ -33,12 +33,12 @@ namespace ChessV1
             piecePoses = new PieceList(32);
             for (int i = 0; i < 64; i++) // put in kings first
             {
-                if ((square[i] & Piece.PieceBits) == Piece.King)
+                if (Piece.PieceType(square[i]) == Piece.King)
                     piecePoses.AddPieceAtSquare(i);
             }
             for (int i = 0; i < 64; i++)
             {
-                if (square[i] != 0 && (square[i] & Piece.PieceBits) != Piece.King)
+                if (square[i] != 0 && Piece.PieceType(square[i]) != Piece.King)
                     piecePoses.AddPieceAtSquare(i);
             }
         }
@@ -50,14 +50,19 @@ namespace ChessV1
         {
 
         }
-        public void ChangePlayer() => playerTurn ^= Piece.ColorBits;
+        public void ChangePlayer() => playerTurn ^= Piece.colourMask;
         public void InitFEN(string FEN)
         {
             string[] sections = FEN.Split(' ');
+            int boardPtr = 0;
             foreach (char c in sections[0])
             {
                 if (c == '/')
                     continue;
+                else if (c < 58) // a num
+                    boardPtr += c - '0';
+                else
+                    square[boardPtr] = PreInitializeData.CharToPiece.GetPiece(c);
             }
         }
         public unsafe override int GetHashCode()

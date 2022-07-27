@@ -1,6 +1,6 @@
-using Chess;
+using ChessV1;
 
-namespace PreInitlizedData
+namespace PreInitializeData
 {
     public struct CharToPiece
     {

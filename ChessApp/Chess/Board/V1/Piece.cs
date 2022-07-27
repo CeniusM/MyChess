@@ -31,10 +31,10 @@ namespace ChessV1
         public const int White = 8;
         public const int Black = 16;
 
-        const int typeMask = 0b00111;
-        const int blackMask = 0b10000;
-        const int whiteMask = 0b01000;
-        const int colourMask = whiteMask | blackMask;
+        public const int typeMask = 0b00111;
+        public const int blackMask = 0b10000;
+        public const int whiteMask = 0b01000;
+        public const int colourMask = whiteMask | blackMask;
 
         public static bool IsColour(int piece, int colour)
         {

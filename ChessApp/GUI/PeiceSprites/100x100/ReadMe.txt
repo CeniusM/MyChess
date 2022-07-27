@@ -1,1 +1,0 @@
-use relativ paths, and load this in to the program in to a list of bitmaps instead of loading each one from memory everytime
