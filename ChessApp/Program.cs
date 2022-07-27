@@ -1,11 +1,12 @@
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using ChessGUI;
 
 namespace winForm;
 
 static class Program
 {
-    private static GameOfChessV2? game;
+    private static GameOfChess? game;
     /// <summary>
     ///  The main entry point for the application.
     /// </summary>

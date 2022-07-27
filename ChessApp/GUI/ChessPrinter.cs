@@ -16,7 +16,7 @@ namespace ChessGUI
         {
             _formGUI = new FormAPI(form);
             this.board = board;
-            _sprites = MyChessGUI.Sprites.SpriteFetcher.GetSprites(Settings.Dimensions.PieceWidth, Settings.Dimensions.PieceHeight);
+            _sprites = Sprites.SpriteFetcher.GetSprites(Settings.Dimensions.PieceWidth, Settings.Dimensions.PieceHeight);
             _form = form;
             form.Paint += (s, e) => PrintBoardAgain();
         }

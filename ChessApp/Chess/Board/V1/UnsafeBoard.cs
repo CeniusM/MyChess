@@ -64,6 +64,28 @@ namespace ChessV1
                 else
                     square[boardPtr] = PreInitializeData.CharToPiece.GetPiece(c);
             }
+            if (sections[1][0] == 'b')
+                playerTurn = 16;
+
+            if (sections[2].Contains('K'))
+                castle |= 0b1000;
+            if (sections[2].Contains('Q'))
+                castle |= 0b0100;
+            if (sections[2].Contains('k'))
+                castle |= 0b0010;
+            if (sections[2].Contains('q'))
+                castle |= 0b0001;
+
+            if (sections[3][0] != '-')
+            {
+                enPassantPiece += sections[3][0] - 'a';
+                enPassantPiece += 64 - ((sections[3][1] - '0') * 8);
+            }
+            else
+                enPassantPiece = 64;
+
+
+            InitPiecePoses();
         }
         public unsafe override int GetHashCode()
         {

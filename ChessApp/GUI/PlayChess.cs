@@ -1,6 +1,5 @@
 using ChessV1; // it should be that this is the only change to try difrent boards
 using winForm;
-using Chess;
 
 /*
 This is only used for debuging and engaging with the new boards
@@ -18,7 +17,7 @@ namespace ChessGUI
         Settings,
         SelectionScreen1
     }
-    public class GameOfChessV2
+    public class GameOfChess
     {
         private GameStates _GameState = GameStates.None;
 
@@ -29,7 +28,7 @@ namespace ChessGUI
         private ChessPrinter _chessPrinter;
         private Form1 _form;
         private bool _isRunning = true;
-        public GameOfChessV2(Form1 form)
+        public GameOfChess(Form1 form)
         {
             _form = form;
             _chessPrinter = new ChessPrinter(_form, board);
