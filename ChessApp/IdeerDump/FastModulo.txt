@@ -1,0 +1,14 @@
+
+
+is this faster and how does modulo even work???
+
+int num & modNum; 
+
+is it equel to this is this fater?
+
+double num1 = (double)num;
+num1 /= modNum;
+remove the whole numbers so if the resuls was 15,142 make it 0,142
+then multiply it by the number we moduloed with
+
+num = (num1 * modNum);

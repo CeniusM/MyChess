@@ -1,6 +1,4 @@
-using MyChess;
 using winForm;
-using MyChess.ChessBoard;
 
 namespace winForm
 {

@@ -1,4 +1,4 @@
-using MyChess.ChessBoard;
+
 
 namespace ChessV1
 {
@@ -6,10 +6,13 @@ namespace ChessV1
     {
         // ---by Sebastian---
         // Bits 0-3 store castles
-		// Bits 4-7 store file of ep square (starting at 1, so 0 = no ep square)
-		// Bits 8-13 captured piece
-		// Bits 14-... fifty mover counter
-		Stack<uint> gameStateHistory;
+        // Bits 4-7 store file of ep square (starting at 1, so 0 = no ep square)
+        // Bits 8-13 captured piece
+        // Bits 14-... fifty mover counter
+        public Stack<uint> gameStateHistory = new Stack<uint>(100);
+
+        // ideer
+        // public List<List<Move>> possibleMoves = new List<List<Move>>(100) { new List<Move>(100) };
 
         public PieceList piecePoses = new PieceList();
         public byte[] square = new byte[64];
@@ -41,7 +44,7 @@ namespace ChessV1
         }
         public void MakeMove(Move move)
         {
-            
+
         }
         public void UnMakeMove()
         {
@@ -50,67 +53,11 @@ namespace ChessV1
         public void ChangePlayer() => playerTurn ^= Piece.ColorBits;
         public void InitFEN(string FEN)
         {
-            try
+            string[] sections = FEN.Split(' ');
+            foreach (char c in sections[0])
             {
-                int fPtr = 0; // fen ptr
-                int bPtr = 0; // board ptr
-                while (true)
-                {
-                    byte b = (byte)FEN[fPtr];
-                    if (b != '/')
-                    {
-                        if (b == ' ')
-                            break;
-                        else if (b < 60) // num
-                        {
-                            bPtr += b - '0';
-                        }
-                        else // letter
-                        {
-                            square[bPtr] = PreInitlizedData.CharToPiece.GetPiece((char)b); // gives a num between 0 and 
-                            bPtr++;
-                        }
-                    }
-
-                    fPtr++;
-                }
-                fPtr++;
-
-                if (FEN[fPtr] == 'b')
-                    playerTurn = Piece.Black;
-
-                fPtr += 2;
-
-                for (int i = 0; i < 4; i++)
-                {
-                    if (FEN[fPtr] == 'K')
-                        castle = (castle | 0b1000);
-                    else if (FEN[fPtr] == 'Q')
-                        castle = (castle | 0b0100);
-                    else if (FEN[fPtr] == 'k')
-                        castle = (castle | 0b0010);
-                    else if (FEN[fPtr] == 'q')
-                        castle = (castle | 0b0001);
-                    else if (FEN[fPtr] == ' ')
-                        break;
-                    fPtr++;
-                }
-                fPtr++;
-
-                if (FEN[fPtr] != '-')
-                {
-                    enPassantPiece += FEN[fPtr] - 'a';
-                    fPtr++;
-                    enPassantPiece += 64 - ((FEN[fPtr] - '0') * 8);
-                }
-                else
-                    enPassantPiece = 64;
-
-                InitPiecePoses();
-            }
-            catch
-            {
-                throw new Exception("Invalid FEN");
+                if (c == '/')
+                    continue;
             }
         }
         public unsafe override int GetHashCode()
