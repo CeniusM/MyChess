@@ -9,28 +9,37 @@ namespace ChessGUI.Sprites
     {
         private static string[] SpriteNames =
         {
-            "WPawn",
-            "BPawn",
-            "Wrook",
-            "Brook",
-            "Wknight",
-            "Bknight",
-            "Wbishop",
-            "Bbishop",
-            "Wqueen",
-            "Bqueen",
+            "None",
             "Wking",
-            "Bking"
+            "WPawn",
+            "Wknight",
+            "None",
+            "Wbishop",
+            "Wrook",
+            "Wqueen",
+            "None",
+            "Bking",
+            "BPawn",
+            "Bknight",
+            "None",
+            "Bbishop",
+            "Brook",
+            "Bqueen"
         };
-        
+
         public static List<Bitmap> GetSprites(int width, int height)
         {
             List<Bitmap> sprites = new List<Bitmap>();
 
             for (int i = 0; i < SpriteNames.Count(); i++)
             {
+                if (SpriteNames[i] == "None")
+                {
+                    sprites.Add(ResizeBitmap(new Bitmap(100, 100), width, height));
+                    continue;
+                }
                 var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"MyChess.GUI.PeiceSprites._100x100.{SpriteNames[i]}.png");
-                sprites.Add(ResizeBitmap(new Bitmap(stream!), 100, 100));
+                sprites.Add(ResizeBitmap(new Bitmap(stream!), width, height));
             }
 
             return sprites;
@@ -43,7 +52,7 @@ namespace ChessGUI.Sprites
             {
                 g.DrawImage(bmp, 0, 0, width, height);
             }
-        
+
             return result;
         }
     }

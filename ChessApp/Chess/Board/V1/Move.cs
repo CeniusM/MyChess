@@ -19,7 +19,7 @@ namespace ChessV1
         public readonly byte StartSquare;
         public readonly byte TargetSquare;
         public readonly byte MoveFlag;
-        public Move(byte s, byte t, byte f)
+        public Move(int s, int t, int f)
         {
             StartSquare = (byte)s;
             TargetSquare = (byte)t;

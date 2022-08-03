@@ -51,6 +51,11 @@ namespace ChessV1
             return piece & typeMask;
         }
 
+        public static bool IsKing(int piece)
+        {
+            return (piece & typeMask) == King;
+        }
+
         public static bool IsRookOrQueen(int piece)
         {
             return (piece & 0b110) == 0b110;

@@ -59,6 +59,7 @@ namespace ChessGUI
                 switch (e.KeyChar)
                 {
                     case ' ':
+                        board.UnMakeMove();
                         break;
                     default:
                         break;
@@ -92,9 +93,11 @@ namespace ChessGUI
                 default:
                     throw new NotImplementedException("This GameState has not been implementet some how");
             }
+
         }
 
         private bool makingAMove = false;
+        int lastPress = 64;
         private void MakeMove()
         {
             if (makingAMove)
@@ -102,46 +105,15 @@ namespace ChessGUI
             makingAMove = true;
             int pressedSquare = squareX + (squareY * 8);
 
-            // seleckt a piece
-            if (Piece.Colour(board.square[pressedSquare]) == board.playerTurn)
+            if (lastPress == 64 && Piece.IsColour(board.square[pressedSquare], board.playerTurn))
+                lastPress = pressedSquare;
+            else if (pressedSquare == lastPress)
+                lastPress = 64;
+            else
             {
-                _selecktedSquare = pressedSquare;
+                board.MakeMove(new(lastPress, pressedSquare, 0));
             }
 
-            // move seleckted piece
-            // else if (_selecktedSquare != -1)
-            // {
-            //     var moves = board.GetPossibleMoves();
-            //     Move? move = null;
-            //     for (int i = 0; i < moves.Count; i++)
-            //     {
-            //         if (moves[i].StartSquare == _selecktedSquare && moves[i].TargetSquare == pressedSquare)
-            //         {
-            //             move = moves[i];
-            //             break;
-            //         }
-            //     }
-
-            //     if (!move.HasValue)
-            //     {
-            //         makingAMove = false;
-            //         _selecktedSquare = -1;
-            //         return;
-            //     }
-
-            //     if (move.Value.MoveFlag > 3) // means it promote
-            //     {
-            //         makingAMove = false;
-            //         StartSquareOfPromotionPiece = move.Value.StartSquare;
-            //         TargetSquareOfPromotionPiece = move.Value.TargetSquare;
-            //         _GameState = GameStates.PlayingChosingPiece;
-            //         return;
-            //     }
-
-            //     board.MakeMove(move.Value);
-            //     _chessPrinter.PrintBoard(_selecktedSquare);
-            //     _selecktedSquare = -1;
-            // }
 
             makingAMove = false;
         }

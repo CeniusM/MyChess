@@ -109,22 +109,30 @@ namespace ChessGUI
         private void DrawPieces()
         {
             int x, y;
-            void PrintWSprite(int sprite) => _formGUI.DrawBitmap(_sprites[(sprite - 1) << 1], x * 100, y * 100);
-            void PrintBSprite(int sprite) => _formGUI.DrawBitmap(_sprites[((sprite - 1) << 1) + 1], x * 100, y * 100);
+            void PrintWSprite(int sprite) => _formGUI.DrawBitmap(_sprites[sprite], x * 100, y * 100);
+            void PrintBSprite(int sprite) => _formGUI.DrawBitmap(_sprites[sprite + 8], x * 100, y * 100);
 
-            for (int i = 0; i < board.piecePoses.Count; i++)
+            x = board.kingPos[0] % 8; y = board.kingPos[0] >> 3;
+            PrintWSprite(Piece.King);
+            x = board.kingPos[1] % 8; y = board.kingPos[1] >> 3;
+            PrintBSprite(Piece.King);
+
+            for (int i = 0; i < board.allPieceLists.Length; i++)
             {
-                int pos = board.piecePoses[i];
-                int piece = board.square[pos];
-                x = pos % 8;
-                y = pos >> 3;
+                for (int j = 0; j < board.allPieceLists[i].Count; j++)
+                {
+                    int pos = board.allPieceLists[i][j];
+                    int piece = board.square[pos];
+                    x = pos % 8;
+                    y = pos >> 3;
 
-                if ((piece & Piece.White) == Piece.White)
-                    PrintWSprite((piece & 0b111));
-                else if ((piece & Piece.Black) == Piece.Black)
-                    PrintBSprite((piece & 0b111));
-                else
-                    throw new NotImplementedException("Cant use Piceses with no color value");
+                    if ((piece & Piece.White) == Piece.White)
+                        PrintWSprite((piece & 0b111));
+                    else if ((piece & Piece.Black) == Piece.Black)
+                        PrintBSprite((piece & 0b111));
+                    else
+                        throw new NotImplementedException("Cant use Piceses with no color value");
+                }
             }
         }
 
