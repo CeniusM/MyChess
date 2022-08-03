@@ -7,6 +7,9 @@ namespace ChessV1
         public const int WhiteIndex = 0;
         public const int BlackIndex = 1;
 
+        public const int WhiteCastleRights = 0b1100;
+        public const int BlackCastleRights = 0b0011;
+
         // --- by Sebastian Lague ---
         // Bits 0-3 store castles
         // Bits 4-7 store file of ep square (starting at 1, so 0 = no ep square)
@@ -59,9 +62,10 @@ namespace ChessV1
             int moveFlag = move.MoveFlag;
 
             // piece
-            int moveingPieceType = square[startSquare] & 0b00111;
-            int moveingPieceColour = square[startSquare] & 0b11000;
+            int movingPieceType = square[startSquare] & 0b00111;
+            int movingPieceColour = square[startSquare] & 0b11000;
             int capturedPiece = square[targetSquare];
+            bool pieceCaptured = capturedPiece != 0; // exluting enpasent capture
 
             // colours
             int colour = playerTurn;
@@ -76,6 +80,7 @@ namespace ChessV1
 
             // push GameStateHistory
             gameStateHistory.Push((uint)((castle) | (EPFile << 4) | (capturedPiece << 8)));
+            EPFile = 0;
 
             // King Move
             if (startSquare == ourKingpPos)
@@ -90,15 +95,40 @@ namespace ChessV1
                     castle &= 0b1100;
             }
 
-            // Peice move
+            // piece move
             else
             {
-                if (moveFlag == Move.Flag.PawnTwoForward)
+                if (moveFlag == Move.Flag.None)
+                {
+                    if (pieceCaptured)
+                        GetPieceList(capturedPiece).RemovePieceAtSquare(targetSquare);
+                    GetPieceList(movingPieceType, movingPieceColour).RemovePieceAtSquare(targetSquare);
+
+                    // remove castle rights
+                    if (whiteToMove && ((castle & WhiteCastleRights) != 0))
+                    {
+                        if (startSquare == 56)
+                            
+
+                    }
+                    else if ((castle & BlackCastleRights) != 0)
+                    {
+
+                    }
+                }
+                else if (moveFlag == Move.Flag.PawnTwoForward)
                 {
                     GetPieceList(capturedPiece).MovePiece(startSquare, targetSquare);
                     EPFile = startSquare % 8 + 1;
                 }
-
+                else if (moveFlag == Move.Flag.EnPassantCapture)
+                {
+                    GetPieceList(movingPieceType, movingPieceColour).MovePiece(startSquare, targetSquare);
+                    if (whiteToMove)
+                        GetPieceList(square[targetSquare + 8]).RemovePieceAtSquare(targetSquare + 8);
+                    else
+                        GetPieceList(square[targetSquare - 8]).RemovePieceAtSquare(targetSquare - 8);
+                }
             }
 
             ChangePlayer();

@@ -72,3 +72,15 @@ namespace ChessV1
         }
     }
 }
+
+/*
+King	= 0b001
+Pawn	= 0b010
+Knight	= 0b011
+Bishop	= 0b101
+Rook	= 0b110
+Queen	= 0b111
+
+White   = 0b01000
+Black   = 0b10000
+*/
