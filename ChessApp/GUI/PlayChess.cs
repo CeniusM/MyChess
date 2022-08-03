@@ -1,5 +1,6 @@
 using ChessV1; // it should be that this is the only change to try difrent boards
 using winForm;
+using MyLib;
 
 /*
 This is only used for debuging and engaging with the new boards
@@ -97,7 +98,7 @@ namespace ChessGUI
         }
 
         private bool makingAMove = false;
-        int lastPress = 64;
+        int lastPress = -1;
         private void MakeMove()
         {
             if (makingAMove)
@@ -105,13 +106,16 @@ namespace ChessGUI
             makingAMove = true;
             int pressedSquare = squareX + (squareY * 8);
 
-            if (lastPress == 64 && Piece.IsColour(board.square[pressedSquare], board.playerTurn))
+            DebugConsole.WriteLine(pressedSquare     + "");
+
+            if (lastPress == -1 && Piece.IsColour(board.square[pressedSquare], board.playerTurn))
                 lastPress = pressedSquare;
             else if (pressedSquare == lastPress)
-                lastPress = 64;
-            else
+                lastPress = -1;
+            else if (lastPress != -1)
             {
                 board.MakeMove(new(lastPress, pressedSquare, 0));
+                lastPress = -1;
             }
 
 

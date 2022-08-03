@@ -4,11 +4,17 @@ namespace ChessV1
 {
     public unsafe class UnsafeBoard
     {
+        #region Consts
         public const int WhiteIndex = 0;
         public const int BlackIndex = 1;
 
         public const int WhiteCastleRights = 0b1100;
+        public const int WhiteKingSideCastleRight = 0b1000;
+        public const int WhiteQueenSideCastleRight = 0b0100;
         public const int BlackCastleRights = 0b0011;
+        public const int BlackKingSideCastleRight = 0b0010;
+        public const int BlackQueenSideCastleRight = 0b0001;
+        #endregion
 
         // --- by Sebastian Lague ---
         // Bits 0-3 store castles
@@ -54,6 +60,7 @@ namespace ChessV1
         #endregion
 
         // this board will not have to check or validate the Move getting send in
+        // it will allways asume the move is valid and will probly crash if not...
         public void MakeMove(Move move)
         {
             // move
@@ -85,14 +92,21 @@ namespace ChessV1
             // King Move
             if (startSquare == ourKingpPos)
             {
-                ourKingpPos = targetSquare;
                 if (capturedPiece != 0) // king can never atc king
                     GetPieceList(capturedPiece).RemovePieceAtSquare(targetSquare);
-                EPFile = 0;
-                if (whiteToMove)
-                    castle &= 0b0011;
+                else if (moveFlag == Move.Flag.Castling) // cant castle if attacking
+                {
+
+                }
                 else
-                    castle &= 0b1100;
+                    kingPos[colourIndex] = targetSquare;
+
+                EPFile = 0;
+
+                if (whiteToMove)
+                    castle ^= WhiteCastleRights;
+                else
+                    castle ^= BlackCastleRights;
             }
 
             // piece move
@@ -105,15 +119,19 @@ namespace ChessV1
                     GetPieceList(movingPieceType, movingPieceColour).RemovePieceAtSquare(targetSquare);
 
                     // remove castle rights
-                    if (whiteToMove && ((castle & WhiteCastleRights) != 0))
+                    if (whiteToMove)
                     {
-                        if (startSquare == 56)
-                            
-
+                        if (startSquare == 56 || targetSquare == 56)
+                            castle ^= WhiteQueenSideCastleRight;
+                        else if (startSquare == 63 || targetSquare == 63)
+                            castle ^= WhiteKingSideCastleRight;
                     }
-                    else if ((castle & BlackCastleRights) != 0)
+                    else
                     {
-
+                        if (startSquare == 0 || targetSquare == 0)
+                            castle ^= BlackQueenSideCastleRight;
+                        else if (startSquare == 7 || targetSquare == 7)
+                            castle ^= BlackKingSideCastleRight;
                     }
                 }
                 else if (moveFlag == Move.Flag.PawnTwoForward)
@@ -128,6 +146,11 @@ namespace ChessV1
                         GetPieceList(square[targetSquare + 8]).RemovePieceAtSquare(targetSquare + 8);
                     else
                         GetPieceList(square[targetSquare - 8]).RemovePieceAtSquare(targetSquare - 8);
+                }
+                // casteling is done at king code
+                else // promotion
+                {
+                    
                 }
             }
 

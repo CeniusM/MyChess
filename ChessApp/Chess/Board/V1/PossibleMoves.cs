@@ -24,13 +24,13 @@ namespace ChessV1
         }
         List<HitPiece> pieces;
         List<int> pinnedPieces;
-        
+
 
         ulong bitboardOpponentAttacks;
 
-        public PossibleMovesGenerator()
+        public PossibleMovesGenerator(UnsafeBoard boardRef)
         {
-
+            board = boardRef;
         }
 
         // only works if the Generation have acured
