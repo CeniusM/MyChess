@@ -2,7 +2,7 @@ using ChessV1;
 
 namespace PreInitializeData
 {
-    public struct CharToPiece
+    public class CharToPiece
     {
         public static byte GetPiece(char c) => data[c - 'A'];
         private static readonly byte[] data =

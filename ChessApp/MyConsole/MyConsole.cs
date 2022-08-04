@@ -2,7 +2,7 @@
 
 namespace MyLib
 {
-    class DebugConsole
+    public class DebugConsole
     {
         public static void WriteLine(string str)
         {
@@ -39,7 +39,7 @@ namespace MyLib
         }
     }
 
-    class MyConsole
+    public class MyConsole
     {
 #if vsc
         public const string _path = @"MyConsole\Console.txt";
@@ -56,7 +56,7 @@ namespace MyLib
         }
     }
 
-    class FileWriter
+    public class FileWriter
     {
         public bool IsOpen { get; private set; } = false;
         private List<string> lines;

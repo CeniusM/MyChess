@@ -2,7 +2,7 @@ using winForm;
 
 namespace winForm
 {
-    class Settings
+    public class Settings
     {
         public class Game
         {

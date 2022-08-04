@@ -12,10 +12,10 @@ namespace ChessGUI
         private UnsafeBoard board;
         private Form1 _form;
         public bool _isPrinting = false;
-        public ChessPrinter(Form1 form, UnsafeBoard board)
+        public ChessPrinter(Form1 form, SafeBoard board)
         {
             _formGUI = new FormAPI(form);
-            this.board = board;
+            this.board = board.GetUnsafeBoard();
             _sprites = Sprites.SpriteFetcher.GetSprites(Settings.Dimensions.PieceWidth, Settings.Dimensions.PieceHeight);
             _form = form;
             form.Paint += (s, e) => PrintBoardAgain();

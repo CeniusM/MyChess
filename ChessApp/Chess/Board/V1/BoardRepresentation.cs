@@ -32,5 +32,8 @@
         {
             return fileNames[fileIndex] + "" + (rankIndex + 1);
         }
+
+        /// <summary> works up too 65535 and down too -65472 </summary>
+        public static bool IsPieceInBound(int pos) => (pos & 0xFFC0) == 0;
     }
 }

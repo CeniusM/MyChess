@@ -21,7 +21,7 @@ namespace ChessV1
         // Bits 4-7 store file of ep square (starting at 1, so 0 = no ep square)
         // Bits 8-13 captured piece
         // Bits 14-... fifty mover counter
-        public Stack<uint> gameStateHistory = new Stack<uint>(100);
+        public Stack<int> gameStateHistory = new Stack<int>(100);
 
         #region BoardInfo
 
@@ -61,7 +61,7 @@ namespace ChessV1
 
         // this board will not have to check or validate the Move getting send in
         // it will allways asume the move is valid and will probly crash if not...
-        public void MakeMove(Move move)
+        public void MakeMove(Move move) // needs castle and promotions
         {
             // move
             int startSquare = move.StartSquare;
@@ -86,7 +86,7 @@ namespace ChessV1
             int opponentKingPos = kingPos[opponentColourIndex];
 
             // push GameStateHistory
-            gameStateHistory.Push((uint)((castle) | (EPFile << 4) | (capturedPiece << 8)));
+            gameStateHistory.Push(((castle) | (EPFile << 4) | (capturedPiece << 8)));
             EPFile = 0;
 
             // King Move
@@ -159,8 +159,16 @@ namespace ChessV1
 
         public void UnMakeMove()
         {
+            int gameState = gameStateHistory.Pop();
+            castle = gameState & 0b1111;
+            EPFile = (gameState >> 4) & 0b1111;
+            int capturedPiece = (gameState >> 8) & 0b111111;
 
+
+
+            ChangePlayer();
         }
+
         public void ChangePlayer() => playerTurn ^= Piece.colourMask;
         public void InitFEN(string FEN)
         {

@@ -23,7 +23,7 @@ namespace ChessGUI
         private GameStates _GameState = GameStates.None;
 
         private const int SquareDimensions = 100;
-        private UnsafeBoard board = new UnsafeBoard();
+        private SafeBoard board = new SafeBoard();
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;
@@ -108,7 +108,7 @@ namespace ChessGUI
 
             DebugConsole.WriteLine(pressedSquare     + "");
 
-            if (lastPress == -1 && Piece.IsColour(board.square[pressedSquare], board.playerTurn))
+            if (lastPress == -1 && Piece.IsColour(board[pressedSquare], board.PlayerTurn))
                 lastPress = pressedSquare;
             else if (pressedSquare == lastPress)
                 lastPress = -1;
