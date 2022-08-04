@@ -310,11 +310,7 @@ namespace MyChessGUI
             ai1.SetChessGame(cg);
             ai2.SetChessGame(cg);
 
-<<<<<<< HEAD
             // OnlyMinMax1 ai1SideKick = new(cg);
-=======
-            // OnlyMinMax1 ai1SideKick = new(cg, 4);
->>>>>>> c01ec3800f54aef48ecf7ce219aaa0044252e813
             // AlphaBetaPruning ai2SideKick = new(cg);
 
             // MisterRandom ai2 = new(cg);
@@ -373,11 +369,7 @@ namespace MyChessGUI
             while (true)
             {
                 Move move1 = ai1.GetMove();
-<<<<<<< HEAD
                 Move move2 = ai1.GetMove();
-=======
-                // Move move2 = ai1.GetMove();
->>>>>>> c01ec3800f54aef48ecf7ce219aaa0044252e813
 
 
                 if (move1 != move2)
