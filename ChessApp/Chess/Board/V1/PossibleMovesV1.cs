@@ -163,11 +163,7 @@ namespace ChessV1
                     attackers++;
             }
 
-            for (int i = 0; i < EnemyPawns.Count; i++)
-            {
-                if (BitBoardHelper.ContainsSquare(PreInitializeData.Pawn.PawnAttacksBitBoard[EnemyPawns[i], EnemyToMoveIndex], square))
-                    attackers++;
-            }
+            // pawns
 
             return attackers;
         }
@@ -184,14 +180,27 @@ namespace ChessV1
                     return true;
             }
 
-            for (int i = 0; i < EnemyPawns.Count; i++)
+            // pawn, just check if 
+            if (WhiteToMove)
             {
-                if (BitBoardHelper.ContainsSquare(PreInitializeData.Pawn.PawnAttacksBitBoard[EnemyPawns[i], EnemyToMoveIndex], square))
-                {
-                    MyLib.DebugConsole.WriteLine(BitBoardHelper.GetBitBoardString(PreInitializeData.Pawn.PawnAttacksBitBoard[EnemyPawns[i], EnemyToMoveIndex]));
+                const byte pawnFoo = Piece.BPawn;
+                if (square[Pawn.PawnAttackSquares[square, 0, 0]] == pawnFoo)
                     return true;
-                }
             }
+            else
+            {
+                if (Board.IsPieceInBound(square + 7))
+                    if ((square + 7) >> 3 == (square >> 3) + 1)
+                        if (board.Square[square + 7] == Piece.WPawn)
+                            return true;
+                if (Board.IsPieceInBound(square + 9))
+                    if ((square + 9) >> 3 == (square >> 3) + 1)
+                        if (board.Square[square + 9] == Piece.WPawn)
+                            return true;
+            }
+
+
+
 
             /*
                 make the 
@@ -302,5 +311,34 @@ public void AddKingMoves() // speedy :D... i hope
             }
             square[OurKingPos] = (byte)(0b1 | ColourToMove);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// dont have to check every pawn, instead just out from the square (IsSquareAttacked())
+            // for (int i = 0; i < EnemyPawns.Count; i++)
+            // {
+            //     if (BitBoardHelper.ContainsSquare(PreInitializeData.Pawn.PawnAttacksBitBoard[EnemyPawns[i], EnemyToMoveIndex], square))
+            //     {
+            //         MyLib.DebugConsole.WriteLine(BitBoardHelper.GetBitBoardString(PreInitializeData.Pawn.PawnAttacksBitBoard[EnemyPawns[i], EnemyToMoveIndex]));
+            //         return true;
+            //     }
+            // }
 
 */
