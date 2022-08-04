@@ -244,14 +244,14 @@ namespace MyChessGUI
             OnlyMinMax1 ai1 = new(cg); // white
             AlphaBetaPruning ai2 = new(cg); // black
 
-            OnlyMinMax1 ai1SideKick = new(cg);
-            AlphaBetaPruning ai2SideKick = new(cg);
+            // OnlyMinMax1 ai1SideKick = new(cg);
+            // AlphaBetaPruning ai2SideKick = new(cg);
 
             // MisterRandom ai2 = new(cg);
             // AlphaBetaPruning ai2 = new(cg);
 
-
-
+            // OnlyMinMax1 ai1 = new(cg);
+            // OnlyMinMax1 ai2 = new(cg);
 
 
 
@@ -301,11 +301,11 @@ namespace MyChessGUI
             {
                 cp.PrintBoard(-1);
                 Move move1 = ai1.GetMove();
-                // Move move2 = ai1SideKick.GetMove();
+                Move move2 = ai1.GetMove();
 
 
-                // if (move1 != move2)
-                //     MyLib.DebugConsole.WriteLine("Move Failed\n" + move1.ToString() + "\n" + move2.ToString());
+                if (move1 != move2)
+                    MyLib.DebugConsole.WriteLine("Move Failed\n" + move1.ToString() + "\n" + move2.ToString());
 
                 cg.MakeMove(move1);
                 if (cg.GetPossibleMoves().Count == 0)
