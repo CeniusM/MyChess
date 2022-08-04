@@ -2,6 +2,12 @@ Get all the pawns to move
 
 Test that the King, Knight, and Pawns work completly as intendead
 
-Go around and clean up / look for derefrencing and propety code
+Go around and clean up
 
 then add rooks/bishop/queen
+
+when it all works:
+optimitation ideers:
+-try and make a branch where all the multi dimensinel arrays get cut down to a single array
+ try and speed test the 2, cause my theory is that all the derefrencing and bounce checking
+ makes it slower then having a sinle array and just use multiplication the get the right index

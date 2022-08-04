@@ -100,10 +100,11 @@ namespace ChessV1
 
             AddKingMoves();
 
-            if (_DoubleCheck) // if double check only count 
+            if (_DoubleCheck) // if double check only king moves count 
                 return;
 
             AddKnightMove();
+            AddPawnMoves();
         }
 
         public void AddKingMoves()
