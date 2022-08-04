@@ -10,12 +10,14 @@ namespace ChessGUI
         private FormAPI _formGUI;
         private List<Bitmap> _sprites;
         private UnsafeBoard board;
+        private PossibleMovesGenerator pmg;
         private Form1 _form;
         public bool _isPrinting = false;
         public ChessPrinter(Form1 form, SafeBoard board)
         {
             _formGUI = new FormAPI(form);
             this.board = board.GetUnsafeBoard();
+            pmg = board.GetPossibleMovesGenerator();
             _sprites = Sprites.SpriteFetcher.GetSprites(Settings.Dimensions.PieceWidth, Settings.Dimensions.PieceHeight);
             _form = form;
             form.Paint += (s, e) => PrintBoardAgain();
@@ -92,18 +94,18 @@ namespace ChessGUI
 
         private void DrawPossibleMoves(int selecktedPiece)
         {
-            // if (selecktedPiece == -1)
-            //     return;
-            // foreach (Move move in GetPossibleMoves())
-            // {
-            //     if (move.StartSquare != selecktedPiece)
-            //         continue;
-            //     int x = move.TargetSquare % 8;
-            //     int y = move.TargetSquare >> 3;
+            if (selecktedPiece == -1)
+                return;
+            foreach (Move move in pmg.GetMoves())
+            {
+                if (move.StartSquare != selecktedPiece)
+                    continue;
+                int x = move.TargetSquare % 8;
+                int y = move.TargetSquare >> 3;
 
-            //     _formGUI.DrawSquare(x * 100, y * 100, 100, 100,
-            //     ((x + y) % 2 == 0) ? Settings.Colors.LightPossibleMoveSquare : Settings.Colors.DarkPossibleMoveSquare);
-            // }
+                _formGUI.DrawSquare(x * 100, y * 100, 100, 100,
+                ((x + y) % 2 == 0) ? Settings.Colors.LightPossibleMoveSquare : Settings.Colors.DarkPossibleMoveSquare);
+            }
         }
 
         private void DrawPieces()

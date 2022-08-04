@@ -14,7 +14,7 @@ public class PieceList {
 		numPieces = 0;
 	}
 
-	public int Count {
+	public int Count { // try and make this into a feild instead
 		get {
 			return numPieces;
 		}

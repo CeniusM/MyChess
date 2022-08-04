@@ -67,21 +67,31 @@ namespace ChessV1
             EnemyKing = _board.kingPos[ColourToMoveIndex ^ 1];
             Castle = _board.castle;
 
+
+            // just set alot of pointer right?
+            // isent it faster then everytime you need to get one you need to 
+            // both derefrence and get go through a propety everytime
+            // ex. for (int i = 0; i < board.pawn[ColourToMoveIndex].Count)
+            // with this
+            // for (int i = 0; i < OurPawns.Count)
+            OurPawns = _board.pawns[ColourToMoveIndex];
+            OurKnights = _board.knights[ColourToMoveIndex];
+            OurBishops = _board.bishops[ColourToMoveIndex];
+            OurRooks = _board.rooks[ColourToMoveIndex];
+            OurQueens = _board.queens[ColourToMoveIndex];
+            EnemyPawns = _board.pawns[EnemyToMoveIndex];
+            EnemyKnights = _board.knights[EnemyToMoveIndex];
+            EnemyBishops = _board.bishops[EnemyToMoveIndex];
+            EnemyRooks = _board.rooks[EnemyToMoveIndex];
+            EnemyQueens = _board.queens[EnemyToMoveIndex];
+
+
             _moves = new List<Move>(40);
+            // another way could maby be to save the previus moves and just loop over those to just count them
+            // but not sure if we get more speed out of checking this cause its very rare...
             int ourKingAttacks = IsSquareAttackedCount(OurKingPos);
             _KingInCheck = (ourKingAttacks != 0);
             _DoubleCheck = (ourKingAttacks > 1);
-
-            OurPawns = _board.pawns[ColourToMoveIndex];
-            OurKnights = _board.pawns[ColourToMoveIndex];
-            OurBishops = _board.pawns[ColourToMoveIndex];
-            OurRooks = _board.pawns[ColourToMoveIndex];
-            OurQueens = _board.pawns[ColourToMoveIndex];
-            EnemyPawns = _board.pawns[EnemyToMoveIndex];
-            EnemyKnights = _board.pawns[EnemyToMoveIndex];
-            EnemyBishops = _board.pawns[EnemyToMoveIndex];
-            EnemyRooks = _board.pawns[EnemyToMoveIndex];
-            EnemyQueens = _board.pawns[EnemyToMoveIndex];
         }
 
         public void GenerateMoves()
@@ -89,114 +99,73 @@ namespace ChessV1
             Init();
 
             AddKingMoves();
+
+            if (_DoubleCheck) // if double check only count 
+                return;
+
+            AddKnightMove();
         }
 
-        public void AddKingMoves() // speedy :D... i hope
+        public void AddKingMoves()
         {
-            int newPos = OurKingPos - 8;
-            if (((newPos) & 0xFFC0) == 0) // bound check
+            square[OurKingPos] = 0; // so it never block it self after checking an ajacent square is atc            
+            for (int i = 0; i < 8; i++)
             {
-                if ((square[newPos] & ColourToMove) != ColourToMove)
+                int move = King.KingAttacksV2[OurKingPos, i];
+                if (move == King.InvalidMove)
+                    continue; // make it so later that you can just break after an InvalidMove
+                else if ((square[move] & ColourToMove) != ColourToMove)
                 {
-                    // // // only problem with this is that the Move get copyed into moves, but maby worth it ¯\_(ツ)_/¯
-                    // // // atlist then we dont have to make a new list and add all the moves that are acually valid
-
-                    // moves the king so the IsSqaureAttacked dosent count the old king pos as blocked
-                    // but no more then the kingPos acually needs to be changed so no need for _boad.Make/UnMakeMove
-                    _board.kingPos[ColourToMoveIndex] = newPos;
-                    if (!IsSquareAttacked(OurKingPos))
-                        _moves.Add(new(OurKingPos, newPos, 0));
+                    if (!IsSquareAttacked(move)) // can make anoter IsSqaureAttacked that ONLY checks slidingPiecses
+                        _moves.Add(new(OurKingPos, move, 0));
                 }
             }
-
-            newPos = OurKingPos + 1;
-            if (((newPos) & 0xFFC0) == 0)
-            {
-                if ((square[newPos] & ColourToMove) != ColourToMove)
-                {
-                    _board.kingPos[ColourToMoveIndex] = newPos;
-                    if (!IsSquareAttacked(OurKingPos))
-                        _moves.Add(new(OurKingPos, newPos, 0));
-                }
-            }
-            newPos = OurKingPos + 8;
-            if (((newPos) & 0xFFC0) == 0)
-            {
-                if ((square[newPos] & ColourToMove) != ColourToMove)
-                {
-                    _board.kingPos[ColourToMoveIndex] = newPos;
-                    if (!IsSquareAttacked(OurKingPos))
-                        _moves.Add(new(OurKingPos, newPos, 0));
-                }
-            }
-            newPos = OurKingPos - 1;
-            if (((newPos) & 0xFFC0) == 0)
-            {
-                if ((square[newPos] & ColourToMove) != ColourToMove)
-                {
-                    _board.kingPos[ColourToMoveIndex] = newPos;
-                    if (!IsSquareAttacked(OurKingPos))
-                        _moves.Add(new(OurKingPos, newPos, 0));
-                }
-            }
-            newPos = OurKingPos - 7;
-            if (((newPos) & 0xFFC0) == 0)
-            {
-                if ((square[newPos] & ColourToMove) != ColourToMove)
-                {
-                    _board.kingPos[ColourToMoveIndex] = newPos;
-                    if (!IsSquareAttacked(OurKingPos))
-                        _moves.Add(new(OurKingPos, newPos, 0));
-                }
-            }
-            newPos = OurKingPos + 9;
-            if (((newPos) & 0xFFC0) == 0)
-            {
-                if ((square[newPos] & ColourToMove) != ColourToMove)
-                {
-                    _board.kingPos[ColourToMoveIndex] = newPos;
-                    if (!IsSquareAttacked(OurKingPos))
-                        _moves.Add(new(OurKingPos, newPos, 0));
-                }
-            }
-            newPos = OurKingPos + 7;
-            if (((newPos) & 0xFFC0) == 0)
-            {
-                if ((square[newPos] & ColourToMove) != ColourToMove)
-                {
-                    _board.kingPos[ColourToMoveIndex] = newPos;
-                    if (!IsSquareAttacked(OurKingPos))
-                        _moves.Add(new(OurKingPos, newPos, 0));
-                }
-            }
-            newPos = OurKingPos - 9;
-            if (((newPos) & 0xFFC0) == 0)
-            {
-                if ((square[newPos] & ColourToMove) != ColourToMove)
-                {
-                    _board.kingPos[ColourToMoveIndex] = newPos;
-                    if (!IsSquareAttacked(OurKingPos))
-                        _moves.Add(new(OurKingPos, newPos, 0));
-                }
-            }
-            _board.kingPos[ColourToMoveIndex] = OurKingPos;
+            square[OurKingPos] = (byte)(0b1 | ColourToMove);
         }
 
+        public void AddKnightMove() // based of AddKingMoves just with a for loop
+        {
+            for (int i = 0; i < OurKnights.Count; i++)
+            {
+                int knightPos = OurKnights[i];
+                square[knightPos] = 0;
+                for (int j = 0; j < 8; j++)
+                {
+                    int newPos = Knight.KnightAttacksV2[knightPos, j];
+                    if (newPos == Knight.InvalidMove)
+                        continue;
+                    if ((square[newPos] & ColourToMove) != ColourToMove)
+                    {
+                        if (!IsSquareAttacked(OurKingPos))
+                            _moves.Add(new(knightPos, newPos, 0));
+                    }
 
+                }
+                square[knightPos] = (byte)(Piece.Knight | ColourToMove);
+            }
+        }
 
+        public void AddPawnMoves()
+        {
 
-
+        }
 
         // returns the amount of attackers
         public int IsSquareAttackedCount(int square)
         {
             int attackers = 0;
-            if (BitBoardHelper.ContainsSquare(PreInitializeData.Knight.KnightAttacksBitBoard[EnemyKing], square))
+            if (BitBoardHelper.ContainsSquare(PreInitializeData.King.KingAttacksBitBoard[EnemyKing], square))
                 attackers++;
 
             for (int i = 0; i < EnemyKnights.Count; i++)
             {
                 if (BitBoardHelper.ContainsSquare(PreInitializeData.Knight.KnightAttacksBitBoard[EnemyKnights[i]], square))
+                    attackers++;
+            }
+
+            for (int i = 0; i < EnemyPawns.Count; i++)
+            {
+                if (BitBoardHelper.ContainsSquare(PreInitializeData.Pawn.PawnAttacksBitBoard[EnemyPawns[i], EnemyToMoveIndex], square))
                     attackers++;
             }
 
@@ -206,13 +175,22 @@ namespace ChessV1
         // just says if anyone attacks this square
         public bool IsSquareAttacked(int square)
         {
-            if (BitBoardHelper.ContainsSquare(PreInitializeData.Knight.KnightAttacksBitBoard[EnemyKing], square))
+            if (BitBoardHelper.ContainsSquare(PreInitializeData.King.KingAttacksBitBoard[EnemyKing], square))
                 return true;
 
             for (int i = 0; i < EnemyKnights.Count; i++)
             {
                 if (BitBoardHelper.ContainsSquare(PreInitializeData.Knight.KnightAttacksBitBoard[EnemyKnights[i]], square))
                     return true;
+            }
+
+            for (int i = 0; i < EnemyPawns.Count; i++)
+            {
+                if (BitBoardHelper.ContainsSquare(PreInitializeData.Pawn.PawnAttacksBitBoard[EnemyPawns[i], EnemyToMoveIndex], square))
+                {
+                    MyLib.DebugConsole.WriteLine(BitBoardHelper.GetBitBoardString(PreInitializeData.Pawn.PawnAttacksBitBoard[EnemyPawns[i], EnemyToMoveIndex]));
+                    return true;
+                }
             }
 
             /*
@@ -231,5 +209,98 @@ namespace ChessV1
 
             return false;
         }
+
+        // need anoter IsSquareAttacked that only look at sliding piece (if piece have moved only pins can atack the king)
+        // IsPiecePinnedToKing()
     }
 }
+
+
+
+
+
+
+/* Grave Yard
+dosent work do to the king just being able to walk to the other side
+but could work if you just added lineDiff in there at one of the checks
+maby a speed comparison at a later point
+
+public void AddKingMoves() // speedy :D... i hope
+        {
+            square[OurKingPos] = 0; // so it never block it self after checking an ajacent square is atc
+            int newPos = OurKingPos - 8;
+            if (((newPos) & 0xFFC0) == 0) // bound check
+            {
+                if ((square[newPos] & ColourToMove) != ColourToMove)
+                {
+                    if (!IsSquareAttacked(newPos))
+                        _moves.Add(new(OurKingPos, newPos, 0));
+                }
+            }
+            newPos = OurKingPos + 1;
+            if (((newPos) & 0xFFC0) == 0)
+            {
+                if ((square[newPos] & ColourToMove) != ColourToMove)
+                {
+                    if (!IsSquareAttacked(newPos))
+                        _moves.Add(new(OurKingPos, newPos, 0));
+                }
+            }
+            newPos = OurKingPos + 8;
+            if (((newPos) & 0xFFC0) == 0)
+            {
+                if ((square[newPos] & ColourToMove) != ColourToMove)
+                {
+                    if (!IsSquareAttacked(newPos))
+                        _moves.Add(new(OurKingPos, newPos, 0));
+                }
+            }
+            newPos = OurKingPos - 1;
+            if (((newPos) & 0xFFC0) == 0)
+            {
+                if ((square[newPos] & ColourToMove) != ColourToMove)
+                {
+                    if (!IsSquareAttacked(newPos))
+                        _moves.Add(new(OurKingPos, newPos, 0));
+                }
+            }
+            newPos = OurKingPos - 7;
+            if (((newPos) & 0xFFC0) == 0)
+            {
+                if ((square[newPos] & ColourToMove) != ColourToMove)
+                {
+                    if (!IsSquareAttacked(newPos))
+                        _moves.Add(new(OurKingPos, newPos, 0));
+                }
+            }
+            newPos = OurKingPos + 9;
+            if (((newPos) & 0xFFC0) == 0)
+            {
+                if ((square[newPos] & ColourToMove) != ColourToMove)
+                {
+                    if (!IsSquareAttacked(newPos))
+                        _moves.Add(new(OurKingPos, newPos, 0));
+                }
+            }
+            newPos = OurKingPos + 7;
+            if (((newPos) & 0xFFC0) == 0)
+            {
+                if ((square[newPos] & ColourToMove) != ColourToMove)
+                {
+                    if (!IsSquareAttacked(newPos))
+                        _moves.Add(new(OurKingPos, newPos, 0));
+                }
+            }
+            newPos = OurKingPos - 9;
+            if (((newPos) & 0xFFC0) == 0)
+            {
+                if ((square[newPos] & ColourToMove) != ColourToMove)
+                {
+                    if (!IsSquareAttacked(newPos))
+                        _moves.Add(new(OurKingPos, newPos, 0));
+                }
+            }
+            square[OurKingPos] = (byte)(0b1 | ColourToMove);
+        }
+
+*/

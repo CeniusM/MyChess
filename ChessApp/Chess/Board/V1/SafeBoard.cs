@@ -14,12 +14,21 @@ namespace ChessV1
             _board = new UnsafeBoard();
             _movesGenerator = new PossibleMovesGenerator(_board);
             _moves = new Move[0];
+            _movesGenerator.GenerateMoves();
+            _moves = _movesGenerator.GetMoves();
+        }
+
+        public SafeBoard(string FEN)
+        {
+            _board = new UnsafeBoard(FEN);
+            _movesGenerator = new PossibleMovesGenerator(_board);
+            _moves = new Move[0];
+            _movesGenerator.GenerateMoves();
+            _moves = _movesGenerator.GetMoves();
         }
 
         public bool MakeMove(Move move)
         {
-            throw new NotImplementedException();
-
             if (_moves.Contains(move))
             {
                 _board.MakeMove(move);
@@ -62,5 +71,6 @@ namespace ChessV1
         public bool IsKingInCheck() => _movesGenerator.IsKingInCheck();
 
         public UnsafeBoard GetUnsafeBoard() => _board;
+        public PossibleMovesGenerator GetPossibleMovesGenerator() => _movesGenerator;
     }
 }

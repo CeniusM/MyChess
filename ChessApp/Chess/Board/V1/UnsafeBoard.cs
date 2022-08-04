@@ -96,17 +96,21 @@ namespace ChessV1
                     GetPieceList(capturedPiece).RemovePieceAtSquare(targetSquare);
                 else if (moveFlag == Move.Flag.Castling) // cant castle if attacking
                 {
-
+                    // also move the rook and change the caltle stuff
+                }
+                kingPos[colourIndex] = targetSquare;
+                square[startSquare] = 0;
+                EPFile = 0;
+                if (whiteToMove)
+                {
+                    square[targetSquare] = Piece.WKing; // so we dont have to check if white twice
+                    castle ^= WhiteCastleRights;
                 }
                 else
-                    kingPos[colourIndex] = targetSquare;
-
-                EPFile = 0;
-
-                if (whiteToMove)
-                    castle ^= WhiteCastleRights;
-                else
+                {
+                    square[targetSquare] = Piece.BKing;
                     castle ^= BlackCastleRights;
+                }
             }
 
             // piece move
@@ -150,7 +154,7 @@ namespace ChessV1
                 // casteling is done at king code
                 else // promotion
                 {
-                    
+
                 }
             }
 

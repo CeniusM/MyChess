@@ -23,7 +23,7 @@ namespace ChessGUI
         private GameStates _GameState = GameStates.None;
 
         private const int SquareDimensions = 100;
-        private SafeBoard board = new SafeBoard();
+        private SafeBoard board = new SafeBoard("8/5p2/4k2p/1n6/1N6/4K2P/5P2/8 w - - 0 1");
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;
@@ -98,7 +98,6 @@ namespace ChessGUI
         }
 
         private bool makingAMove = false;
-        int lastPress = -1;
         private void MakeMove()
         {
             if (makingAMove)
@@ -106,16 +105,14 @@ namespace ChessGUI
             makingAMove = true;
             int pressedSquare = squareX + (squareY * 8);
 
-            DebugConsole.WriteLine(pressedSquare     + "");
-
-            if (lastPress == -1 && Piece.IsColour(board[pressedSquare], board.PlayerTurn))
-                lastPress = pressedSquare;
-            else if (pressedSquare == lastPress)
-                lastPress = -1;
-            else if (lastPress != -1)
+            if (_selecktedSquare == -1 && Piece.IsColour(board[pressedSquare], board.PlayerTurn))
+                _selecktedSquare = pressedSquare;
+            else if (pressedSquare == _selecktedSquare)
+                _selecktedSquare = -1;
+            else if (_selecktedSquare != -1)
             {
-                board.MakeMove(new(lastPress, pressedSquare, 0));
-                lastPress = -1;
+                board.MakeMove(new(_selecktedSquare, pressedSquare, 0));
+                _selecktedSquare = -1;
             }
 
 
