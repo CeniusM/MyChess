@@ -100,7 +100,6 @@ namespace MyChess.ChessBoard
 
         public void MakeMove(Move move)
         {
-
             // halfMove += 1;
             // // if move was a succes, adds a fullmove after black moved
             // if (playerTurn == BlackMask)

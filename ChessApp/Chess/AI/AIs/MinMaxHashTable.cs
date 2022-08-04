@@ -13,9 +13,11 @@ namespace MyChess.ChessBoard.AIs
             throw new NotImplementedException();
         }
 
-        public override void SetChessGame()
+        public override void SetChessGame(ChessGame chessGame)
         {
-            throw new NotImplementedException();
+            this.chessGame = chessGame;
+            board = chessGame.board;
+            evaluator = new(chessGame);
         }
     }
 }

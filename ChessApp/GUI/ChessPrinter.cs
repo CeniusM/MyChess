@@ -1,4 +1,3 @@
-using MyChess.ChessBoard;
 using winForm;
 using MyChess;
 using CS_Math;
@@ -6,17 +5,19 @@ using MyChess.ChessBoard.Evaluators;
 using MyChess.PossibleMoves;
 using MyChess.ChessBoard.AIs;
 using MyChess.ChessBoard.Evaluators.Methods;
+using Chess;
 
 namespace MyChessGUI
 {
     // gets the instruction from the chess game and gives the FormGUI instructions on what to print
     public class ChessPrinter
     {
+        public int depthOfEval = 2;
         private FormAPI _formGUI;
         private List<Bitmap> _sprites;
         private ChessGame chessGame;
         private Form1 _form;
-        // private bool _isPrinting = false;
+        public bool _isPrinting = false;
         public ChessPrinter(Form1 form, ChessGame chessGame)
         {
             _formGUI = new FormAPI(form);
@@ -28,17 +29,24 @@ namespace MyChessGUI
 
         public void PrintBoardAgain() => _formGUI.Print();
 
-        public void PrintBoard(int selecktedPiece)
+        public void PrintBoard(int selecktedPiece, bool useMiniMaxEval = false)
         {
+            // useMiniMaxEval = false; // DOSENT WORK
+
+
+            if (_isPrinting)
+                return;
+            _isPrinting = true;
             DrawFeild();
 
             DrawPossibleMoves(selecktedPiece);
 
             DrawPieces();
 
-            PrintEvalBar();
+            PrintEvalBar(useMiniMaxEval);
 
             _formGUI.Print();
+            _isPrinting = false;
         }
 
         private void DrawFeild(bool drawFieldBonuses = false)
@@ -116,7 +124,7 @@ namespace MyChessGUI
                 x = pos % 8;
                 y = pos >> 3;
 
-                if ((piece & Piece.White) == Piece.White)
+                if (Piece.IsColour(piece, Piece.White))
                     PrintWSprite((piece & 0b111));
                 else if ((piece & Piece.Black) == Piece.Black)
                     PrintBSprite((piece & 0b111));
@@ -126,28 +134,35 @@ namespace MyChessGUI
         }
 
 
-        public void PrintEvalBar()
+        public void PrintEvalBar(bool useMiniMaxEval = false)
         {
             _formGUI.DrawSquare(Settings.Dimensions.ScreenWidth - Settings.Dimensions.EvalBarWidth, 0, Settings.Dimensions.ScreenHeight, Settings.Dimensions.EvalBarWidth, Color.White);
 
-            float evaluation = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count) / 300f; // idk 
-                                                                                                                  // float evaluation = new OnlyMinMax(chessGame).minimax(OnlyMinMax.Depth, chessGame.GetPossibleMoves().Count) / 300f;
-
-            float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f, 15); // returs a num between -15 and 15
-
-            int evalHeightpx = (int)((-evalHeight / 15f + 1) * 400f); // make eval height into a range between 0, 800
-
-            _formGUI.DrawSquare(800, 0, evalHeightpx, 100, Color.Black);
+            { // scope for names
+                float evaluation = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count) / 300f; // idk 
+                float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f, 15); // returs a num between -15 and 15
+                int evalHeightpx = (int)((-evalHeight / 15f + 1) * 400f); // make eval height into a range between 0, 800
+                _formGUI.DrawSquare(800, 0, evalHeightpx, 100, Color.Black);
+            }
 
 
+            if (!useMiniMaxEval)
+            {
+                float evaluation = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count, true) / 300f; // idk 
 
-            float evaluationv2 = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count, true) / 300f; // idk 
+                float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f, 15); // returs a num between -15 and 15
 
-            float evalHeightv2 = MyMath.LogisticCurve((float)evaluationv2, 30, 0.3f, 15); // returs a num between -15 and 15
+                int evalHeightpx = (int)((-evalHeight / 15f + 1) * 400f); // make eval height into a range between 0, 800
 
-            int evalHeightpxv2 = (int)((-evalHeightv2 / 15f + 1) * 400f); // make eval height into a range between 0, 800
-
-            _formGUI.DrawSquare(900, 0, evalHeightpxv2, 100, Color.Black);
+                _formGUI.DrawSquare(900, 0, evalHeightpx, 100, Color.Black);
+            }
+            else
+            {
+                float evaluation = chessGame.evaluator.TestMiniMaxEval(chessGame, depthOfEval) / 300f;
+                float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f, 15);
+                int evalHeightpx = (int)((-evalHeight / 15f + 1) * 400f);
+                _formGUI.DrawSquare(900, 0, evalHeightpx, 100, Color.Black);
+            }
         }
     }
 }

@@ -4,9 +4,10 @@ namespace MyChess.ChessBoard.AIs
 {
     public class OnlyMinMax1 : ChessAIBase
     {
-        public const int Depth = 4; // rather have id even so the last move is from the oppenent
-        public OnlyMinMax1(ChessGame chessGame) : base(chessGame)
+        public int Depth = 4; // rather have id even so the last move is from the oppenent
+        public OnlyMinMax1(ChessGame chessGame, int depth = 4) : base(chessGame)
         {
+            this.Depth = depth;
         }
 
         public override Move GetMove()
@@ -90,9 +91,11 @@ namespace MyChess.ChessBoard.AIs
             }
         }
 
-        public override void SetChessGame()
+        public override void SetChessGame(ChessGame chessGame)
         {
-            throw new NotImplementedException();
+            this.chessGame = chessGame;
+            board = chessGame.board;
+            evaluator = new(chessGame);
         }
     }
 }

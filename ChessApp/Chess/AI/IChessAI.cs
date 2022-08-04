@@ -4,7 +4,7 @@ namespace MyChess.ChessBoard.AIs
 {
     public interface IChessAI
     {
-        void SetChessGame();
+        void SetChessGame(ChessGame chessGame);
         Move GetMove();
     }
 }

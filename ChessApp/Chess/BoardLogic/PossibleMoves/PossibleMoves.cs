@@ -1,5 +1,4 @@
 using MyChess.ChessBoard;
-using MyChess.PossibleMoves.Pieces;
 
 // maby put all the piece movement code in here for speed?
 // implement and test the loop inside Generate the loop
@@ -9,23 +8,13 @@ namespace MyChess.PossibleMoves
 {
     public class PossibleMovesGenerator
     {
-        enum AttackType
-        {
-            Sliding, // Rook, Bishop, Queen
-            Step, // King, Pawn
-            Jump // Knight
-        }
-        // private struct kingAttacker
-        // {
-        //     int pieceType;
-        //     int pos;
-        // }
-        // private List<kingAttacker> kingAttackers = new List<kingAttacker>();
-
+        // maby sometime make it remeber earlyer move lists and attacksLists
         private int ThisKing = 0;
         private int OpponentKing = 0;
+        private int KingPos = 0;
         private Board board;
         public List<Move> moves;
+        public AttackList attacks;
         public PossibleMovesGenerator(Board board)
         {
             moves = new List<Move>();
@@ -35,7 +24,7 @@ namespace MyChess.PossibleMoves
 
         public void GenerateMoves()
         {
-            moves = new List<Move>(30); // avg moves for random pos
+            moves = new List<Move>(40); // avg moves for random pos, and 70 somthing is uselly max
 
             // so we dont need to loop over all square everytime we try and fint the right piece
             // for (int i = 0; i < board.piecePoses.Count; i++)
@@ -60,12 +49,24 @@ namespace MyChess.PossibleMoves
                 ThisKing = Piece.BKing;
                 OpponentKing = Piece.WKing;
             }
+            KingPos = GetKingsPos(board.playerTurn);
 
             AddCastleMoves();
             AddPawnMoves();
             AddKnightMoves();
             AddSlidingPieces();
             AddKingMoves();
+
+
+            // AttackList.Attacks[] temp = new AttackList.Attacks[moves.Count];
+            // for (int i = 0; i < moves.Count; i++)
+            //     temp[i] = new AttackList.Attacks(board.Square[moves[i].StartSquare], moves[i].StartSquare, moves[i].TargetSquare);
+            // attacks = new AttackList(temp, board.piecePoses);
+
+            // or maby make the AddPiece code store where they are acually attacking istead of doing it after
+
+            
+
 
             KingCheckCheck();
         }
@@ -84,8 +85,8 @@ namespace MyChess.PossibleMoves
             List<Move> ValidMoves = new List<Move>(moves.Count);
 
             // go through each move
-            int kingPos = GetKingsPos(board.playerTurn);
-            int kingPosTemp = kingPos;
+            // int kingPos = GetKingsPos(board.playerTurn);
+            int kingPosTemp = KingPos;
             int kingPiece = Piece.King | board.playerTurn;
             for (int i = 0; i < moves.Count; i++)
             {
@@ -96,7 +97,7 @@ namespace MyChess.PossibleMoves
                     kingPosTemp = GetKingsPos(board.playerTurn ^ Board.ColorMask);
                 if (!IsSquareAttacked(kingPosTemp, board.playerTurn))
                     ValidMoves.Add(moves[i]);
-                kingPosTemp = kingPos;
+                kingPosTemp = KingPos;
 
                 board.UnMakeMove();
             }
