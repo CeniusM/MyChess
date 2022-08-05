@@ -1,4 +1,5 @@
 // il add in fithy move count rule, repetetion and half move rule in later
+// then the moves from gameStateHistory probely need to go in their own stack
 
 namespace ChessV1
 {
@@ -18,9 +19,12 @@ namespace ChessV1
 
         // --- by Sebastian Lague ---
         // Bits 0-3 store castles
-        // Bits 4-7 store file of ep square (starting at 1, so 0 = no ep square)
-        // Bits 8-13 captured piece
-        // Bits 14-... fifty mover counter
+        // Bits 4-9 store ep square (64 = nothing)
+        // Bits 10-14 captured piece
+        // Bits 15-20 startSquare
+        // Bits 21-26 targetSquare
+        // Bits 27-30 moveFlag
+        // Bit 31 free <3 and technecly add 1 more from ep square
         public Stack<int> gameStateHistory = new Stack<int>(100);
 
         #region BoardInfo
@@ -42,7 +46,7 @@ namespace ChessV1
 
         public byte[] square = new byte[64];
         public int castle = 0b1111;
-        public int EPFile = 0;
+        public int EPSquare = 0;
         public int playerTurn = 8; // 8 = white, 16 = black;
         #endregion
 
@@ -86,8 +90,8 @@ namespace ChessV1
             int opponentKingPos = kingPos[opponentColourIndex];
 
             // push GameStateHistory
-            gameStateHistory.Push(((castle) | (EPFile << 4) | (capturedPiece << 8)));
-            EPFile = 0;
+            gameStateHistory.Push(((castle) | (EPSquare << 4) | (capturedPiece << 10) | (startSquare << 15) | (targetSquare << 21) | (moveFlag << 27)));
+            EPSquare = 0;
 
             // King Move
             if (startSquare == ourKingpPos)
@@ -100,7 +104,7 @@ namespace ChessV1
                 }
                 kingPos[colourIndex] = targetSquare;
                 square[startSquare] = 0;
-                EPFile = 0;
+                EPSquare = 0;
                 if (whiteToMove)
                 {
                     square[targetSquare] = Piece.WKing; // so we dont have to check if white twice
@@ -120,7 +124,9 @@ namespace ChessV1
                 {
                     if (pieceCaptured)
                         GetPieceList(capturedPiece).RemovePieceAtSquare(targetSquare);
-                    GetPieceList(movingPieceType, movingPieceColour).RemovePieceAtSquare(targetSquare);
+                    GetPieceList(movingPieceType, movingPieceColour).MovePiece(startSquare, targetSquare);
+                    square[targetSquare] = square[startSquare];
+                    square[startSquare] = 0;
 
                     // remove castle rights
                     if (whiteToMove)
@@ -141,7 +147,10 @@ namespace ChessV1
                 else if (moveFlag == Move.Flag.PawnTwoForward)
                 {
                     GetPieceList(capturedPiece).MovePiece(startSquare, targetSquare);
-                    EPFile = startSquare % 8 + 1;
+                    if (whiteToMove)
+                        EPSquare = targetSquare + 8;
+                    else
+                        EPSquare = targetSquare - 8;
                 }
                 else if (moveFlag == Move.Flag.EnPassantCapture)
                 {
@@ -165,8 +174,13 @@ namespace ChessV1
         {
             int gameState = gameStateHistory.Pop();
             castle = gameState & 0b1111;
-            EPFile = (gameState >> 4) & 0b1111;
-            int capturedPiece = (gameState >> 8) & 0b111111;
+            EPSquare = (gameState >> 4) & 0b111111;
+            int capturedPiece = (gameState >> 10) & 0b11111;
+            int startSquare = (gameState >> 15) & 0b111111;
+            int targetSquare = (gameState >> 21) & 0b111111;
+            int moveFlag = (gameState >> 27) & 0b111;
+
+
 
 
 
@@ -201,9 +215,9 @@ namespace ChessV1
                 castle |= 0b0001;
 
             if (sections[3][0] != '-')
-                EPFile = sections[3][0] - 'a' + 1;
+                EPSquare = sections[3][0] - 'a' + 1;
             else
-                EPFile = 0;
+                EPSquare = 0;
 
             InitPiecePoses();
         }

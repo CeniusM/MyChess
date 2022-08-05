@@ -1,6 +1,11 @@
 Get all the pawns to move
 
+potential pitfall, in some cases where pieces take eachother they need to do a little more
+then just move them self in the square, but acually also remove and add back the captured
+piece to it dosent get counted in the IsSquareAttacked
+
 Test that the King, Knight, and Pawns work completly as intendead
+with perft games where only those 3 are used *(promotions can obv not be tested)
 
 Go around and clean up
 
@@ -11,3 +16,16 @@ optimitation ideers:
 -try and make a branch where all the multi dimensinel arrays get cut down to a single array
  try and speed test the 2, cause my theory is that all the derefrencing and bounce checking
  makes it slower then having a sinle array and just use multiplication the get the right index
+
+-try and make a new branch where the optimitation is to remove as many method calls as possible
+
+-make a branch where you change the pieceList propety count and index out for feilds
+
+-try and make it so under the pawn addmoves code make it so it dosent test for isquare atc 
+ multible times under the same pawn, fx move 1 and 2 forward will always result in the same
+ from is square under atc, but also like enpassent is almost the same but not queiet
+
+-try very very small thing but maby make the issquareatc into the opisit so that we dont have
+ to invert the results from IsSqaureAtc every time its used, so just return the opesit
+
+-try and make the code more cache friendly
