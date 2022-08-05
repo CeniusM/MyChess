@@ -62,7 +62,7 @@ namespace ChessV1
         {
             ColourToMove = _board.playerTurn;
             ColourToMoveIndex = ColourToMove >> 4;
-            EnemyToMove = ColourToMove ^ 0b11111;
+            EnemyToMove = ColourToMove ^ 0b11000;
             EnemyToMoveIndex = (ColourToMove >> 4) ^ 1;
             WhiteToMove = (ColourToMove == 8);
             OurKingPos = _board.kingPos[ColourToMoveIndex];
@@ -98,15 +98,60 @@ namespace ChessV1
 
         public void GenerateMoves()
         {
+            // make a full check count
             Init();
+
 
             AddKingMoves();
 
             if (_DoubleCheck) // if double check only king moves count 
                 return;
 
-            AddKnightMove();
             AddPawnMoves();
+            AddKnightMove();
+            AddQueenMoves();
+        }
+
+        private void AddQueenMoves()
+        {
+            byte queen = (byte)(Piece.Queen | ColourToMove);
+            for (int i = 0; i < OurQueens.Count; i++)
+            {
+                int QueenPos = OurQueens[i];
+                for (int dir = 0; dir < 8; dir++)
+                {
+                    for (int j = 0; j < 7; j++)
+                    {
+                        int move = SlidingPieces.SlidingpieceAttacks[QueenPos, dir, j];
+                        if (move == SlidingPieces.InvalidMove)
+                            break;
+
+                        if (squares[move] == 0)
+                        {
+                            squares[move] = queen;
+                            squares[QueenPos] = 0;
+                            if (!IsSquareAttacked(OurKingPos))
+                                _moves.Add(new(QueenPos, move, 0));
+                            squares[QueenPos] = queen;
+                            squares[move] = 0;
+                        }
+                        else if (Piece.IsColour(squares[move], EnemyToMove))
+                        {
+                            byte capturedPiece = squares[move];
+                            squares[move] = queen;
+                            squares[QueenPos] = 0;
+                            if (!IsSquareAttacked(OurKingPos))
+                                _moves.Add(new(QueenPos, move, 0));
+                            squares[QueenPos] = queen;
+                            squares[move] = capturedPiece;
+                            break;
+                        }
+                        else
+                            break;
+
+                    }
+                }
+            }
         }
 
         public void AddKingMoves()
@@ -209,15 +254,17 @@ namespace ChessV1
                     {
                         if (move7 == EPSquare)
                         {
+                            byte capturedPiece = squares[move7];
                             squares[pawnPos] = 0;
+                            squares[move7] = Piece.WPawn;
+
                             // never anything on a EPSquare so dosent override anything, but still need to remove the other taken pawn so it dosent block
                             // also need to remove it from its list if we try the method of going through all the queens/rooks/bishops to see
                             // if any of them attack the king
-                            squares[move7] = Piece.WPawn;
                             if (!IsSquareAttacked(OurKingPos))
                                 _moves.Add(new(pawnPos, move7, Move.Flag.EnPassantCapture));
                             squares[pawnPos] = Piece.WPawn;
-                            squares[move7] = 0;
+                            squares[move7] = capturedPiece;
                         }
                         else if (move9 == EPSquare)
                         {
@@ -233,6 +280,7 @@ namespace ChessV1
                     // attacks
                     if (Piece.Colour(squares[move7]) == EnemyToMove)
                     {
+                        byte capturedPiece = squares[move7];
                         squares[pawnPos] = 0;
                         squares[move7] = Piece.WPawn; // override on another piece
                         if (!IsSquareAttacked(OurKingPos))
@@ -248,10 +296,11 @@ namespace ChessV1
                                 _moves.Add(new(pawnPos, move7, 0));
                         }
                         squares[pawnPos] = Piece.WPawn;
-                        squares[move7] = 0;
+                        squares[move7] = capturedPiece;
                     }
                     if (Piece.Colour(squares[move9]) == EnemyToMove)
                     {
+                        byte capturedPiece = squares[move9];
                         squares[pawnPos] = 0;
                         squares[move9] = Piece.WPawn;
                         if (!IsSquareAttacked(OurKingPos))
@@ -267,7 +316,7 @@ namespace ChessV1
                                 _moves.Add(new(pawnPos, move9, 0));
                         }
                         squares[pawnPos] = Piece.WPawn;
-                        squares[move9] = 0;
+                        squares[move9] = capturedPiece;
                     }
                 }
             }
@@ -320,17 +369,22 @@ namespace ChessV1
                     {
                         if (move7 == EPSquare)
                         {
+                            byte capturedPiece = squares[move7];
                             squares[pawnPos] = 0;
-                            squares[move7] = Piece.BPawn; // never anything on a EPSquare so dosent override anything
+                            squares[move7] = Piece.BPawn;
+
+                            // never anything on a EPSquare so dosent override anything, but still need to remove the other taken pawn so it dosent block
+                            // also need to remove it from its list if we try the method of going through all the queens/rooks/bishops to see
+                            // if any of them attack the king
                             if (!IsSquareAttacked(OurKingPos))
                                 _moves.Add(new(pawnPos, move7, Move.Flag.EnPassantCapture));
                             squares[pawnPos] = Piece.BPawn;
-                            squares[move7] = 0;
+                            squares[move7] = capturedPiece;
                         }
                         else if (move9 == EPSquare)
                         {
                             squares[pawnPos] = 0;
-                            squares[move9] = Piece.BPawn; // never anything on a EPSquare so dosent override anything
+                            squares[move9] = Piece.BPawn;
                             if (!IsSquareAttacked(OurKingPos))
                                 _moves.Add(new(pawnPos, move9, Move.Flag.EnPassantCapture));
                             squares[pawnPos] = Piece.BPawn;
@@ -341,8 +395,9 @@ namespace ChessV1
                     // attacks
                     if (Piece.Colour(squares[move7]) == EnemyToMove)
                     {
+                        byte capturedPiece = squares[move7];
                         squares[pawnPos] = 0;
-                        squares[move7] = Piece.BPawn;
+                        squares[move7] = Piece.BPawn; // override on another piece
                         if (!IsSquareAttacked(OurKingPos))
                         {
                             if (BitBoardHelper.ContainsSquare(0xFF, move7))
@@ -356,10 +411,11 @@ namespace ChessV1
                                 _moves.Add(new(pawnPos, move7, 0));
                         }
                         squares[pawnPos] = Piece.BPawn;
-                        squares[move7] = 0;
+                        squares[move7] = capturedPiece;
                     }
                     if (Piece.Colour(squares[move9]) == EnemyToMove)
                     {
+                        byte capturedPiece = squares[move9];
                         squares[pawnPos] = 0;
                         squares[move9] = Piece.BPawn;
                         if (!IsSquareAttacked(OurKingPos))
@@ -375,7 +431,7 @@ namespace ChessV1
                                 _moves.Add(new(pawnPos, move9, 0));
                         }
                         squares[pawnPos] = Piece.BPawn;
-                        squares[move9] = 0;
+                        squares[move9] = capturedPiece;
                     }
                 }
             }
@@ -470,6 +526,8 @@ namespace ChessV1
 
 
             /*
+                Start with casting ray method, then make branch to try other
+
                 make the 
                 SlidingpieceAttacksBitBoardDirection
                 and

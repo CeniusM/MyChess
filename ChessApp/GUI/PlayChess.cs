@@ -23,7 +23,7 @@ namespace ChessGUI
         private GameStates _GameState = GameStates.None;
 
         private const int SquareDimensions = 100;
-        private SafeBoard board = new SafeBoard("8/5p2/4k1p1/1n6/1N6/4K2P/5P2/8 w - - 0 1");
+        private SafeBoard board = new SafeBoard("8/5pq1/4k1p1/1n6/1N6/4K2P/5PQ1/8 w - - 0 1");
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;

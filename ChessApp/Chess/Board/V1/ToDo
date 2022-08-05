@@ -17,6 +17,8 @@ optimitation ideers:
  try and speed test the 2, cause my theory is that all the derefrencing and bounce checking
  makes it slower then having a sinle array and just use multiplication the get the right index
 
+-try and make the IsSquareAttacked code faster, try and make a branch where you just cast rays from square
+
 -try and make a new branch where the optimitation is to remove as many method calls as possible
 
 -make a branch where you change the pieceList propety count and index out for feilds
@@ -29,3 +31,5 @@ optimitation ideers:
  to invert the results from IsSqaureAtc every time its used, so just return the opesit
 
 -try and make the code more cache friendly
+
+-try another crap ideer i have, make a second square[] board where you store the colour of the pieces, and maby even another with the type

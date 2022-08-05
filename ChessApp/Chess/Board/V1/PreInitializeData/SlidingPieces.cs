@@ -10,9 +10,13 @@ namespace PreInitializeData
             Init();
         }
 
-        public static int[,,] SlidingpieceAttacks = new int[64, 8, 7];
-        public static int[,] SlidingpieceAttacksBitBoardDirection = new int[64, 8]; // specific direction
-        public static int[] SlidingpieceAttacksBitBoard = new int[64]; // all directions
+        public static readonly int[,,] SlidingpieceAttacks = new int[64, 8, 7];
+        public static readonly ulong[] QueenAttacksBitBoard = new ulong[64]; // all directions
+        public static readonly ulong[,] QueenAttacksBitBoardDirection = new ulong[64, 8]; // specific direction
+        public static readonly ulong[] RookAttacksBitBoard = new ulong[64]; // all directions
+        public static readonly ulong[,] RookAttacksBitBoardDirection = new ulong[64, 8]; // specific direction
+        public static readonly ulong[] BishopAttacksBitBoard = new ulong[64]; // all directions
+        public static readonly ulong[,] BishopAttacksBitBoardDirection = new ulong[64, 8]; // specific direction
         private static void Init()
         {
             int[] lineDiffs =
@@ -27,7 +31,8 @@ namespace PreInitializeData
                 -1
             };
 
-            // init SlidingpieceAttacks
+            // init SlidingpieceAttacks and 
+            // init SlidingpieceAttacksBitBoardDirection
             for (int square = 0; square < 64; square++)
             {
                 for (int dir = 0; dir < 8; dir++)
@@ -52,13 +57,30 @@ namespace PreInitializeData
                         }
 
                         SlidingpieceAttacks[square, dir, moveCount] = move;
+
+                        QueenAttacksBitBoardDirection[square, dir] |= 0x8000000000000000 >> move;
+                        if (dir < 4)
+                            RookAttacksBitBoardDirection[square, dir] |= 0x8000000000000000 >> move;
+                        else
+                            BishopAttacksBitBoardDirection[square, dir] |= 0x8000000000000000 >> move;
                     }
                 }
             }
 
-            // init SlidingpieceAttacksBitBoardDirection
 
             // init SlidingpieceAttacksBitBoard
+            for (int square = 0; square < 64; square++)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    QueenAttacksBitBoard[square] |= QueenAttacksBitBoardDirection[square, i];
+                    RookAttacksBitBoard[square] |= RookAttacksBitBoardDirection[square, i];
+                    BishopAttacksBitBoard[square] |= BishopAttacksBitBoardDirection[square, i];
+                }
+            }
+
+            // for (int i = 0; i < 64; i++)
+            //     MyLib.DebugConsole.WriteLine(BitBoardHelper.GetBitBoardString(BishopAttacksBitBoard[i]));
         }
     }
 }
