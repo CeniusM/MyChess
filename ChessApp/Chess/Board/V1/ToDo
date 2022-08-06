@@ -13,6 +13,19 @@ then add rooks/bishop/queen
 
 when it all works:
 optimitation ideers:
+
+-!!!!!try making pointer to the first elements in the 1d arrays, there by you
+ dont have to do any index, method calls, returns, bounds checks ont the array
+ only a single derefrencing and plus thingy
+ ex, ulong* ptr = &QueenbitBoards[0], then just call ulong foo = *ptr[index]
+ do it at init time, and just remember to not miss the bounds :P
+ dont know if it is true but, maby do a #if Debug where you allways
+ Check if the value is the same as last time becous maby the runtime enviuorment
+ moves around the data, not sure tho if it would move the array
+ maby do the same with byte[] square so you dont have to do the bounds check
+ also try it in the piece list and all over the place
+ du kan enda inde i MakeMove gøre startPtr = square[startPtr]
+
 -try and make a branch where all the multi dimensinel arrays get cut down to a single array
  try and speed test the 2, cause my theory is that all the derefrencing and bounce checking
  makes it slower then having a sinle array and just use multiplication the get the right index

@@ -50,13 +50,13 @@ namespace PreInitializeData
                             SlidingpieceAttacks[square, dir, moveCount] = InvalidMove;
                             break;
                         }
-                        if (lindDiff != lineDiffs[dir])
+                        else if (lindDiff != lineDiffs[dir])
                         {
                             SlidingpieceAttacks[square, dir, moveCount] = InvalidMove;
                             break;
                         }
-
-                        SlidingpieceAttacks[square, dir, moveCount] = move;
+                        else
+                            SlidingpieceAttacks[square, dir, moveCount] = move;
 
                         QueenAttacksBitBoardDirection[square, dir] |= 0x8000000000000000 >> move;
                         if (dir < 4)

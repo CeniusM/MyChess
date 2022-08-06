@@ -44,6 +44,7 @@ namespace ChessV1
         }
         #endregion
 
+        public byte* squarePtr;
         public byte[] square = new byte[64];
         public int castle = 0b1111;
         public int EPSquare = 0;
@@ -153,9 +154,9 @@ namespace ChessV1
                 {
                     GetPieceList(movingPieceType, movingPieceColour).MovePiece(startSquare, targetSquare);
                     if (whiteToMove)
-                        GetPieceList(square[targetSquare + 8]).RemovePieceAtSquare(targetSquare + 8);
+                        pawns[BlackIndex].RemovePieceAtSquare(targetSquare + 8);
                     else
-                        GetPieceList(square[targetSquare - 8]).RemovePieceAtSquare(targetSquare - 8);
+                        pawns[WhiteIndex].RemovePieceAtSquare(targetSquare - 8);
                 }
                 // casteling is done at king code
                 else // promotion
@@ -184,6 +185,20 @@ namespace ChessV1
                         GetPieceList(Piece.Bishop, colour).AddPieceAtSquare(targetSquare);
                         GetPieceList(Piece.Pawn, colour).RemovePieceAtSquare(startSquare);
                     }
+                    if (whiteToMove)
+                    {
+                        if (targetSquare == 56)
+                            castle ^= WhiteQueenSideCastleRight;
+                        else if (targetSquare == 63)
+                            castle ^= WhiteKingSideCastleRight;
+                    }
+                    else
+                    {
+                        if (targetSquare == 0)
+                            castle ^= BlackQueenSideCastleRight;
+                        else if (targetSquare == 7)
+                            castle ^= BlackKingSideCastleRight;
+                    }
                 }
             }
 
@@ -192,6 +207,7 @@ namespace ChessV1
 
         public void UnMakeMove()
         {
+            ChangePlayer();
             int gameState = gameStateHistory.Pop();
             castle = gameState & 0b1111;
             EPSquare = (gameState >> 4) & 0b111111;
@@ -200,12 +216,76 @@ namespace ChessV1
             int targetSquare = (gameState >> 21) & 0b111111;
             int moveFlag = (gameState >> 27) & 0b111;
 
+            square[startSquare] = square[targetSquare];
+            square[targetSquare] = (byte)capturedPiece;
+            if (capturedPiece != 0)
+                GetPieceList(capturedPiece).AddPieceAtSquare(targetSquare);
 
+            // colour
+            bool isWhite = (playerTurn ^ 011000) == 8;
+            int colourIndex = playerTurn >> 4;
 
+            // pieces
+            int ourKingpPos = kingPos[colourIndex];
 
+            if (targetSquare == ourKingpPos)
+            {
+                if (moveFlag == Move.Flag.Castling)
+                {
 
-            ChangePlayer();
+                }
+                kingPos[colourIndex] = startSquare;
+            }
+            else
+            {
+                GetPieceList(square[startSquare]).MovePiece(targetSquare, startSquare);
+                if (moveFlag == Move.Flag.EnPassantCapture)
+                {
+                    if (isWhite)
+                    {
+                        square[targetSquare + 8] = Piece.WPawn;
+                        pawns[WhiteIndex].AddPieceAtSquare(targetSquare - 8);
+                    }
+                    else
+                    {
+                        square[targetSquare + 8] = Piece.BPawn;
+                        pawns[BlackIndex].AddPieceAtSquare(targetSquare + 8);
+                    }
+                }
+                else if (moveFlag > 3) // promotion
+                {
+                    if (moveFlag == Move.Flag.PromoteToQueen)
+                    {
+                        if (isWhite)
+                            square[startSquare] = Piece.WPawn;
+                        else
+                            square[startSquare] = Piece.Black;
+                    }
+                    else if (moveFlag == Move.Flag.PromoteToKnight)
+                    {
+                        if (isWhite)
+                            square[startSquare] = Piece.WPawn;
+                        else
+                            square[startSquare] = Piece.Black;
+                    }
+                    else if (moveFlag == Move.Flag.PromoteToRook)
+                    {
+                        if (isWhite)
+                            square[startSquare] = Piece.WPawn;
+                        else
+                            square[startSquare] = Piece.Black;
+                    }
+                    else if (moveFlag == Move.Flag.PromoteToBishop)
+                    {
+                        if (isWhite)
+                            square[startSquare] = Piece.WPawn;
+                        else
+                            square[startSquare] = Piece.Black;
+                    }
+                }
+            }
         }
+
 
         public void ChangePlayer() => playerTurn ^= Piece.colourMask;
         public void InitFEN(string FEN)
@@ -238,6 +318,9 @@ namespace ChessV1
                 EPSquare = sections[3][0] - 'a' + 1;
             else
                 EPSquare = 0;
+
+            fixed (byte* ptr = &square[0])
+                squarePtr = ptr;
 
             InitPiecePoses();
         }

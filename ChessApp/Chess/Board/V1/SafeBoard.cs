@@ -42,8 +42,6 @@ namespace ChessV1
 
         public bool UnMakeMove()
         {
-            throw new NotImplementedException();
-
             if (_board.gameStateHistory.Count != 0)
             {
                 _board.UnMakeMove();
@@ -51,6 +49,7 @@ namespace ChessV1
                 _moves = _movesGenerator.GetMoves();
                 return true;
             }
+            else return false;
         }
 
         public int this[int key]

@@ -16,7 +16,7 @@ namespace PreInitializeData
         // and return true if it could be a valid move, attacks that is
 
         // start square, target square, colour
-        public static readonly bool[] ValidMove = new bool[64 * 64 * 2]; // if white no need to add 4096
+        // public static readonly bool[] ValidMove = new bool[64 * 64 * 2]; // if white no need to add 4096
         // ValidMove[start + (target * 64) + (ColourIndex * (4.096))]
         // is this faster then
         // ValidMove[start, target, colour]
@@ -63,7 +63,7 @@ namespace PreInitializeData
                     if ((i - 7) >> 3 == (i >> 3) - 1)
                     {
                         PawnAttackSquares[i, 0, 0] = i - 7;
-                        ValidMove[i + ((i - 7) * 64)] = true;
+                        // ValidMove[i + ((i - 7) * 64)] = true;
                     }
                     else
                         PawnAttackSquares[i, 0, 0] = InvalidMove;
@@ -75,7 +75,7 @@ namespace PreInitializeData
                     if ((i - 9) >> 3 == (i >> 3) - 1)
                     {
                         PawnAttackSquares[i, 0, 1] = i - 9;
-                        ValidMove[i + ((i - 9) * 64)] = true;
+                        // ValidMove[i + ((i - 9) * 64)] = true;
                     }
                     else
                         PawnAttackSquares[i, 0, 1] = InvalidMove;
@@ -89,7 +89,7 @@ namespace PreInitializeData
                     if ((i + 7) >> 3 == (i >> 3) + 1)
                     {
                         PawnAttackSquares[i, 1, 0] = i + 7;
-                        ValidMove[i + ((i + 7) * 64) + 4096] = true;
+                        // ValidMove[i + ((i + 7) * 64) + 4096] = true;
                     }
                     else
                         PawnAttackSquares[i, 1, 0] = InvalidMove;
@@ -101,7 +101,7 @@ namespace PreInitializeData
                     if ((i + 9) >> 3 == (i >> 3) + 1)
                     {
                         PawnAttackSquares[i, 1, 1] = i + 9;
-                        ValidMove[i + ((i + 9) * 64) + 4096] = true;
+                        // ValidMove[i + ((i + 9) * 64) + 4096] = true;
                     }
                     else
                         PawnAttackSquares[i, 1, 0] = InvalidMove;

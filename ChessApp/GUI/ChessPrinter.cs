@@ -133,7 +133,11 @@ namespace ChessGUI
                     else if ((piece & Piece.Black) == Piece.Black)
                         PrintBSprite((piece & 0b111));
                     else
+                    {
+                        MyLib.DebugConsole.WriteLine("pos: " + pos + ", type: " + (piece & 0b111) + ", colour: " +
+                        (((piece & 0b11000) == 0) ? "Nothing" : (((piece & 0b11000) == 8) ? "White" : "Black"))); // colour
                         throw new NotImplementedException("Cant use Piceses with no color value");
+                    }
                 }
             }
         }

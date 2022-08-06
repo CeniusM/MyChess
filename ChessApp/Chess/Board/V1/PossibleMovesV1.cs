@@ -2,7 +2,7 @@ using PreInitializeData;
 
 namespace ChessV1
 {
-    public class PossibleMovesGenerator
+    public unsafe class PossibleMovesGenerator
     {
         private UnsafeBoard _board;
         private List<Move> _moves;
@@ -276,36 +276,8 @@ namespace ChessV1
             }
         }
 
-
-
-/*
-    Istedet for at lave en ValidMove ting så kunne du bare lave 2 bitboard consts, en for vær side
-    så like 
-    01111111
-    01111111
-    01111111
-    01111111
-    01111111
-    01111111
-    01111111
-    01111111
-    og hvis den ikke returner 1 så kan den ikke rykke til venstre som hvid, og højre som sort
-*/
-
-
-
-
-
         public void AddPawnMoves()
         {
-            // for white
-            // MyLib.DebugConsole.WriteLine(BitBoardHelper.GetBitBoardString(0xFF00)); // double move
-            // MyLib.DebugConsole.WriteLine(BitBoardHelper.GetBitBoardString(0xFF00000000000000)); // promotion line
-
-            // for black
-            // MyLib.DebugConsole.WriteLine(BitBoardHelper.GetBitBoardString(0xFF000000000000)); // double move
-            // MyLib.DebugConsole.WriteLine(BitBoardHelper.GetBitBoardString(0xFF)); // promotion line
-
             int EPSquare = _board.EPSquare;
 
             if (WhiteToMove)
@@ -320,26 +292,29 @@ namespace ChessV1
                     int move9 = pawnPos - 9;
 
                     // double move, checked up against a bitboard
-                    if (BitBoardHelper.ContainsSquare(0xFF00, pawnPos))
+                    if (BitBoardHelper.ContainsSquare(ConstBitBoards.WhiteTwoMoveLine, pawnPos))
                         if (squares[sinlgeMovePos] == 0)
                             if (squares[doubleMovePos] == 0)
                             {
                                 squares[pawnPos] = 0;
+                                squares[doubleMovePos] = Piece.WPawn;
                                 if (!IsSquareAttacked(OurKingPos))
                                 {
                                     _moves.Add(new(pawnPos, doubleMovePos, Move.Flag.PawnTwoForward));
                                 }
                                 squares[pawnPos] = Piece.WPawn;
+                                squares[doubleMovePos] = 0;
                             }
 
                     // single move
                     if (squares[sinlgeMovePos] == 0)
                     {
                         squares[pawnPos] = 0;
+                        squares[sinlgeMovePos] = Piece.WPawn;
                         if (!IsSquareAttacked(OurKingPos))
                         {
                             // check if it is on promotion line
-                            if (BitBoardHelper.ContainsSquare(0xFF00000000000000, sinlgeMovePos))
+                            if (BitBoardHelper.ContainsSquare(ConstBitBoards.WhitePromotionLine, sinlgeMovePos))
                             {
                                 _moves.Add(new(pawnPos, sinlgeMovePos, Move.Flag.PromoteToQueen));
                                 _moves.Add(new(pawnPos, sinlgeMovePos, Move.Flag.PromoteToKnight));
@@ -350,6 +325,7 @@ namespace ChessV1
                                 _moves.Add(new(pawnPos, sinlgeMovePos, 0));
                         }
                         squares[pawnPos] = Piece.WPawn;
+                        squares[sinlgeMovePos] = 0;
                     }
 
                     // enpassent
@@ -357,9 +333,9 @@ namespace ChessV1
                     {
                         if (move7 == EPSquare)
                         {
-                            byte capturedPiece = squares[move7];
                             squares[pawnPos] = 0;
                             squares[move7] = Piece.WPawn;
+                            squares[EPSquare + 8] = 0;
 
                             // never anything on a EPSquare so dosent override anything, but still need to remove the other taken pawn so it dosent block
                             // also need to remove it from its list if we try the method of going through all the queens/rooks/bishops to see
@@ -367,15 +343,18 @@ namespace ChessV1
                             if (!IsSquareAttacked(OurKingPos))
                                 _moves.Add(new(pawnPos, move7, Move.Flag.EnPassantCapture));
                             squares[pawnPos] = Piece.WPawn;
-                            squares[move7] = capturedPiece;
+                            squares[EPSquare + 8] = Piece.BPawn;
+                            squares[move7] = 0;
                         }
                         else if (move9 == EPSquare)
                         {
                             squares[pawnPos] = 0;
                             squares[move9] = Piece.WPawn;
+                            squares[EPSquare + 8] = 0;
                             if (!IsSquareAttacked(OurKingPos))
                                 _moves.Add(new(pawnPos, move9, Move.Flag.EnPassantCapture));
                             squares[pawnPos] = Piece.WPawn;
+                            squares[EPSquare + 8] = Piece.BPawn;
                             squares[move9] = 0;
                         }
                     }
@@ -383,43 +362,49 @@ namespace ChessV1
                     // attacks
                     if (Piece.Colour(squares[move7]) == EnemyToMove)
                     {
-                        byte capturedPiece = squares[move7];
-                        squares[pawnPos] = 0;
-                        squares[move7] = Piece.WPawn; // override on another piece
-                        if (!IsSquareAttacked(OurKingPos))
+                        if (BitBoardHelper.ContainsSquare(ConstBitBoards.RightSideIs0, pawnPos))
                         {
-                            if (BitBoardHelper.ContainsSquare(0xFF00000000000000, move7))
+                            byte capturedPiece = squares[move7];
+                            squares[pawnPos] = 0;
+                            squares[move7] = Piece.WPawn; // override on another piece
+                            if (!IsSquareAttacked(OurKingPos))
                             {
-                                _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToQueen));
-                                _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToKnight));
-                                _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToRook));
-                                _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToBishop));
+                                if (BitBoardHelper.ContainsSquare(ConstBitBoards.WhitePromotionLine, move7))
+                                {
+                                    _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToQueen));
+                                    _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToKnight));
+                                    _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToRook));
+                                    _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToBishop));
+                                }
+                                else
+                                    _moves.Add(new(pawnPos, move7, 0));
                             }
-                            else
-                                _moves.Add(new(pawnPos, move7, 0));
+                            squares[pawnPos] = Piece.WPawn;
+                            squares[move7] = capturedPiece;
                         }
-                        squares[pawnPos] = Piece.WPawn;
-                        squares[move7] = capturedPiece;
                     }
                     if (Piece.Colour(squares[move9]) == EnemyToMove)
                     {
-                        byte capturedPiece = squares[move9];
-                        squares[pawnPos] = 0;
-                        squares[move9] = Piece.WPawn;
-                        if (!IsSquareAttacked(OurKingPos))
+                        if (BitBoardHelper.ContainsSquare(ConstBitBoards.LeftSideIs0, pawnPos))
                         {
-                            if (BitBoardHelper.ContainsSquare(0xFF00000000000000, move9))
+                            byte capturedPiece = squares[move9];
+                            squares[pawnPos] = 0;
+                            squares[move9] = Piece.WPawn;
+                            if (!IsSquareAttacked(OurKingPos))
                             {
-                                _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToQueen));
-                                _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToKnight));
-                                _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToRook));
-                                _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToBishop));
+                                if (BitBoardHelper.ContainsSquare(ConstBitBoards.WhitePromotionLine, move9))
+                                {
+                                    _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToQueen));
+                                    _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToKnight));
+                                    _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToRook));
+                                    _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToBishop));
+                                }
+                                else
+                                    _moves.Add(new(pawnPos, move9, 0));
                             }
-                            else
-                                _moves.Add(new(pawnPos, move9, 0));
+                            squares[pawnPos] = Piece.WPawn;
+                            squares[move9] = capturedPiece;
                         }
-                        squares[pawnPos] = Piece.WPawn;
-                        squares[move9] = capturedPiece;
                     }
                 }
             }
@@ -435,26 +420,29 @@ namespace ChessV1
                     int move9 = pawnPos + 9;
 
                     // double move, checked up against a bitboard
-                    if (BitBoardHelper.ContainsSquare(0xFF000000000000, pawnPos))
+                    if (BitBoardHelper.ContainsSquare(ConstBitBoards.BlackTwoMoveLine, pawnPos))
                         if (squares[sinlgeMovePos] == 0)
                             if (squares[doubleMovePos] == 0)
                             {
                                 squares[pawnPos] = 0;
+                                squares[doubleMovePos] = Piece.BPawn;
                                 if (!IsSquareAttacked(OurKingPos))
                                 {
                                     _moves.Add(new(pawnPos, doubleMovePos, Move.Flag.PawnTwoForward));
                                 }
                                 squares[pawnPos] = Piece.BPawn;
+                                squares[doubleMovePos] = 0;
                             }
 
                     // single move
                     if (squares[sinlgeMovePos] == 0)
                     {
                         squares[pawnPos] = 0;
+                        squares[sinlgeMovePos] = Piece.BPawn;
                         if (!IsSquareAttacked(OurKingPos))
                         {
                             // check if it is on promotion line
-                            if (BitBoardHelper.ContainsSquare(0xFF, sinlgeMovePos))
+                            if (BitBoardHelper.ContainsSquare(ConstBitBoards.BlackPromotionLine, sinlgeMovePos))
                             {
                                 _moves.Add(new(pawnPos, sinlgeMovePos, Move.Flag.PromoteToQueen));
                                 _moves.Add(new(pawnPos, sinlgeMovePos, Move.Flag.PromoteToKnight));
@@ -465,6 +453,7 @@ namespace ChessV1
                                 _moves.Add(new(pawnPos, sinlgeMovePos, 0));
                         }
                         squares[pawnPos] = Piece.BPawn;
+                        squares[sinlgeMovePos] = 0;
                     }
 
                     // enpassent
@@ -472,9 +461,9 @@ namespace ChessV1
                     {
                         if (move7 == EPSquare)
                         {
-                            byte capturedPiece = squares[move7];
                             squares[pawnPos] = 0;
                             squares[move7] = Piece.BPawn;
+                            squares[EPSquare + 8] = 0;
 
                             // never anything on a EPSquare so dosent override anything, but still need to remove the other taken pawn so it dosent block
                             // also need to remove it from its list if we try the method of going through all the queens/rooks/bishops to see
@@ -482,15 +471,18 @@ namespace ChessV1
                             if (!IsSquareAttacked(OurKingPos))
                                 _moves.Add(new(pawnPos, move7, Move.Flag.EnPassantCapture));
                             squares[pawnPos] = Piece.BPawn;
-                            squares[move7] = capturedPiece;
+                            squares[EPSquare + 8] = Piece.WPawn;
+                            squares[move7] = 0;
                         }
                         else if (move9 == EPSquare)
                         {
                             squares[pawnPos] = 0;
                             squares[move9] = Piece.BPawn;
+                            squares[EPSquare + 8] = 0;
                             if (!IsSquareAttacked(OurKingPos))
                                 _moves.Add(new(pawnPos, move9, Move.Flag.EnPassantCapture));
                             squares[pawnPos] = Piece.BPawn;
+                            squares[EPSquare + 8] = Piece.WPawn;
                             squares[move9] = 0;
                         }
                     }
@@ -498,43 +490,49 @@ namespace ChessV1
                     // attacks
                     if (Piece.Colour(squares[move7]) == EnemyToMove)
                     {
-                        byte capturedPiece = squares[move7];
-                        squares[pawnPos] = 0;
-                        squares[move7] = Piece.BPawn; // override on another piece
-                        if (!IsSquareAttacked(OurKingPos))
+                        if (BitBoardHelper.ContainsSquare(ConstBitBoards.RightSideIs0, pawnPos))
                         {
-                            if (BitBoardHelper.ContainsSquare(0xFF, move7))
+                            byte capturedPiece = squares[move7];
+                            squares[pawnPos] = 0;
+                            squares[move7] = Piece.BPawn; // override on another piece
+                            if (!IsSquareAttacked(OurKingPos))
                             {
-                                _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToQueen));
-                                _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToKnight));
-                                _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToRook));
-                                _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToBishop));
+                                if (BitBoardHelper.ContainsSquare(ConstBitBoards.BlackPromotionLine, move7))
+                                {
+                                    _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToQueen));
+                                    _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToKnight));
+                                    _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToRook));
+                                    _moves.Add(new(pawnPos, move7, Move.Flag.PromoteToBishop));
+                                }
+                                else
+                                    _moves.Add(new(pawnPos, move7, 0));
                             }
-                            else
-                                _moves.Add(new(pawnPos, move7, 0));
+                            squares[pawnPos] = Piece.BPawn;
+                            squares[move7] = capturedPiece;
                         }
-                        squares[pawnPos] = Piece.BPawn;
-                        squares[move7] = capturedPiece;
                     }
                     if (Piece.Colour(squares[move9]) == EnemyToMove)
                     {
-                        byte capturedPiece = squares[move9];
-                        squares[pawnPos] = 0;
-                        squares[move9] = Piece.BPawn;
-                        if (!IsSquareAttacked(OurKingPos))
+                        if (BitBoardHelper.ContainsSquare(ConstBitBoards.LeftSideIs0, pawnPos))
                         {
-                            if (BitBoardHelper.ContainsSquare(0xFF, move9))
+                            byte capturedPiece = squares[move9];
+                            squares[pawnPos] = 0;
+                            squares[move9] = Piece.BPawn;
+                            if (!IsSquareAttacked(OurKingPos))
                             {
-                                _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToQueen));
-                                _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToKnight));
-                                _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToRook));
-                                _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToBishop));
+                                if (BitBoardHelper.ContainsSquare(ConstBitBoards.BlackPromotionLine, move9))
+                                {
+                                    _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToQueen));
+                                    _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToKnight));
+                                    _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToRook));
+                                    _moves.Add(new(pawnPos, move9, Move.Flag.PromoteToBishop));
+                                }
+                                else
+                                    _moves.Add(new(pawnPos, move9, 0));
                             }
-                            else
-                                _moves.Add(new(pawnPos, move9, 0));
+                            squares[pawnPos] = Piece.BPawn;
+                            squares[move9] = capturedPiece;
                         }
-                        squares[pawnPos] = Piece.BPawn;
-                        squares[move9] = capturedPiece;
                     }
                 }
             }
@@ -623,6 +621,32 @@ namespace ChessV1
                     if ((move) >> 3 == (square >> 3) + 1)
                         if (squares[move] == Piece.WPawn)
                             return true;
+            }
+
+            for (int dir = 0; dir < 8; dir++)
+            {
+                for (int moveCount = 0; moveCount < 7; moveCount++)
+                {
+                    int foo = PreInitializeData.SlidingPieces.SlidingpieceAttacks[square, dir, moveCount];
+                    if (foo == PreInitializeData.SlidingPieces.InvalidMove)
+                        break;
+                    int piece = squares[foo];
+                    if (piece == 0)
+                        continue;
+                    if (Piece.Colour(piece) != ColourToMove)
+                    {
+                        if (Piece.PieceType(piece) == Piece.Queen)
+                            return true;
+                        else if (Piece.PieceType(piece) == Piece.Rook && dir < 4)
+                            return true;
+                        else if (Piece.PieceType(piece) == Piece.Bishop && dir > 3)
+                            return true;
+                        else
+                            break;
+                    }
+                    else
+                        break;
+                }
             }
 
 

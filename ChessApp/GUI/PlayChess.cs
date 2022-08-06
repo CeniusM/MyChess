@@ -56,12 +56,13 @@ namespace ChessGUI
                 return;
 
 
-            if (_GameState == GameStates.None)
+            if (_GameState == GameStates.PlayingMove)
             {
                 switch (e.KeyChar)
                 {
                     case ' ':
                         board.UnMakeMove();
+                        _chessPrinter.PrintBoard(_selecktedSquare);
                         break;
                     default:
                         break;
@@ -105,6 +106,8 @@ namespace ChessGUI
                 return;
             makingAMove = true;
             int pressedSquare = squareX + (squareY * 8);
+
+            // MyLib.DebugConsole.WriteLine(BitBoardHelper.GetBitBoardString(0b1111111011111110111111101111111011111110111111101111111011111110));
 
             if (Piece.IsColour(board[pressedSquare], board.PlayerTurn) && pressedSquare != _selecktedSquare)
                 _selecktedSquare = pressedSquare;
