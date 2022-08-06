@@ -50,6 +50,7 @@ namespace ChessGUI
             _chessPrinter.PrintBoard(_selecktedSquare);
         }
 
+        private int searchDepth = 4;
         private void KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (_chessPrinter._isPrinting)
@@ -64,8 +65,19 @@ namespace ChessGUI
                         board.UnMakeMove();
                         _chessPrinter.PrintBoard(_selecktedSquare);
                         break;
-                    default:
+                    case 'p': // perft
+                        Console.WriteLine(PerftTester.PerftTest.Perft(board.GetUnsafeBoard(), board.GetPossibleMovesGenerator(), searchDepth) + ", Depth: " + searchDepth);
                         break;
+                    case 'r': // perft
+                        board.GetPossibleMovesGenerator().GenerateMoves();
+                        break;
+                    case 'w': // perft
+                        searchDepth++;
+                        break;
+                    case 's': // perft
+                        searchDepth--;
+                        break;
+                        // default:
                 }
             }
         }

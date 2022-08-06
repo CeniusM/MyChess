@@ -14,6 +14,11 @@ then add rooks/bishop/queen
 when it all works:
 optimitation ideers:
 
+-make a good infurstruckture(possibleMovesV2) before going on with very low level code
+ you have allredy writen it all down so it wont be lost ;P
+
+-make pointer to the pieceLists
+
 -!!!!!try making pointer to the first elements in the 1d arrays, there by you
  dont have to do any index, method calls, returns, bounds checks ont the array
  only a single derefrencing and plus thingy

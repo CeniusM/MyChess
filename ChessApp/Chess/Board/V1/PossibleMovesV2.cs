@@ -1,5 +1,43 @@
 
 
+namespace ChessV1
+{
+    public class PossibleMovesGeneratorV2
+    {
+        int pinnedPieceCount = 0;
+        int[] pinnedPieces = new int[32];
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // namespace ChessV1
 // {
 //     public class PossibleMovesGenerator

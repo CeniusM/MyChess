@@ -70,13 +70,15 @@ namespace ChessV1
         {
             try
             {
-                // for (int i = 0; i < 64; i++)
-                // {
-                //     if (square[i] == 0 && (square[i] & 0b11000) == 0)
-                //     {
 
-                //     }
-                // }
+                // looking for ghost pieces
+                for (int i = 0; i < 64; i++)
+                {
+                    if (square[i] != 0 && (square[i] & 0b11000) == 0)
+                    {
+
+                    }
+                }
 
 
 

@@ -19,9 +19,22 @@ namespace PerftTester
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            MyLib.DebugConsole.WriteLine(Perft(ub, pmg, 5) + "");
+            MyLib.DebugConsole.WriteLine(Perft(ub, pmg, 4) + "");
             sw.Stop();
             MyLib.DebugConsole.WriteLine(sw.Elapsed.TotalSeconds + "s");
+
+
+
+
+            pmg.GenerateMoves();
+            Move[] moves = pmg.GetMoves();
+            int MoveCount = moves.Count();
+            for (int i = 0; i < MoveCount; i++)
+            {
+                ub.MakeMove(moves[i]);
+                Console.WriteLine(moves[i].ToString() + ", Combinations: " + Perft(ub, pmg, 3));
+                ub.UnMakeMove();
+            }
         }
 
         public static long Perft(UnsafeBoard board, PossibleMovesGenerator pmg, int Depth)

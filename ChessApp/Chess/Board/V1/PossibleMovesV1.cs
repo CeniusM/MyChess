@@ -3,7 +3,7 @@ using PreInitializeData;
 namespace ChessV1
 {
     public unsafe class PossibleMovesGenerator
-    {
+    { 
         private UnsafeBoard _board;
         private List<Move> _moves;
         private byte[] squares; // just a ref so no copying
@@ -76,6 +76,8 @@ namespace ChessV1
             // ex. for (int i = 0; i < board.pawn[ColourToMoveIndex].Count)
             // with this
             //     for (int i = 0; i < OurPawns.Count)
+
+            // this is still very slow, but not as slow
             OurPawns = _board.pawns[ColourToMoveIndex];
             OurKnights = _board.knights[ColourToMoveIndex];
             OurBishops = _board.bishops[ColourToMoveIndex];
@@ -257,7 +259,7 @@ namespace ChessV1
             squares[OurKingPos] = (byte)(0b1 | ColourToMove);
         }
 
-        public void AddKnightMoves() // based of AddKingMoves just with a for loop
+        public void AddKnightMoves()
         {
             byte knight = (byte)(Piece.Knight | ColourToMove);
             for (int i = 0; i < OurKnights.Count; i++)
@@ -271,7 +273,7 @@ namespace ChessV1
                         continue;
                     byte capturedPiece = squares[newPos];
                     squares[newPos] = knight;
-                    if ((squares[newPos] & ColourToMove) != ColourToMove)
+                    if ((capturedPiece & ColourToMove) != ColourToMove)
                     {
                         if (!IsSquareAttacked(OurKingPos))
                             _moves.Add(new(knightPos, newPos, 0));
@@ -496,7 +498,7 @@ namespace ChessV1
                     // attacks
                     if (Piece.Colour(squares[move7]) == EnemyToMove)
                     {
-                        if (BitBoardHelper.ContainsSquare(ConstBitBoards.RightSideIs0, pawnPos))
+                        if (BitBoardHelper.ContainsSquare(ConstBitBoards.LeftSideIs0, pawnPos))
                         {
                             byte capturedPiece = squares[move7];
                             squares[pawnPos] = 0;
@@ -519,7 +521,7 @@ namespace ChessV1
                     }
                     if (Piece.Colour(squares[move9]) == EnemyToMove)
                     {
-                        if (BitBoardHelper.ContainsSquare(ConstBitBoards.LeftSideIs0, pawnPos))
+                        if (BitBoardHelper.ContainsSquare(ConstBitBoards.RightSideIs0, pawnPos))
                         {
                             byte capturedPiece = squares[move9];
                             squares[pawnPos] = 0;
