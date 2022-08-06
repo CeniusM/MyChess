@@ -247,8 +247,11 @@ namespace ChessV1
                     continue; // make it so later that you can just break after an InvalidMove
                 else if ((squares[move] & ColourToMove) != ColourToMove)
                 {
+                    byte capturedPiece = squares[move];
+                    squares[move] = 0;
                     if (!IsSquareAttacked(move)) // can make anoter IsSqaureAttacked that ONLY checks slidingPiecses
                         _moves.Add(new(OurKingPos, move, 0));
+                    squares[move] = capturedPiece;
                 }
             }
             squares[OurKingPos] = (byte)(0b1 | ColourToMove);
@@ -256,6 +259,7 @@ namespace ChessV1
 
         public void AddKnightMoves() // based of AddKingMoves just with a for loop
         {
+            byte knight = (byte)(Piece.Knight | ColourToMove);
             for (int i = 0; i < OurKnights.Count; i++)
             {
                 int knightPos = OurKnights[i];
@@ -265,12 +269,14 @@ namespace ChessV1
                     int newPos = Knight.KnightAttacksV2[knightPos, j];
                     if (newPos == Knight.InvalidMove)
                         continue;
+                    byte capturedPiece = squares[newPos];
+                    squares[newPos] = knight;
                     if ((squares[newPos] & ColourToMove) != ColourToMove)
                     {
                         if (!IsSquareAttacked(OurKingPos))
                             _moves.Add(new(knightPos, newPos, 0));
                     }
-
+                    squares[newPos] = capturedPiece;
                 }
                 squares[knightPos] = (byte)(Piece.Knight | ColourToMove);
             }

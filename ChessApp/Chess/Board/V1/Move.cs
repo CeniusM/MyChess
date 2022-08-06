@@ -42,5 +42,10 @@ namespace ChessV1
                     return 0;
             }
         }
+
+        public override string ToString()
+        {
+            return "S: " + StartSquare + ", T: " + TargetSquare + ", F: " + MoveFlag;
+        }
     }
 }

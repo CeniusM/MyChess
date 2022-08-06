@@ -19,7 +19,7 @@ namespace PerftTester
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            MyLib.DebugConsole.WriteLine(Perft(ub, pmg, 4) + "");
+            MyLib.DebugConsole.WriteLine(Perft(ub, pmg, 5) + "");
             sw.Stop();
             MyLib.DebugConsole.WriteLine(sw.Elapsed.TotalSeconds + "s");
         }
