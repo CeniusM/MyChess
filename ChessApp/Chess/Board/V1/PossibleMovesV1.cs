@@ -108,8 +108,92 @@ namespace ChessV1
                 return;
 
             AddPawnMoves();
-            AddKnightMove();
+            AddKnightMoves();
             AddQueenMoves();
+            AddBishopMoves();
+            AddRookMoves();
+        }
+
+        private void AddRookMoves()
+        {
+            byte rook = (byte)(Piece.Rook | ColourToMove);
+            for (int i = 0; i < OurRooks.Count; i++)
+            {
+                int RookPos = OurRooks[i];
+                for (int dir = 0; dir < 4; dir++)
+                {
+                    for (int j = 0; j < 7; j++)
+                    {
+                        int move = SlidingPieces.SlidingpieceAttacks[RookPos, dir, j];
+                        if (move == SlidingPieces.InvalidMove)
+                            break;
+
+                        if (squares[move] == 0)
+                        {
+                            squares[move] = rook;
+                            squares[RookPos] = 0;
+                            if (!IsSquareAttacked(OurKingPos))
+                                _moves.Add(new(RookPos, move, 0));
+                            squares[RookPos] = rook;
+                            squares[move] = 0;
+                        }
+                        else if (Piece.IsColour(squares[move], EnemyToMove))
+                        {
+                            byte capturedPiece = squares[move];
+                            squares[move] = rook;
+                            squares[RookPos] = 0;
+                            if (!IsSquareAttacked(OurKingPos))
+                                _moves.Add(new(RookPos, move, 0));
+                            squares[RookPos] = rook;
+                            squares[move] = capturedPiece;
+                            break;
+                        }
+                        else
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void AddBishopMoves()
+        {
+            byte bishop = (byte)(Piece.Bishop | ColourToMove);
+            for (int i = 0; i < OurBishops.Count; i++)
+            {
+                int BishopPos = OurBishops[i];
+                for (int dir = 4; dir < 8; dir++)
+                {
+                    for (int j = 0; j < 7; j++)
+                    {
+                        int move = SlidingPieces.SlidingpieceAttacks[BishopPos, dir, j];
+                        if (move == SlidingPieces.InvalidMove)
+                            break;
+
+                        if (squares[move] == 0)
+                        {
+                            squares[move] = bishop;
+                            squares[BishopPos] = 0;
+                            if (!IsSquareAttacked(OurKingPos))
+                                _moves.Add(new(BishopPos, move, 0));
+                            squares[BishopPos] = bishop;
+                            squares[move] = 0;
+                        }
+                        else if (Piece.IsColour(squares[move], EnemyToMove))
+                        {
+                            byte capturedPiece = squares[move];
+                            squares[move] = bishop;
+                            squares[BishopPos] = 0;
+                            if (!IsSquareAttacked(OurKingPos))
+                                _moves.Add(new(BishopPos, move, 0));
+                            squares[BishopPos] = bishop;
+                            squares[move] = capturedPiece;
+                            break;
+                        }
+                        else
+                            break;
+                    }
+                }
+            }
         }
 
         private void AddQueenMoves()
@@ -148,7 +232,6 @@ namespace ChessV1
                         }
                         else
                             break;
-
                     }
                 }
             }
@@ -171,7 +254,7 @@ namespace ChessV1
             squares[OurKingPos] = (byte)(0b1 | ColourToMove);
         }
 
-        public void AddKnightMove() // based of AddKingMoves just with a for loop
+        public void AddKnightMoves() // based of AddKingMoves just with a for loop
         {
             for (int i = 0; i < OurKnights.Count; i++)
             {
@@ -192,6 +275,26 @@ namespace ChessV1
                 squares[knightPos] = (byte)(Piece.Knight | ColourToMove);
             }
         }
+
+
+
+/*
+    Istedet for at lave en ValidMove ting så kunne du bare lave 2 bitboard consts, en for vær side
+    så like 
+    01111111
+    01111111
+    01111111
+    01111111
+    01111111
+    01111111
+    01111111
+    01111111
+    og hvis den ikke returner 1 så kan den ikke rykke til venstre som hvid, og højre som sort
+*/
+
+
+
+
 
         public void AddPawnMoves()
         {

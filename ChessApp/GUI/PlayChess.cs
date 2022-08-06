@@ -23,7 +23,8 @@ namespace ChessGUI
         private GameStates _GameState = GameStates.None;
 
         private const int SquareDimensions = 100;
-        private SafeBoard board = new SafeBoard("8/5pq1/4k1p1/1n6/1N6/4K2P/5PQ1/8 w - - 0 1");
+        // private SafeBoard board = new SafeBoard("8/5pq1/4k1p1/1n6/1N6/4K2P/5PQ1/8 w - - 0 1");
+        private SafeBoard board = new SafeBoard();
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;
@@ -111,26 +112,55 @@ namespace ChessGUI
                 _selecktedSquare = -1;
             else if (_selecktedSquare != -1)
             {
-                board.MakeMove(new(_selecktedSquare, pressedSquare, 0));
+                Move? move = null;
+
+                // get the amount of moves that has the same start and target square
+                // if 1, just used that
+                // if 4, promotion
+                // if 0, it wasent a valid move
+                int countOfMoves = 0;
+                int moveFlag = 0;
+                foreach (Move m in board.GetMoves())
+                {
+                    if (m.StartSquare == _selecktedSquare && m.TargetSquare == pressedSquare)
+                    {
+                        countOfMoves++;
+                        moveFlag = m.MoveFlag;
+                    }
+                }
+
+                if (countOfMoves == 4)
+                {
+                    StartSquareOfPromotionPiece = _selecktedSquare;
+                    TargetSquareOfPromotionPiece = pressedSquare;
+                    _GameState = GameStates.PlayingChosingPiece;
+                }
+
+                if (countOfMoves == 1)
+                    move = new(_selecktedSquare, pressedSquare, moveFlag);
+
+                if (move.HasValue)
+                    board.MakeMove(move.Value);
+
                 _selecktedSquare = -1;
             }
-
 
             makingAMove = false;
         }
 
-        // int StartSquareOfPromotionPiece = 0;
-        // int TargetSquareOfPromotionPiece = 0;
+        int StartSquareOfPromotionPiece = 0;
+        int TargetSquareOfPromotionPiece = 0;
         private void ChosePromotionPiece()
         {
             if (makingAMove)
                 return;
             makingAMove = true;
 
-            // board.MakeMove(new(StartSquareOfPromotionPiece, TargetSquareOfPromotionPiece, Move.Flag.PromoteToQueen, board.board.Square[TargetSquareOfPromotionPiece]));
+            board.MakeMove(new(StartSquareOfPromotionPiece, TargetSquareOfPromotionPiece, Move.Flag.PromoteToQueen));
 
             _chessPrinter.PrintBoard(_selecktedSquare);
             _selecktedSquare = -1;
+            _GameState = GameStates.PlayingMove;
 
             makingAMove = false;
         }

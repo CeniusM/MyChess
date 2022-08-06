@@ -93,6 +93,9 @@ namespace ChessV1
             gameStateHistory.Push(((castle) | (EPSquare << 4) | (capturedPiece << 10) | (startSquare << 15) | (targetSquare << 21) | (moveFlag << 27)));
             EPSquare = 0;
 
+            square[targetSquare] = square[startSquare];
+            square[startSquare] = 0;
+
             // King Move
             if (startSquare == ourKingpPos)
             {
@@ -103,20 +106,16 @@ namespace ChessV1
                     // also move the rook and change the caltle stuff
                 }
                 kingPos[colourIndex] = targetSquare;
-                square[startSquare] = 0;
                 EPSquare = 0;
                 if (whiteToMove)
                 {
-                    square[targetSquare] = Piece.WKing; // so we dont have to check if white twice
                     castle ^= WhiteCastleRights;
                 }
                 else
                 {
-                    square[targetSquare] = Piece.BKing;
                     castle ^= BlackCastleRights;
                 }
             }
-
             // piece move
             else
             {
@@ -125,8 +124,6 @@ namespace ChessV1
                     if (pieceCaptured)
                         GetPieceList(capturedPiece).RemovePieceAtSquare(targetSquare);
                     GetPieceList(movingPieceType, movingPieceColour).MovePiece(startSquare, targetSquare);
-                    square[targetSquare] = square[startSquare];
-                    square[startSquare] = 0;
 
                     // remove castle rights
                     if (whiteToMove)
@@ -146,7 +143,7 @@ namespace ChessV1
                 }
                 else if (moveFlag == Move.Flag.PawnTwoForward)
                 {
-                    GetPieceList(capturedPiece).MovePiece(startSquare, targetSquare);
+                    GetPieceList(movingPieceType, movingPieceColour).MovePiece(startSquare, targetSquare);
                     if (whiteToMove)
                         EPSquare = targetSquare + 8;
                     else
@@ -163,7 +160,30 @@ namespace ChessV1
                 // casteling is done at king code
                 else // promotion
                 {
-
+                    if (moveFlag == Move.Flag.PromoteToQueen)
+                    {
+                        square[targetSquare] = (byte)(Piece.Queen | colour);
+                        GetPieceList(Piece.Queen, colour).AddPieceAtSquare(targetSquare);
+                        GetPieceList(Piece.Pawn, colour).RemovePieceAtSquare(startSquare);
+                    }
+                    else if (moveFlag == Move.Flag.PromoteToKnight)
+                    {
+                        square[targetSquare] = (byte)(Piece.Knight | colour);
+                        GetPieceList(Piece.Knight, colour).AddPieceAtSquare(targetSquare);
+                        GetPieceList(Piece.Pawn, colour).RemovePieceAtSquare(startSquare);
+                    }
+                    else if (moveFlag == Move.Flag.PromoteToRook)
+                    {
+                        square[targetSquare] = (byte)(Piece.Rook | colour);
+                        GetPieceList(Piece.Rook, colour).AddPieceAtSquare(targetSquare);
+                        GetPieceList(Piece.Pawn, colour).RemovePieceAtSquare(startSquare);
+                    }
+                    else if (moveFlag == Move.Flag.PromoteToBishop)
+                    {
+                        square[targetSquare] = (byte)(Piece.Bishop | colour);
+                        GetPieceList(Piece.Bishop, colour).AddPieceAtSquare(targetSquare);
+                        GetPieceList(Piece.Pawn, colour).RemovePieceAtSquare(startSquare);
+                    }
                 }
             }
 
