@@ -46,6 +46,11 @@ namespace ChessV2
 
 
         /// <summary>
+        /// (square + (dir * 64) + (moveCount * 512))
+        /// </summary>
+        public static int* SlidingpieceAttacks;
+
+        /// <summary>
         /// (square)
         /// </summary>
         ulong* QueenAttacksBitBoardPtr;
@@ -55,27 +60,67 @@ namespace ChessV2
         /// </summary>
         public ulong* QueenAttacksBitBoardDirectionPtr;
 
+        /// <summary>
+        /// (square)
+        /// </summary>
+        ulong* RookAttacksBitBoardPtr;
+
+        /// <summary>
+        /// (square + (dir * 64))
+        /// </summary>
+        public ulong* RookAttacksBitBoardDirectionPtr;
+
+        /// <summary>
+        /// (square)
+        /// </summary>
+        ulong* BishopAttacksBitBoardPtr;
+
+        /// <summary>
+        /// (square + (dir * 64))
+        /// </summary>
+        public ulong* BishopAttacksBitBoardDirectionPtr;
+
+        /// <summary>
+        /// (square)
+        /// </summary>
+        ulong* KnightAttacksBitBoardPtr;
+
+        /// <summary>
+        /// (square)
+        /// </summary>
+        ulong* KingAttacksBitBoardPtr;
+
+        /// <summary>
+        /// (square + (dir * 64))
+        /// </summary>
+        int* KingAttacksPtr;
+
+
+
         public bool IsKingInCheck;
 
         public PossibleMovesGenerator(UnsafeBoard boardRef)
         {
+            fixed (int* ptr = &SlidingPieces._SlidingpieceAttacks1D[0])
+                SlidingpieceAttacks = ptr;
             fixed (ulong* ptr = &SlidingPieces._QueenAttacksBitBoard[0])
                 QueenAttacksBitBoardPtr = ptr;
             fixed (ulong* ptr = &SlidingPieces._QueenAttacksBitBoardDirection1d[0])
                 QueenAttacksBitBoardDirectionPtr = ptr;
-
-
-            for (int i = 0; i < 63 + (8 * 64); i++)
-            {
-                Console.WriteLine(QueenAttacksBitBoardDirectionPtr[i]);
-            }
-
-
-
-
-
-
-
+            fixed (ulong* ptr = &SlidingPieces._RookAttacksBitBoard[0])
+                RookAttacksBitBoardPtr = ptr;
+            fixed (ulong* ptr = &SlidingPieces._RookAttacksBitBoardDirection1d[0])
+                RookAttacksBitBoardDirectionPtr = ptr;
+            fixed (ulong* ptr = &SlidingPieces._BishopAttacksBitBoard[0])
+                BishopAttacksBitBoardPtr = ptr;
+            fixed (ulong* ptr = &SlidingPieces._BishopAttacksBitBoardDirection1d[0])
+                BishopAttacksBitBoardDirectionPtr = ptr;
+            fixed (ulong* ptr = &Knight.KnightAttacksBitBoard[0])
+                KnightAttacksBitBoardPtr = ptr;
+            fixed (ulong* ptr = &King.KingAttacksBitBoard[0])
+                KingAttacksBitBoardPtr = ptr;
+            fixed (int* ptr = &King.KingAttacksV2D1[0])
+                KingAttacksPtr = ptr;
 
 
 
@@ -168,7 +213,7 @@ namespace ChessV2
 
                             for (int moveCount = 0; moveCount < 7; moveCount++)
                             {
-                                int move = SlidingPieces.SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
+                                int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
                                 int squareFromMove = boardPtr[move];
                                 if (move == OurKingPos)
                                     break;
@@ -188,8 +233,114 @@ namespace ChessV2
                             }
                             if (piecesBetween == 1 && piecesBetween != -1)
                             {
-                                pinningPieceDirection[pinningPiecesCount] = dir;
-                                pinningPiecesPos[pinningPiecesCount] = pos;
+                                pinningPieceDirectionPtr[pinningPiecesCount] = dir;
+                                pinningPiecesPosPtr[pinningPiecesCount] = pos;
+                                pinningPiecesCount++;
+                                pinnedPieces |= (0x8000000000000000 >> pinnedPiecePos);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Rooks
+            for (int i = 0; i < EnemyRooks[-1]; i++)
+            {
+                int pos = EnemyRooks[i];
+
+                // check if king is in any of the attacks
+                if (((RookAttacksBitBoardPtr[pos] << OurKingPos) & 0x8000000000000000) == 0x8000000000000000)
+                {
+                    // find the direction of the pin
+                    for (int dir = 0; dir < 4; dir++)
+                    {
+                        // find the dir
+                        if (((RookAttacksBitBoardDirectionPtr[pos + (dir * 64)] << OurKingPos) & 0x8000000000000000) == 0x8000000000000000)
+                        {
+                            // amount of pieces between king and pinning piece
+                            int piecesBetween = 0;
+
+                            // pos of first pin on piece
+                            int pinnedPiecePos = -1;
+
+                            for (int moveCount = 0; moveCount < 7; moveCount++)
+                            {
+                                int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
+                                int squareFromMove = boardPtr[move];
+                                if (move == OurKingPos)
+                                    break;
+                                if (squareFromMove != 0)
+                                {
+                                    piecesBetween++;
+                                    if (piecesBetween == 2)
+                                        break;
+                                    else if ((squareFromMove & 0b11000) == OurColour && pinnedPiecePos == -1)
+                                        pinnedPiecePos = move;
+                                    else if ((squareFromMove & 0b11000) == EnemyColour)
+                                    {
+                                        piecesBetween = 0;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (piecesBetween == 1 && piecesBetween != -1)
+                            {
+                                pinningPieceDirectionPtr[pinningPiecesCount] = dir;
+                                pinningPiecesPosPtr[pinningPiecesCount] = pos;
+                                pinningPiecesCount++;
+                                pinnedPieces |= (0x8000000000000000 >> pinnedPiecePos);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Bishops
+            for (int i = 0; i < EnemyBishops[-1]; i++)
+            {
+                int pos = EnemyBishops[i];
+
+                // check if king is in any of the attacks
+                if (((BishopAttacksBitBoardPtr[pos] << OurKingPos) & 0x8000000000000000) == 0x8000000000000000)
+                {
+                    // find the direction of the pin
+                    for (int dir = 4; dir < 8; dir++)
+                    {
+                        // find the dir
+                        if (((BishopAttacksBitBoardDirectionPtr[pos + (dir * 64)] << OurKingPos) & 0x8000000000000000) == 0x8000000000000000)
+                        {
+                            // amount of pieces between king and pinning piece
+                            int piecesBetween = 0;
+
+                            // pos of first pin on piece
+                            int pinnedPiecePos = -1;
+
+                            for (int moveCount = 0; moveCount < 7; moveCount++)
+                            {
+                                int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
+                                int squareFromMove = boardPtr[move];
+                                if (move == OurKingPos)
+                                    break;
+                                if (squareFromMove != 0)
+                                {
+                                    piecesBetween++;
+                                    if (piecesBetween == 2)
+                                        break;
+                                    else if ((squareFromMove & 0b11000) == OurColour && pinnedPiecePos == -1)
+                                        pinnedPiecePos = move;
+                                    else if ((squareFromMove & 0b11000) == EnemyColour)
+                                    {
+                                        piecesBetween = 0;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (piecesBetween == 1 && piecesBetween != -1)
+                            {
+                                pinningPieceDirectionPtr[pinningPiecesCount] = dir;
+                                pinningPiecesPosPtr[pinningPiecesCount] = pos;
                                 pinningPiecesCount++;
                                 pinnedPieces |= (0x8000000000000000 >> pinnedPiecePos);
                             }
@@ -204,12 +355,112 @@ namespace ChessV2
         {
             Init();
 
-
+            AddKingMoves();
         }
 
         public void AddKingMoves()
         {
+            byte king = (byte)(Piece.King | OurColour);
+        }
 
+        public bool IsSquareAttacked(int square)
+        {
+            // check king atc
+            if (((KingAttacksBitBoardPtr[EnemyKingPos] << square) & 0x8000000000000000) == 0x8000000000000000)
+                return true;
+
+            // check the knights bitboards
+            for (int knightNum = 0; knightNum < EnemyKnights[-1]; knightNum++)
+            {
+                if (((KnightAttacksBitBoardPtr[EnemyKnights[knightNum]] << square) & 0x8000000000000000) == 0x8000000000000000)
+                    return true;
+            }
+
+            // Queens
+            for (int i = 0; i < EnemyQueens[-1]; i++)
+            {
+                int pos = EnemyQueens[i];
+
+                // check if king is in any of the attacks
+                if (((QueenAttacksBitBoardPtr[pos] << square) & 0x8000000000000000) == 0x8000000000000000)
+                {
+                    // find the direction of the pin
+                    for (int dir = 0; dir < 8; dir++)
+                    {
+                        // find the dir
+                        if (((QueenAttacksBitBoardDirectionPtr[pos + (dir * 64)] << square) & 0x8000000000000000) == 0x8000000000000000)
+                        {
+                            for (int moveCount = 0; moveCount < 7; moveCount++)
+                            {
+                                int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
+                                if (move == square)
+                                    return true;
+                                if (boardPtr[move] != 0)
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Rooks
+            for (int i = 0; i < EnemyRooks[-1]; i++)
+            {
+                int pos = EnemyRooks[i];
+
+                // check if king is in any of the attacks
+                if (((RookAttacksBitBoardPtr[pos] << square) & 0x8000000000000000) == 0x8000000000000000)
+                {
+                    // find the direction of the pin
+                    for (int dir = 0; dir < 4; dir++)
+                    {
+                        // find the dir
+                        if (((RookAttacksBitBoardDirectionPtr[pos + (dir * 64)] << square) & 0x8000000000000000) == 0x8000000000000000)
+                        {
+                            for (int moveCount = 0; moveCount < 7; moveCount++)
+                            {
+                                int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
+                                if (move == square)
+                                    return true;
+                                if (boardPtr[move] != 0)
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Bishops
+            for (int i = 0; i < EnemyBishops[-1]; i++)
+            {
+                int pos = EnemyBishops[i];
+
+                // check if king is in any of the attacks
+                if (((BishopAttacksBitBoardPtr[pos] << square) & 0x8000000000000000) == 0x8000000000000000)
+                {
+                    // find the direction of the pin
+                    for (int dir = 4; dir < 8; dir++)
+                    {
+                        // find the dir
+                        if (((BishopAttacksBitBoardDirectionPtr[pos + (dir * 64)] << square) & 0x8000000000000000) == 0x8000000000000000)
+                        {
+                            for (int moveCount = 0; moveCount < 7; moveCount++)
+                            {
+                                int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
+                                if (move == square)
+                                    return true;
+                                if (boardPtr[move] != 0)
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         public Move[] GetMoves()
