@@ -6,6 +6,12 @@ namespace ChessV2
     {
         /* contains square
 ((bitboard << square) & 0x8000000000000000) == 0x8000000000000000
+
+
+in bounds
+
+(pos & 0xFFC0) == 0
+
         */
         UnsafeBoard boardRef;
 
@@ -18,13 +24,13 @@ namespace ChessV2
 
 
 
-        int[] pinningPiecesPos = new int[16];
-        int[] pinningPieceDirection = new int[16];
+        ulong[] pinningPiecesAttackDirBitBoard = new ulong[64]; // the square of the pinned piece
         ulong pinnedPieces = 0;
-        int* pinningPiecesPosPtr;
-        int* pinningPieceDirectionPtr;
-        int pinningPiecesCount = 0; // so even with the pinned pieces we dont have to check all sliding pieces
+        ulong* pinningPiecesAttackDirBitBoardPtr;
 
+
+        bool _KingInCheck = false;
+        bool _DoubleCheck = false;
 
         bool WhiteToMove;
         int OurColour;
@@ -95,6 +101,10 @@ namespace ChessV2
         /// </summary>
         int* KingAttacksPtr;
 
+        /// <summary>
+        /// Ex. PATP[square(2) + (atack from right side of feild(1) * 64) + (attacker is white(1) * 128)]
+        /// </summary>
+        bool* PawnAttackThisPiece; // square, right side?, white?
 
 
         public bool IsKingInCheck;
@@ -121,6 +131,8 @@ namespace ChessV2
                 KingAttacksBitBoardPtr = ptr;
             fixed (int* ptr = &King.KingAttacksV2D1[0])
                 KingAttacksPtr = ptr;
+            fixed (bool* ptr = &Pawn.PawnCanAttackThisPiece[0])
+                PawnAttackThisPiece = ptr;
 
 
 
@@ -129,10 +141,8 @@ namespace ChessV2
             this.boardRef = boardRef;
             boardPtr = boardRef.boardPtr;
 
-            fixed (int* ptr = &pinningPiecesPos[0])
-                pinningPiecesPosPtr = ptr;
-            fixed (int* ptr = &pinningPieceDirection[0])
-                pinningPieceDirectionPtr = ptr;
+            fixed (ulong* ptr = &pinningPiecesAttackDirBitBoard[0])
+                pinningPiecesAttackDirBitBoardPtr = ptr;
         }
 
         public void Init()
@@ -147,6 +157,7 @@ namespace ChessV2
 
             if (WhiteToMove)
             {
+                // can even remove the boardRefs by moving the pointers to this class
                 OurKingPos = boardRef.kingPosPtr[0];
                 EnemyKingPos = boardRef.kingPosPtr[1];
 
@@ -179,18 +190,18 @@ namespace ChessV2
             }
 
 
-            // int ourKingAttacks = IsSquareAttackedCount(OurKingPos);
-            // _KingInCheck = (ourKingAttacks != 0);
-            // _DoubleCheck = (ourKingAttacks > 1);
-            // if (ourKingAttacks < 2)
-            InitPinnedPieces();
+            int ourKingAttacks = IsSquareAttackedCount(OurKingPos);
+            _KingInCheck = (ourKingAttacks != 0);
+            _DoubleCheck = (ourKingAttacks > 1);
+            if (ourKingAttacks < 2)
+                InitPinnedPieces();
             Console.WriteLine(ChessV1.BitBoardHelper.GetBitBoardString(pinnedPieces));
         }
 
         private void InitPinnedPieces()
         {
             pinnedPieces = 0;
-            pinningPiecesCount = 0;
+
             // Queens
             for (int i = 0; i < EnemyQueens[-1]; i++)
             {
@@ -211,9 +222,10 @@ namespace ChessV2
                             // pos of first pin on piece
                             int pinnedPiecePos = -1;
 
+                            int move = 0;
                             for (int moveCount = 0; moveCount < 7; moveCount++)
                             {
-                                int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
+                                move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
                                 int squareFromMove = boardPtr[move];
                                 if (move == OurKingPos)
                                     break;
@@ -233,9 +245,7 @@ namespace ChessV2
                             }
                             if (piecesBetween == 1 && piecesBetween != -1)
                             {
-                                pinningPieceDirectionPtr[pinningPiecesCount] = dir;
-                                pinningPiecesPosPtr[pinningPiecesCount] = pos;
-                                pinningPiecesCount++;
+                                pinningPiecesAttackDirBitBoardPtr[pinnedPiecePos] = QueenAttacksBitBoardDirectionPtr[pos + (dir * 64)];
                                 pinnedPieces |= (0x8000000000000000 >> pinnedPiecePos);
                             }
                             break;
@@ -264,9 +274,10 @@ namespace ChessV2
                             // pos of first pin on piece
                             int pinnedPiecePos = -1;
 
+                            int move = 0;
                             for (int moveCount = 0; moveCount < 7; moveCount++)
                             {
-                                int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
+                                move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
                                 int squareFromMove = boardPtr[move];
                                 if (move == OurKingPos)
                                     break;
@@ -286,9 +297,7 @@ namespace ChessV2
                             }
                             if (piecesBetween == 1 && piecesBetween != -1)
                             {
-                                pinningPieceDirectionPtr[pinningPiecesCount] = dir;
-                                pinningPiecesPosPtr[pinningPiecesCount] = pos;
-                                pinningPiecesCount++;
+                                pinningPiecesAttackDirBitBoardPtr[pinnedPiecePos] = QueenAttacksBitBoardDirectionPtr[pos + (dir * 64)];
                                 pinnedPieces |= (0x8000000000000000 >> pinnedPiecePos);
                             }
                             break;
@@ -317,9 +326,10 @@ namespace ChessV2
                             // pos of first pin on piece
                             int pinnedPiecePos = -1;
 
+                            int move = 0;
                             for (int moveCount = 0; moveCount < 7; moveCount++)
                             {
-                                int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
+                                move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
                                 int squareFromMove = boardPtr[move];
                                 if (move == OurKingPos)
                                     break;
@@ -339,9 +349,7 @@ namespace ChessV2
                             }
                             if (piecesBetween == 1 && piecesBetween != -1)
                             {
-                                pinningPieceDirectionPtr[pinningPiecesCount] = dir;
-                                pinningPiecesPosPtr[pinningPiecesCount] = pos;
-                                pinningPiecesCount++;
+                                pinningPiecesAttackDirBitBoardPtr[pinnedPiecePos] = QueenAttacksBitBoardDirectionPtr[pos + (dir * 64)];
                                 pinnedPieces |= (0x8000000000000000 >> pinnedPiecePos);
                             }
                             break;
@@ -356,11 +364,386 @@ namespace ChessV2
             Init();
 
             AddKingMoves();
+
+            if (_DoubleCheck)
+                return;
+
+            // i need to add to difrent code roads, one for when the king it in check and one when it isent
+            // becous when the king is in check you need to check all the pieces if it can block the pin / kill the attacer
+            // make a bitboard of the attacker/attacks, if any of the moves land in it, it is a valid move
+            // its only one more bitboard check per move, maby no need to split up the moves
+            // and when it is a double check only king moves work
+
+            AddPawnMoves();
+        }
+
+        private void AddPawnMoves()
+        {
+            // 4 secktors
+
+            // white pawn
+            if (WhiteToMove)
+            {
+                for (int pawnNum = 0; pawnNum < OurPawns[-1]; pawnNum++)
+                {
+                    int pawnPos = OurPawns[pawnNum];
+
+                    int sinlgeMovePos = pawnPos - 8;
+                    int doubleMovePos = pawnPos - 16;
+                    int move7 = pawnPos - 7;
+                    int move9 = pawnPos - 9;
+
+                    // pinned piece
+                    if (((pinnedPieces << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                    {
+                        // single move
+                        if ((sinlgeMovePos & 0xFFC0) == 0)
+                            if (boardPtr[sinlgeMovePos] == 0)
+                            {
+                                if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << sinlgeMovePos) & 0x8000000000000000) == 0x8000000000000000)
+                                {
+                                    // if promoting
+                                    if (((ConstBitBoards.WhitePromotionLine << sinlgeMovePos) & 0x8000000000000000) == 0x8000000000000000)
+                                    {
+                                        moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToQueen);
+                                        movesCount++;
+                                        moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToKnight);
+                                        movesCount++;
+                                        moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToRook);
+                                        movesCount++;
+                                        moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToBishop);
+                                        movesCount++;
+                                    }
+                                    else
+                                    {
+                                        moves[movesCount] = new Move(pawnPos, sinlgeMovePos, 0);
+                                        movesCount++;
+                                    }
+                                }
+                            }
+
+                        // double move
+                        if (((ConstBitBoards.WhiteTwoMoveLine << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                            if ((doubleMovePos & 0xFFC0) == 0)
+                                if (boardPtr[sinlgeMovePos] == 0)
+                                    if (boardPtr[doubleMovePos] == 0)
+                                    {
+                                        if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << doubleMovePos) & 0x8000000000000000) == 0x8000000000000000)
+                                        {
+                                            moves[movesCount] = new Move(pawnPos, doubleMovePos, Move.Flag.PawnTwoForward);
+                                            movesCount++;
+                                        }
+                                    }
+
+
+                        // EnPassent
+                        if (move7 == EPSquare)
+                        {
+                            if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move7) & 0x8000000000000000) == 0x8000000000000000)
+                            {
+                                moves[movesCount] = new Move(pawnPos, move7, Move.Flag.EnPassantCapture);
+                                movesCount++;
+                            }
+                        }
+                        else if (move9 == EPSquare)
+                        {
+                            if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move9) & 0x8000000000000000) == 0x8000000000000000)
+                            {
+                                moves[movesCount] = new Move(pawnPos, move9, Move.Flag.EnPassantCapture);
+                                movesCount++;
+                            }
+                        }
+
+                        // attack move7/right
+                        if (((ConstBitBoards.RightSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                            if ((move7 & 0xFFC0) == 0)
+                                if ((boardPtr[move7] & 0b11000) == EnemyColour)
+                                {
+                                    if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move7) & 0x8000000000000000) == 0x8000000000000000)
+                                    {
+                                        moves[movesCount] = new Move(pawnPos, move7, 0);
+                                        movesCount++;
+                                    }
+                                }
+
+                        // attack move9/left
+                        if ((move9 & 0xFFC0) == 0)
+                            if (((ConstBitBoards.LeftSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                if ((boardPtr[move9] & 0b11000) == EnemyColour)
+                                {
+                                    if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move9) & 0x8000000000000000) == 0x8000000000000000)
+                                    {
+                                        moves[movesCount] = new Move(pawnPos, move9, 0);
+                                        movesCount++;
+                                    }
+                                }
+                    }
+
+                    // unpinned piece
+                    else
+                    {
+                        // single move
+                        if ((sinlgeMovePos & 0xFFC0) == 0)
+                            if (boardPtr[sinlgeMovePos] == 0)
+                            {
+                                // if promoting
+                                if (((ConstBitBoards.WhitePromotionLine << sinlgeMovePos) & 0x8000000000000000) == 0x8000000000000000)
+                                {
+                                    moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToQueen);
+                                    movesCount++;
+                                    moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToKnight);
+                                    movesCount++;
+                                    moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToRook);
+                                    movesCount++;
+                                    moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToBishop);
+                                    movesCount++;
+                                }
+                                else
+                                {
+                                    moves[movesCount] = new Move(pawnPos, sinlgeMovePos, 0);
+                                    movesCount++;
+                                }
+                            }
+
+                        // double move
+                        if (((ConstBitBoards.WhiteTwoMoveLine << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                            if ((doubleMovePos & 0xFFC0) == 0)
+                                if (boardPtr[sinlgeMovePos] == 0)
+                                    if (boardPtr[doubleMovePos] == 0)
+                                    {
+                                        moves[movesCount] = new Move(pawnPos, doubleMovePos, Move.Flag.PawnTwoForward);
+                                        movesCount++;
+                                    }
+
+
+                        // EnPassent
+                        if (move7 == EPSquare)
+                        {
+                            moves[movesCount] = new Move(pawnPos, move7, Move.Flag.EnPassantCapture);
+                            movesCount++;
+                        }
+                        else if (move9 == EPSquare)
+                        {
+                            moves[movesCount] = new Move(pawnPos, move9, Move.Flag.EnPassantCapture);
+                            movesCount++;
+                        }
+
+                        // attack move7/right
+                        if ((move7 & 0xFFC0) == 0)
+                            if (((ConstBitBoards.RightSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                if ((boardPtr[move7] & 0b11000) == EnemyColour)
+                                {
+                                    moves[movesCount] = new Move(pawnPos, move7, 0);
+                                    movesCount++;
+                                }
+
+                        // attack move9/left
+                        if ((move9 & 0xFFC0) == 0)
+                            if (((ConstBitBoards.LeftSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                if ((boardPtr[move9] & 0b11000) == EnemyColour)
+                                {
+                                    moves[movesCount] = new Move(pawnPos, move9, 0);
+                                    movesCount++;
+                                }
+                    }
+                }
+            }
+
+            // black pawn
+            else
+            {
+                for (int pawnNum = 0; pawnNum < OurPawns[-1]; pawnNum++)
+                {
+                    int pawnPos = OurPawns[pawnNum];
+
+                    int sinlgeMovePos = pawnPos + 8;
+                    int doubleMovePos = pawnPos + 16;
+                    int move7 = pawnPos + 7;
+                    int move9 = pawnPos + 9;
+
+                    // pinned piece
+                    if (((pinnedPieces << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                    {
+                        // single move
+                        if ((sinlgeMovePos & 0xFFC0) == 0)
+                            if (boardPtr[sinlgeMovePos] == 0)
+                            {
+                                if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << sinlgeMovePos) & 0x8000000000000000) == 0x8000000000000000)
+                                {
+                                    // if promoting
+                                    if (((ConstBitBoards.BlackPromotionLine << sinlgeMovePos) & 0x8000000000000000) == 0x8000000000000000)
+                                    {
+                                        moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToQueen);
+                                        movesCount++;
+                                        moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToKnight);
+                                        movesCount++;
+                                        moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToRook);
+                                        movesCount++;
+                                        moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToBishop);
+                                        movesCount++;
+                                    }
+                                    else
+                                    {
+                                        moves[movesCount] = new Move(pawnPos, sinlgeMovePos, 0);
+                                        movesCount++;
+                                    }
+                                }
+                            }
+
+                        // double move
+                        if (((ConstBitBoards.BlackTwoMoveLine << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                            if ((doubleMovePos & 0xFFC0) == 0)
+                                if (boardPtr[sinlgeMovePos] == 0)
+                                    if (boardPtr[doubleMovePos] == 0)
+                                    {
+                                        if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << doubleMovePos) & 0x8000000000000000) == 0x8000000000000000)
+                                        {
+                                            moves[movesCount] = new Move(pawnPos, doubleMovePos, Move.Flag.PawnTwoForward);
+                                            movesCount++;
+                                        }
+                                    }
+
+
+                        // EnPassent
+                        if (move7 == EPSquare)
+                        {
+                            if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move7) & 0x8000000000000000) == 0x8000000000000000)
+                            {
+                                moves[movesCount] = new Move(pawnPos, move7, Move.Flag.EnPassantCapture);
+                                movesCount++;
+                            }
+                        }
+                        else if (move9 == EPSquare)
+                        {
+                            if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move9) & 0x8000000000000000) == 0x8000000000000000)
+                            {
+                                moves[movesCount] = new Move(pawnPos, move9, Move.Flag.EnPassantCapture);
+                                movesCount++;
+                            }
+                        }
+
+                        // attack move7/right
+                        if ((move7 & 0xFFC0) == 0)
+                            if (((ConstBitBoards.LeftSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                if ((boardPtr[move7] & 0b11000) == EnemyColour)
+                                {
+                                    if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move7) & 0x8000000000000000) == 0x8000000000000000)
+                                    {
+                                        moves[movesCount] = new Move(pawnPos, move7, 0);
+                                        movesCount++;
+                                    }
+                                }
+
+                        // attack move9/left
+                        if ((move9 & 0xFFC0) == 0)
+                            if (((ConstBitBoards.RightSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                if ((boardPtr[move9] & 0b11000) == EnemyColour)
+                                {
+                                    if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move9) & 0x8000000000000000) == 0x8000000000000000)
+                                    {
+                                        moves[movesCount] = new Move(pawnPos, move9, 0);
+                                        movesCount++;
+                                    }
+                                }
+                    }
+
+                    // unpinned piece
+                    else
+                    {
+                        // single move
+                        if ((sinlgeMovePos & 0xFFC0) == 0)
+                            if (boardPtr[sinlgeMovePos] == 0)
+                            {
+                                // if promoting
+                                if (((ConstBitBoards.BlackPromotionLine << sinlgeMovePos) & 0x8000000000000000) == 0x8000000000000000)
+                                {
+                                    moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToQueen);
+                                    movesCount++;
+                                    moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToKnight);
+                                    movesCount++;
+                                    moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToRook);
+                                    movesCount++;
+                                    moves[movesCount] = new Move(pawnPos, sinlgeMovePos, Move.Flag.PromoteToBishop);
+                                    movesCount++;
+                                }
+                                else
+                                {
+                                    moves[movesCount] = new Move(pawnPos, sinlgeMovePos, 0);
+                                    movesCount++;
+                                }
+                            }
+
+                        // double move
+                        if (((ConstBitBoards.BlackTwoMoveLine << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                            if ((doubleMovePos & 0xFFC0) == 0)
+                                if (boardPtr[sinlgeMovePos] == 0)
+                                    if (boardPtr[doubleMovePos] == 0)
+                                    {
+                                        moves[movesCount] = new Move(pawnPos, doubleMovePos, Move.Flag.PawnTwoForward);
+                                        movesCount++;
+                                    }
+
+
+                        // EnPassent
+                        if (move7 == EPSquare)
+                        {
+                            moves[movesCount] = new Move(pawnPos, move7, Move.Flag.EnPassantCapture);
+                            movesCount++;
+                        }
+                        else if (move9 == EPSquare)
+                        {
+                            moves[movesCount] = new Move(pawnPos, move9, Move.Flag.EnPassantCapture);
+                            movesCount++;
+                        }
+
+                        // attack move7/right
+                        if ((move7 & 0xFFC0) == 0)
+                            if (((ConstBitBoards.LeftSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                if ((boardPtr[move7] & 0b11000) == EnemyColour)
+                                {
+                                    moves[movesCount] = new Move(pawnPos, move7, 0);
+                                    movesCount++;
+                                }
+
+                        // attack move9/left
+                        if ((move9 & 0xFFC0) == 0)
+                            if (((ConstBitBoards.RightSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                if ((boardPtr[move9] & 0b11000) == EnemyColour)
+                                {
+                                    moves[movesCount] = new Move(pawnPos, move9, 0);
+                                    movesCount++;
+                                }
+                    }
+                }
+
+            }
         }
 
         public void AddKingMoves()
         {
-            byte king = (byte)(Piece.King | OurColour);
+            boardPtr[OurKingPos] = 0;
+            for (int moveCount = 0; moveCount < 8; moveCount++)
+            {
+                int move = KingAttacksPtr[OurKingPos + (moveCount * 64)];
+                if (move == King.InvalidMove)
+                    continue;
+                int piece = boardPtr[move];
+                if (piece == 0)
+                {
+                    if (!IsSquareAttacked(move))
+                    {
+                        moves[movesCount] = new(OurKingPos, move, 0);
+                        movesCount++;
+                    }
+                }
+                else if ((piece & 0b11000) == OurColour)
+                    continue;
+                else
+                {
+
+                }
+            }
+            boardPtr[OurKingPos] = (byte)(Piece.King | OurColour);
         }
 
         public bool IsSquareAttacked(int square)
@@ -374,6 +757,30 @@ namespace ChessV2
             {
                 if (((KnightAttacksBitBoardPtr[EnemyKnights[knightNum]] << square) & 0x8000000000000000) == 0x8000000000000000)
                     return true;
+            }
+
+            // pawn, just check if 
+            if (WhiteToMove)
+            {
+                int move = square - 7;
+                if (PawnAttackThisPiece[square + 64])
+                    if (boardPtr[move] == Piece.BPawn)
+                        return true;
+                move = square - 9;
+                if (PawnAttackThisPiece[square])
+                    if (boardPtr[move] == Piece.BPawn)
+                        return true;
+            }
+            else
+            {
+                int move = square + 9;
+                if (PawnAttackThisPiece[square + 64 + 128])
+                    if (boardPtr[move] == Piece.WPawn)
+                        return true;
+                move = square + 7;
+                if (PawnAttackThisPiece[square + 128])
+                    if (boardPtr[move] == Piece.WPawn)
+                        return true;
             }
 
             // Queens
@@ -461,6 +868,132 @@ namespace ChessV2
             }
 
             return false;
+        }
+
+        public int IsSquareAttackedCount(int square)
+        {
+            int attackers = 0;
+
+            // check king atc
+            if (((KingAttacksBitBoardPtr[EnemyKingPos] << square) & 0x8000000000000000) == 0x8000000000000000)
+                attackers++;
+
+            // check the knights bitboards
+            for (int knightNum = 0; knightNum < EnemyKnights[-1]; knightNum++)
+            {
+                if (((KnightAttacksBitBoardPtr[EnemyKnights[knightNum]] << square) & 0x8000000000000000) == 0x8000000000000000)
+                    attackers++;
+            }
+
+            // pawn, just check if 
+            if (WhiteToMove)
+            {
+                int move = square - 7;
+                if (PawnAttackThisPiece[square + 64])
+                    if (boardPtr[move] == Piece.BPawn)
+                        attackers++;
+                move = square - 9;
+                if (PawnAttackThisPiece[square])
+                    if (boardPtr[move] == Piece.BPawn)
+                        attackers++;
+            }
+            else
+            {
+                int move = square + 9;
+                if (PawnAttackThisPiece[square + 64 + 128])
+                    if (boardPtr[move] == Piece.WPawn)
+                        attackers++;
+                move = square + 7;
+                if (PawnAttackThisPiece[square + 128])
+                    if (boardPtr[move] == Piece.WPawn)
+                        attackers++;
+            }
+
+            // Queens
+            for (int i = 0; i < EnemyQueens[-1]; i++)
+            {
+                int pos = EnemyQueens[i];
+
+                // check if king is in any of the attacks
+                if (((QueenAttacksBitBoardPtr[pos] << square) & 0x8000000000000000) == 0x8000000000000000)
+                {
+                    // find the direction of the pin
+                    for (int dir = 0; dir < 8; dir++)
+                    {
+                        // find the dir
+                        if (((QueenAttacksBitBoardDirectionPtr[pos + (dir * 64)] << square) & 0x8000000000000000) == 0x8000000000000000)
+                        {
+                            for (int moveCount = 0; moveCount < 7; moveCount++)
+                            {
+                                int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
+                                if (move == square)
+                                    attackers++;
+                                if (boardPtr[move] != 0)
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Rooks
+            for (int i = 0; i < EnemyRooks[-1]; i++)
+            {
+                int pos = EnemyRooks[i];
+
+                // check if king is in any of the attacks
+                if (((RookAttacksBitBoardPtr[pos] << square) & 0x8000000000000000) == 0x8000000000000000)
+                {
+                    // find the direction of the pin
+                    for (int dir = 0; dir < 4; dir++)
+                    {
+                        // find the dir
+                        if (((RookAttacksBitBoardDirectionPtr[pos + (dir * 64)] << square) & 0x8000000000000000) == 0x8000000000000000)
+                        {
+                            for (int moveCount = 0; moveCount < 7; moveCount++)
+                            {
+                                int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
+                                if (move == square)
+                                    attackers++;
+                                if (boardPtr[move] != 0)
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Bishops
+            for (int i = 0; i < EnemyBishops[-1]; i++)
+            {
+                int pos = EnemyBishops[i];
+
+                // check if king is in any of the attacks
+                if (((BishopAttacksBitBoardPtr[pos] << square) & 0x8000000000000000) == 0x8000000000000000)
+                {
+                    // find the direction of the pin
+                    for (int dir = 4; dir < 8; dir++)
+                    {
+                        // find the dir
+                        if (((BishopAttacksBitBoardDirectionPtr[pos + (dir * 64)] << square) & 0x8000000000000000) == 0x8000000000000000)
+                        {
+                            for (int moveCount = 0; moveCount < 7; moveCount++)
+                            {
+                                int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
+                                if (move == square)
+                                    attackers++;
+                                if (boardPtr[move] != 0)
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return attackers;
         }
 
         public Move[] GetMoves()

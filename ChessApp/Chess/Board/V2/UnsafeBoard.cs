@@ -25,6 +25,13 @@ namespace ChessV2
 
         // !!! Only public varibles are allowed to be touched ater init !!!
 
+
+        // Bits 0-3 store castles
+        // Bits 4-9 store ep square (64 = nothing)
+        // Bits 10-14 captured piece
+        // Bits 15-20 startSquare
+        // Bits 21-26 targetSquare
+        // Bits 27-30 moveFlag
         private int[] gameStateHistory;
         public int* gameStateHistoryPtr;
         public int gameStateHistoryCount = 0;
@@ -74,12 +81,225 @@ namespace ChessV2
 
         public void MakeMove(Move move)
         {
+            int startSquare = move.StartSquare;
+            int targetSquare = move.TargetSquare;
+            int moveFlag = move.MoveFlag;
+            int movingPiece = boardPtr[startSquare];
+            int capturedPiece = boardPtr[targetSquare];
+            bool pieceCaptured = (capturedPiece != 0);
 
+            bool WhiteToMove = (playerTurn == 8);
+            int OurColour = playerTurn;
+            int OurColourIndex = playerTurn >> 4;
+
+            int OurKingPos = kingPosPtr[OurColourIndex];
+
+            gameStateHistoryPtr[gameStateHistoryCount] =
+                (castle) + (EPSquare << 4) + (capturedPiece << 10) + (startSquare << 15) + (targetSquare << 21) + (moveFlag << 27);
+            gameStateHistoryCount++;
+            EPSquare = 64;
+
+            boardPtr[targetSquare] = boardPtr[startSquare];
+            boardPtr[startSquare] = 0;
+
+            if (startSquare == OurKingPos)
+            {
+                if (capturedPiece != 0) // king can never atc king
+                    GetPieceList(capturedPiece & 0b00111, capturedPiece & 0b11000).RemovePieceAtSquare(targetSquare);
+                else if (moveFlag == Move.Flag.Castling) // cant castle if attacking
+                {
+                    // also move the rook and change the caltle stuff
+                }
+                kingPosPtr[OurColourIndex] = targetSquare;
+                EPSquare = 0;
+                if (WhiteToMove)
+                {
+                    castle ^= WhiteCastleRights;
+                }
+                else
+                {
+                    castle ^= BlackCastleRights;
+                }
+            }
+            // piece move
+            else
+            {
+                if (moveFlag == Move.Flag.None)
+                {
+                    if (pieceCaptured)
+                        GetPieceList(capturedPiece & 0b00111, capturedPiece & 0b11000).RemovePieceAtSquare(targetSquare);
+                    GetPieceList(movingPiece & 0b00111, OurColour).MovePiece(startSquare, targetSquare);
+
+                    // remove castle rights
+                    if (WhiteToMove)
+                    {
+                        if (startSquare == 56 || targetSquare == 56)
+                            castle ^= WhiteQueenSideCastleRight;
+                        else if (startSquare == 63 || targetSquare == 63)
+                            castle ^= WhiteKingSideCastleRight;
+                    }
+                    else
+                    {
+                        if (startSquare == 0 || targetSquare == 0)
+                            castle ^= BlackQueenSideCastleRight;
+                        else if (startSquare == 7 || targetSquare == 7)
+                            castle ^= BlackKingSideCastleRight;
+                    }
+                }
+                else if (moveFlag == Move.Flag.PawnTwoForward)
+                {
+                    GetPieceList(movingPiece & 0b00111, OurColour).MovePiece(startSquare, targetSquare);
+                    if (WhiteToMove)
+                        EPSquare = targetSquare + 8;
+                    else
+                        EPSquare = targetSquare - 8;
+                }
+                else if (moveFlag == Move.Flag.EnPassantCapture)
+                {
+                    GetPieceList(movingPiece & 0b00111, OurColour).MovePiece(startSquare, targetSquare);
+                    if (WhiteToMove)
+                    {
+                        pawns[BlackIndex].RemovePieceAtSquare(targetSquare + 8);
+                        boardPtr[targetSquare + 8] = 0;
+                    }
+                    else
+                    {
+                        pawns[WhiteIndex].RemovePieceAtSquare(targetSquare - 8);
+                        boardPtr[targetSquare - 8] = 0;
+                    }
+                }
+                // casteling is done at king code
+                else // promotion
+                {
+                    if (moveFlag == Move.Flag.PromoteToQueen)
+                    {
+                        boardPtr[targetSquare] = (byte)(Piece.Queen | OurColour);
+                        GetPieceList(Piece.Queen, OurColour).AddPieceAtSquare(targetSquare);
+                        GetPieceList(Piece.Pawn, OurColour).RemovePieceAtSquare(startSquare);
+                    }
+                    else if (moveFlag == Move.Flag.PromoteToKnight)
+                    {
+                        boardPtr[targetSquare] = (byte)(Piece.Knight | OurColour);
+                        GetPieceList(Piece.Knight, OurColour).AddPieceAtSquare(targetSquare);
+                        GetPieceList(Piece.Pawn, OurColour).RemovePieceAtSquare(startSquare);
+                    }
+                    else if (moveFlag == Move.Flag.PromoteToRook)
+                    {
+                        boardPtr[targetSquare] = (byte)(Piece.Rook | OurColour);
+                        GetPieceList(Piece.Rook, OurColour).AddPieceAtSquare(targetSquare);
+                        GetPieceList(Piece.Pawn, OurColour).RemovePieceAtSquare(startSquare);
+                    }
+                    else if (moveFlag == Move.Flag.PromoteToBishop)
+                    {
+                        boardPtr[targetSquare] = (byte)(Piece.Bishop | OurColour);
+                        GetPieceList(Piece.Bishop, OurColour).AddPieceAtSquare(targetSquare);
+                        GetPieceList(Piece.Pawn, OurColour).RemovePieceAtSquare(startSquare);
+                    }
+                    if (WhiteToMove)
+                    {
+                        if (targetSquare == 56)
+                            castle ^= WhiteQueenSideCastleRight;
+                        else if (targetSquare == 63)
+                            castle ^= WhiteKingSideCastleRight;
+                    }
+                    else
+                    {
+                        if (targetSquare == 0)
+                            castle ^= BlackQueenSideCastleRight;
+                        else if (targetSquare == 7)
+                            castle ^= BlackKingSideCastleRight;
+                    }
+                }
+            }
+
+
+
+
+            playerTurn ^= 0b11000;
         }
 
         public void UnMakeMove()
         {
+            playerTurn ^= 0b11000;
+            gameStateHistoryCount--;
+            int gameState = gameStateHistoryPtr[gameStateHistoryCount];
+            castle = gameState & 0b1111;
+            EPSquare = (gameState >> 4) & 0b111111;
+            int capturedPiece = (gameState >> 10) & 0b11111;
+            int startSquare = (gameState >> 15) & 0b111111;
+            int targetSquare = (gameState >> 21) & 0b111111;
+            int moveFlag = (gameState >> 27) & 0b111;
 
+            boardPtr[startSquare] = boardPtr[targetSquare];
+            boardPtr[targetSquare] = (byte)capturedPiece;
+            if (capturedPiece != 0)
+                GetPieceList(capturedPiece & 0b00111, capturedPiece & 0b11000).AddPieceAtSquare(targetSquare);
+
+            bool WhiteToMove = (playerTurn == 8);
+            int OurColour = playerTurn;
+            int OurColourIndex = playerTurn >> 4;
+
+            int OurKingPos = kingPosPtr[OurColourIndex];
+
+
+
+            if (targetSquare == OurKingPos)
+            {
+                if (moveFlag == Move.Flag.Castling)
+                {
+
+                }
+                kingPosPtr[OurColourIndex] = startSquare;
+            }
+            else
+            {
+                GetPieceList(boardPtr[startSquare] & 0b00111, boardPtr[startSquare] & 0b11000).MovePiece(targetSquare, startSquare);
+                if (moveFlag == Move.Flag.EnPassantCapture)
+                {
+                    if (WhiteToMove)
+                    {
+                        boardPtr[targetSquare + 8] = Piece.WPawn;
+                        pawns[WhiteIndex].AddPieceAtSquare(targetSquare - 8);
+                    }
+                    else
+                    {
+                        boardPtr[targetSquare + 8] = Piece.BPawn;
+                        pawns[BlackIndex].AddPieceAtSquare(targetSquare + 8);
+                    }
+                }
+                else if (moveFlag > 3) // promotion
+                {
+                    if (moveFlag == Move.Flag.PromoteToQueen)
+                    {
+                        if (WhiteToMove)
+                            boardPtr[startSquare] = Piece.WPawn;
+                        else
+                            boardPtr[startSquare] = Piece.Black;
+                    }
+                    else if (moveFlag == Move.Flag.PromoteToKnight)
+                    {
+                        if (WhiteToMove)
+                            boardPtr[startSquare] = Piece.WPawn;
+                        else
+                            boardPtr[startSquare] = Piece.Black;
+                    }
+                    else if (moveFlag == Move.Flag.PromoteToRook)
+                    {
+                        if (WhiteToMove)
+                            boardPtr[startSquare] = Piece.WPawn;
+                        else
+                            boardPtr[startSquare] = Piece.Black;
+                    }
+                    else if (moveFlag == Move.Flag.PromoteToBishop)
+                    {
+                        if (WhiteToMove)
+                            boardPtr[startSquare] = Piece.WPawn;
+                        else
+                            boardPtr[startSquare] = Piece.Black;
+                    }
+                }
+
+            }
         }
 
         private void InitFEN(string FEN)
@@ -186,7 +406,7 @@ namespace ChessV2
             blackRooks = rooks[1].occupiedPtr;
             blackQueens = queens[1].occupiedPtr;
         }
-        PieceList GetPieceList(int pieceType, int colour)
+        PieceList GetPieceList(int pieceType, int colour) // dont like this, method call + c# array propety call
         {
             return allPieceLists[(colour >> 4) * 8 + pieceType];
         }

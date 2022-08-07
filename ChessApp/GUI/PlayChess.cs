@@ -25,7 +25,9 @@ namespace ChessGUI
 
         private const int SquareDimensions = 100;
         // private SafeBoard board = new SafeBoard("8/5pq1/4k1p1/1n6/1N6/4K2P/5PQ1/8 w - - 0 1");
-        private SafeBoard board = new SafeBoard("7b/b7/5P2/r1PPP3/3K2Pq/2PPP3/8/3r2qk w - - 0 1");
+        // private SafeBoard board = new SafeBoard("3r3b/b7/5P2/2PPP3/3K2Pq/2PPP3/8/6qk w - - 0 1"); // pines
+        private SafeBoard board = new SafeBoard("3k4/p3pp1p/8/8/8/8/P1PP3P/4K3 w - - 0 1"); // pawns / king
+
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;
