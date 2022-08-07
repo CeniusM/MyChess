@@ -1,4 +1,4 @@
-using ChessV1;
+using ChessV2;
 using System.Diagnostics;
 
 namespace PerftTester
@@ -8,13 +8,13 @@ namespace PerftTester
         public static void Start()
         {
             // warmup 
-            UnsafeBoard foo1 = new(); PossibleMovesGeneratorV2 foo2 = new(foo1); Perft(foo1, foo2, 4);
+            UnsafeBoard foo1 = new(); PossibleMovesGenerator foo2 = new(foo1); Perft(foo1, foo2, 4);
 
 
 
 
-            UnsafeBoard ub = new UnsafeBoard();
-            PossibleMovesGeneratorV2 pmg = new PossibleMovesGeneratorV2(ub);
+            UnsafeBoard ub = new UnsafeBoard("4k3/ppp2ppp/8/8/8/8/PPP2PPP/4K3 w - - 0 1"); // 971165 at perft 5
+            PossibleMovesGenerator pmg = new PossibleMovesGenerator(ub);
 
 
             Stopwatch sw = new Stopwatch();
@@ -37,7 +37,7 @@ namespace PerftTester
             }
         }
 
-        public static long Perft(UnsafeBoard board, PossibleMovesGeneratorV2 pmg, int Depth)
+        public static long Perft(UnsafeBoard board, PossibleMovesGenerator pmg, int Depth)
         {
             long count = 0;
             PerftMove(Depth);

@@ -36,7 +36,7 @@ static class Program
 #else
 
 #endif
-        //PerftTester.PerftTest.Start();
+        // PerftTester.PerftTest.Start();
 
         game = new(myForm);
         game.Play();

@@ -1,16 +1,16 @@
-using ChessV1;
+using ChessV2;
 using winForm;
 
 namespace ChessGUI
 {
     // gets the instruction from the chess game and gives the FormGUI instructions on what to print
-    public class ChessPrinter
+    public unsafe class ChessPrinter
     {
         public int depthOfEval = 2;
         private FormAPI _formGUI;
         private List<Bitmap> _sprites;
         private UnsafeBoard board;
-        private PossibleMovesGeneratorV2 pmg;
+        private PossibleMovesGenerator pmg;
         private Form1 _form;
         public bool _isPrinting = false;
         public ChessPrinter(Form1 form, SafeBoard board)
@@ -108,36 +108,69 @@ namespace ChessGUI
             }
         }
 
+        // private void DrawPieces()
+        // {
+        //     int x, y;
+        //     void PrintWSprite(int sprite) => _formGUI.DrawBitmap(_sprites[sprite], x * 100, y * 100);
+        //     void PrintBSprite(int sprite) => _formGUI.DrawBitmap(_sprites[sprite + 8], x * 100, y * 100);
+
+        //     x = board.kingPosPtr[0] % 8; y = board.kingPosPtr[0] >> 3;
+        //     PrintWSprite(Piece.King);
+        //     x = board.kingPosPtr[1] % 8; y = board.kingPosPtr[1] >> 3;
+        //     PrintBSprite(Piece.King);
+
+        //     for (int i = 0; i < board.allPieceLists.Length; i++)
+        //     {
+        //         for (int j = 0; j < board.allPieceLists[i].numPieces; j++)
+        //         {
+        //             int pos = board.allPieceLists[i][j];
+        //             int piece = board.square[pos];
+        //             x = pos % 8;
+        //             y = pos >> 3;
+
+        //             if ((piece & Piece.White) == Piece.White)
+        //                 PrintWSprite((piece & 0b111));
+        //             else if ((piece & Piece.Black) == Piece.Black)
+        //                 PrintBSprite((piece & 0b111));
+        //             else
+        //             {
+        //                 MyLib.DebugConsole.WriteLine("pos: " + pos + ", type: " + (piece & 0b111) + ", colour: " +
+        //                 (((piece & 0b11000) == 0) ? "Nothing" : (((piece & 0b11000) == 8) ? "White" : "Black"))); // colour
+        //                 throw new NotImplementedException("Cant use Piceses with no color value");
+        //             }
+        //         }
+        //     }
+        // }
+
         private void DrawPieces()
         {
             int x, y;
             void PrintWSprite(int sprite) => _formGUI.DrawBitmap(_sprites[sprite], x * 100, y * 100);
             void PrintBSprite(int sprite) => _formGUI.DrawBitmap(_sprites[sprite + 8], x * 100, y * 100);
 
-            x = board.kingPos[0] % 8; y = board.kingPos[0] >> 3;
+            x = board.kingPosPtr[0] % 8; y = board.kingPosPtr[0] >> 3;
             PrintWSprite(Piece.King);
-            x = board.kingPos[1] % 8; y = board.kingPos[1] >> 3;
+            x = board.kingPosPtr[1] % 8; y = board.kingPosPtr[1] >> 3;
             PrintBSprite(Piece.King);
 
-            for (int i = 0; i < board.allPieceLists.Length; i++)
+            for (int i = 0; i < 64; i++)
             {
-                for (int j = 0; j < board.allPieceLists[i].Count; j++)
-                {
-                    int pos = board.allPieceLists[i][j];
-                    int piece = board.square[pos];
-                    x = pos % 8;
-                    y = pos >> 3;
+                if (board.boardPtr[i] == 0)
+                    continue;
+                int pos = i;
+                int piece = board.boardPtr[i];
+                x = pos % 8;
+                y = pos >> 3;
 
-                    if ((piece & Piece.White) == Piece.White)
-                        PrintWSprite((piece & 0b111));
-                    else if ((piece & Piece.Black) == Piece.Black)
-                        PrintBSprite((piece & 0b111));
-                    else
-                    {
-                        MyLib.DebugConsole.WriteLine("pos: " + pos + ", type: " + (piece & 0b111) + ", colour: " +
-                        (((piece & 0b11000) == 0) ? "Nothing" : (((piece & 0b11000) == 8) ? "White" : "Black"))); // colour
-                        throw new NotImplementedException("Cant use Piceses with no color value");
-                    }
+                if ((piece & Piece.White) == Piece.White)
+                    PrintWSprite((piece & 0b111));
+                else if ((piece & Piece.Black) == Piece.Black)
+                    PrintBSprite((piece & 0b111));
+                else
+                {
+                    MyLib.DebugConsole.WriteLine("pos: " + pos + ", type: " + (piece & 0b111) + ", colour: " +
+                    (((piece & 0b11000) == 0) ? "Nothing" : (((piece & 0b11000) == 8) ? "White" : "Black"))); // colour
+                    throw new NotImplementedException("Cant use Piceses with no color value");
                 }
             }
         }

@@ -1,8 +1,8 @@
 using ChessV1;
 
-namespace PreInitializeDataV1
+namespace PreInitializeDataV2
 {
-    public class Directions
+    public unsafe class Directions
     {
         public readonly struct Index
         {
@@ -17,7 +17,13 @@ namespace PreInitializeDataV1
         }
         public readonly struct Value
         {
-            public static readonly int[] Indexed = { North, East, South, West, NorthEast, SouthEast, SouthWest, NorthWest };
+            static Value()
+            {
+                fixed (int* ptr = &_Indexed[0])
+                    Indexed = ptr;
+            }
+            private static readonly int[] _Indexed = { North, East, South, West, NorthEast, SouthEast, SouthWest, NorthWest };
+            public static readonly int* Indexed;
             public const int North = -8;
             public const int East = 1;
             public const int South = 8;

@@ -1,6 +1,6 @@
 using ChessV1;
 
-namespace PreInitializeData
+namespace PreInitializeDataV1
 {
     public class Pawn
     {

@@ -1,14 +1,15 @@
 // prioritise struckture
 // note, if a piece is pinned it can still attack its pinner
 
-using PreInitializeData;
+using PreInitializeDataV1;
 
 namespace ChessV1
 {
     public unsafe class PossibleMovesGeneratorV2
     {
         ulong pinnedPieces = 0;
-        int[] pinningPieces = new int[16];
+        int[] pinningPiecesPos = new int[16];
+        int[] pinningPieceDirection = new int[16];
         int pinningPiecesCount = 0; // so even with the pinned pieces we dont have to check all sliding pieces
 
 
@@ -48,6 +49,7 @@ namespace ChessV1
         //only works if the move generation have been run
         public bool IsKingInCheck() => _KingInCheck;
 
+#pragma warning disable 8618
         public PossibleMovesGeneratorV2(UnsafeBoard board)
         {
             _board = board;
@@ -55,6 +57,7 @@ namespace ChessV1
             _KingInCheck = false;
             squares = _board.square;
         }
+#pragma warning restore 8618
 
         public Move[] GetMoves()
         {
@@ -90,11 +93,13 @@ namespace ChessV1
             OurBishops = _board.bishops[OurColourIndex];
             OurRooks = _board.rooks[OurColourIndex];
             OurQueens = _board.queens[OurColourIndex];
-            // EnemyPawns = _board.pawns[EnemyColourIndex];
-            // EnemyKnights = _board.knights[EnemyColourIndex];
+            EnemyPawns = _board.pawns[EnemyColourIndex];
+            EnemyKnights = _board.knights[EnemyColourIndex];
             EnemyBishops = _board.bishops[EnemyColourIndex];
             EnemyRooks = _board.rooks[EnemyColourIndex];
             EnemyQueens = _board.queens[EnemyColourIndex];
+
+
 
             _moves = new List<Move>(40);
             // another way could maby be to save the previus moves and just loop over those to just count them
@@ -102,17 +107,17 @@ namespace ChessV1
             // int ourKingAttacks = IsSquareAttackedCount(OurKingPos);
             // _KingInCheck = (ourKingAttacks != 0);
             // _DoubleCheck = (ourKingAttacks > 1);
-            // pinnedPieces = 0;
-            // pinningPiecesCount = 0;
             // if (ourKingAttacks < 2)
             InitPinnedPieces();
-            Console.WriteLine(BitBoardHelper.GetBitBoardString(pinnedPieces));
+            // Console.WriteLine(BitBoardHelper.GetBitBoardString(pinnedPieces));
         }
 
         private void InitPinnedPieces()
         {
+            pinnedPieces = 0;
+            pinningPiecesCount = 0;
             // Queens
-            for (int i = 0; i < EnemyQueens.Count; i++)
+            for (int i = 0; i < EnemyQueens.numPieces; i++)
             {
                 int pos = EnemyQueens[i];
 
@@ -153,7 +158,8 @@ namespace ChessV1
                             }
                             if (piecesBetween == 1 && piecesBetween != -1)
                             {
-                                pinningPieces[pinningPiecesCount] = pos;
+                                pinningPieceDirection[pinningPiecesCount] = dir;
+                                pinningPiecesPos[pinningPiecesCount] = pos;
                                 pinningPiecesCount++;
                                 pinnedPieces |= (0x8000000000000000 >> pinnedPiecePos);
                             }
@@ -164,7 +170,7 @@ namespace ChessV1
             }
 
             // Rooks
-            for (int i = 0; i < EnemyRooks.Count; i++)
+            for (int i = 0; i < EnemyRooks.numPieces; i++)
             {
                 int pos = EnemyRooks[i];
 
@@ -205,7 +211,8 @@ namespace ChessV1
                             }
                             if (piecesBetween == 1 && piecesBetween != -1)
                             {
-                                pinningPieces[pinningPiecesCount] = pos;
+                                pinningPieceDirection[pinningPiecesCount] = dir;
+                                pinningPiecesPos[pinningPiecesCount] = pos;
                                 pinningPiecesCount++;
                                 pinnedPieces |= (0x8000000000000000 >> pinnedPiecePos);
                             }
@@ -216,7 +223,7 @@ namespace ChessV1
             }
 
             // Bishops
-            for (int i = 0; i < EnemyBishops.Count; i++)
+            for (int i = 0; i < EnemyBishops.numPieces; i++)
             {
                 int pos = EnemyBishops[i];
 
@@ -257,7 +264,8 @@ namespace ChessV1
                             }
                             if (piecesBetween == 1 && piecesBetween != -1)
                             {
-                                pinningPieces[pinningPiecesCount] = pos;
+                                pinningPieceDirection[pinningPiecesCount] = dir;
+                                pinningPiecesPos[pinningPiecesCount] = pos;
                                 pinningPiecesCount++;
                                 pinnedPieces |= (0x8000000000000000 >> pinnedPiecePos);
                             }
@@ -279,20 +287,215 @@ namespace ChessV1
             // if (_DoubleCheck) // if double check only king moves count 
             //     return;
 
-            // AddPawnMoves();
+            AddPawnMoves();
             // AddKnightMoves();
             // AddQueenMoves();
             // AddBishopMoves();
             // AddRookMoves();
         }
 
-        private void AddKingMoves()
+        private void AddPawnMoves()
         {
-            if (Piece.Colour(squares[OurKingPos - 8]) != OurColour)
-            {
 
+            // white side
+            if (WhiteToMove)
+            {
+                // get the pawns
+                for (int PawnNum = 0; PawnNum < OurPawns.numPieces; PawnNum++)
+                {
+                    int pawnPos = squares[PawnNum];
+                    // piece pinned
+                    if (BitBoardHelper.ContainsSquare(pinnedPieces, pawnPos))
+                    {
+
+                    }
+
+                    // piece not pinned
+                    else
+                    {
+
+                    }
+                }
+            }
+
+            // black side
+            else
+            {
+                // get the pawns
+                for (int PawnNum = 0; PawnNum < OurPawns.numPieces; PawnNum++)
+                {
+                    int pawnPos = squares[PawnNum];
+                    // piece pinned
+                    if (BitBoardHelper.ContainsSquare(pinnedPieces, pawnPos))
+                    {
+
+                    }
+
+                    // piece not pinned
+                    else
+                    {
+
+                    }
+                }
             }
         }
+
+        public void AddKingMoves()
+        {
+            squares[OurKingPos] = 0; // so it never block it self after checking an ajacent square is atc            
+            for (int i = 0; i < 8; i++)
+            {
+                int move = King.KingAttacksV2[OurKingPos, i];
+                if (move == King.InvalidMove)
+                    continue; // make it so later that you can just break after an InvalidMove
+                else if ((squares[move] & OurColour) != OurColour)
+                {
+                    byte capturedPiece = squares[move];
+                    squares[move] = 0;
+                    if (!IsSquareAttacked(move)) // can make anoter IsSqaureAttacked that ONLY checks slidingPiecses
+                        _moves.Add(new(OurKingPos, move, 0));
+                    squares[move] = capturedPiece;
+                }
+            }
+            squares[OurKingPos] = (byte)(0b1 | OurColour);
+        }
+
+        #region IsSqaureAttacked
+        public bool IsSquareAttacked(int square)
+        {
+            if (BitBoardHelper.ContainsSquare(PreInitializeDataV1.King.KingAttacksBitBoard[EnemyKingPos], square))
+                return true;
+
+            for (int i = 0; i < EnemyKnights.numPieces; i++)
+            {
+                if (BitBoardHelper.ContainsSquare(PreInitializeDataV1.Knight.KnightAttacksBitBoard[EnemyKnights[i]], square))
+                    return true;
+            }
+
+            // pawn, just check if 
+            if (WhiteToMove)
+            {
+                int move = square - 7;
+                if (BoardRepresentation.IsPieceInBound(move))
+                    if ((move) >> 3 == (square >> 3) - 1)
+                        if (squares[move] == Piece.BPawn)
+                            return true;
+                move = square - 9;
+                if (BoardRepresentation.IsPieceInBound(move))
+                    if ((move) >> 3 == (square >> 3) - 1)
+                        if (squares[move] == Piece.BPawn)
+                            return true;
+            }
+            else
+            {
+                int move = square + 7;
+                if (BoardRepresentation.IsPieceInBound(move))
+                    if ((move) >> 3 == (square >> 3) + 1)
+                        if (squares[move] == Piece.WPawn)
+                            return true;
+                move = square + 9;
+                if (BoardRepresentation.IsPieceInBound(move))
+                    if ((move) >> 3 == (square >> 3) + 1)
+                        if (squares[move] == Piece.WPawn)
+                            return true;
+            }
+
+            for (int dir = 0; dir < 8; dir++)
+            {
+                for (int moveCount = 0; moveCount < 7; moveCount++)
+                {
+                    int foo = PreInitializeDataV1.SlidingPieces.SlidingpieceAttacks[square, dir, moveCount];
+                    if (foo == PreInitializeDataV1.SlidingPieces.InvalidMove)
+                        break;
+                    int piece = squares[foo];
+                    if (piece == 0)
+                        continue;
+                    if (Piece.Colour(piece) != OurColour)
+                    {
+                        if (Piece.PieceType(piece) == Piece.Queen)
+                            return true;
+                        else if (Piece.PieceType(piece) == Piece.Rook && dir < 4)
+                            return true;
+                        else if (Piece.PieceType(piece) == Piece.Bishop && dir > 3)
+                            return true;
+                        else
+                            break;
+                    }
+                    else
+                        break;
+                }
+            }
+            return false;
+        }
+        public int IsSquareAttackedCount(int square)
+        {
+            int attackers = 0;
+            if (BitBoardHelper.ContainsSquare(PreInitializeDataV1.King.KingAttacksBitBoard[EnemyKingPos], square))
+                attackers++;
+
+            for (int i = 0; i < EnemyKnights.numPieces; i++)
+            {
+                if (BitBoardHelper.ContainsSquare(PreInitializeDataV1.Knight.KnightAttacksBitBoard[EnemyKnights[i]], square))
+                    attackers++;
+            }
+
+            // pawns
+            if (WhiteToMove)
+            {
+                int move = square - 7;
+                if (BoardRepresentation.IsPieceInBound(move))
+                    if ((move) >> 3 == (square >> 3) - 1)
+                        if (squares[move] == Piece.BPawn)
+                            attackers++;
+                move = square - 9;
+                if (BoardRepresentation.IsPieceInBound(move))
+                    if ((move) >> 3 == (square >> 3) - 1)
+                        if (squares[move] == Piece.BPawn)
+                            attackers++;
+            }
+            else
+            {
+                int move = square + 7;
+                if (BoardRepresentation.IsPieceInBound(move))
+                    if ((move) >> 3 == (square >> 3) + 1)
+                        if (squares[move] == Piece.WPawn)
+                            attackers++;
+                move = square + 9;
+                if (BoardRepresentation.IsPieceInBound(move))
+                    if ((move) >> 3 == (square >> 3) + 1)
+                        if (squares[move] == Piece.WPawn)
+                            attackers++;
+            }
+
+            for (int dir = 0; dir < 8; dir++)
+            {
+                for (int moveCount = 0; moveCount < 7; moveCount++)
+                {
+                    int foo = PreInitializeDataV1.SlidingPieces.SlidingpieceAttacks[square, dir, moveCount];
+                    if (foo == PreInitializeDataV1.SlidingPieces.InvalidMove)
+                        break;
+                    int piece = squares[foo];
+                    if (piece == 0)
+                        continue;
+                    if (Piece.Colour(piece) != OurColour)
+                    {
+                        if (Piece.PieceType(piece) == Piece.Queen)
+                            attackers++;
+                        else if (Piece.PieceType(piece) == Piece.Rook && dir < 4)
+                            attackers++;
+                        else if (Piece.PieceType(piece) == Piece.Bishop && dir > 3)
+                            attackers++;
+                        else
+                            break;
+                    }
+                    else
+                        break;
+                }
+            }
+
+            return attackers;
+        }
+        #endregion
     }
 }
 

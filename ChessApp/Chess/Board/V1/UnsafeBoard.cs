@@ -330,7 +330,7 @@ namespace ChessV1
                 else if (c < 58) // a num
                     boardPtr += c - 49;
                 else
-                    square[boardPtr] = PreInitializeData.CharToPiece.GetPiece(c);
+                    square[boardPtr] = PreInitializeDataV1.CharToPiece.GetPiece(c);
                 boardPtr++;
             }
             if (sections[1][0] == 'b')

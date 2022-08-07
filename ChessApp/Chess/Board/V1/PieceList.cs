@@ -6,7 +6,7 @@ public unsafe class PieceList {
 	public int[] occupiedSquares;
 	// Map to go from index of a square, to the index in the occupiedSquares array where that square is stored
 	int[] map;
-	int numPieces;
+	public int numPieces;
 
 	public PieceList (int maxPieceCount = 16) {
 		occupiedSquares = new int[maxPieceCount];
@@ -19,7 +19,6 @@ public unsafe class PieceList {
 			return numPieces;
 		}
 	}
-
 	public void AddPieceAtSquare (int square) {
 		occupiedSquares[numPieces] = square;
 		map[square] = numPieces;

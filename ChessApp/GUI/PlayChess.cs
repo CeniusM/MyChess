@@ -1,4 +1,4 @@
-using ChessV1; // it should be that this is the only change to try difrent boards
+using ChessV2; // it should be that this is the only change to try difrent boards
 using winForm;
 using MyLib;
 
@@ -30,7 +30,7 @@ namespace ChessGUI
         // private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;
         private Form1 _form;
-        private bool _isRunning = true;
+        // private bool _isRunning = true;
         public GameOfChess(Form1 form)
         {
             _form = form;
@@ -42,7 +42,7 @@ namespace ChessGUI
 
         public void Stop()
         {
-            _isRunning = false;
+            // _isRunning = false;
         }
 
         public void Play()
@@ -134,7 +134,7 @@ namespace ChessGUI
 
             // MyLib.DebugConsole.WriteLine(BitBoardHelper.GetBitBoardString(0b1111111011111110111111101111111011111110111111101111111011111110));
 
-            if (Piece.IsColour(board[pressedSquare], board.PlayerTurn) && pressedSquare != _selecktedSquare)
+            if (ChessV1.Piece.IsColour(board[pressedSquare], board.PlayerTurn) && pressedSquare != _selecktedSquare)
                 _selecktedSquare = pressedSquare;
             else if (pressedSquare == _selecktedSquare)
                 _selecktedSquare = -1;

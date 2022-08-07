@@ -1,9 +1,9 @@
-using PreInitializeData;
+using PreInitializeDataV1;
 
 namespace ChessV1
 {
     public unsafe class PossibleMovesGenerator
-    { 
+    {
         private UnsafeBoard _board;
         private List<Move> _moves;
         private byte[] squares; // just a ref so no copying
@@ -43,6 +43,7 @@ namespace ChessV1
         public bool IsKingInCheck() => _KingInCheck;
 
 
+#pragma warning disable 8618
         public PossibleMovesGenerator(UnsafeBoard board)
         {
             _board = board;
@@ -50,6 +51,7 @@ namespace ChessV1
             _KingInCheck = false;
             squares = _board.square;
         }
+#pragma warning restore 8618
 
         public Move[] GetMoves()
         {
@@ -118,7 +120,7 @@ namespace ChessV1
         private void AddRookMoves()
         {
             byte rook = (byte)(Piece.Rook | ColourToMove);
-            for (int i = 0; i < OurRooks.Count; i++)
+            for (int i = 0; i < OurRooks.numPieces; i++)
             {
                 int RookPos = OurRooks[i];
                 for (int dir = 0; dir < 4; dir++)
@@ -159,7 +161,7 @@ namespace ChessV1
         private void AddBishopMoves()
         {
             byte bishop = (byte)(Piece.Bishop | ColourToMove);
-            for (int i = 0; i < OurBishops.Count; i++)
+            for (int i = 0; i < OurBishops.numPieces; i++)
             {
                 int BishopPos = OurBishops[i];
                 for (int dir = 4; dir < 8; dir++)
@@ -200,7 +202,7 @@ namespace ChessV1
         private void AddQueenMoves()
         {
             byte queen = (byte)(Piece.Queen | ColourToMove);
-            for (int i = 0; i < OurQueens.Count; i++)
+            for (int i = 0; i < OurQueens.numPieces; i++)
             {
                 int QueenPos = OurQueens[i];
                 for (int dir = 0; dir < 8; dir++)
@@ -261,7 +263,7 @@ namespace ChessV1
         public void AddKnightMoves()
         {
             byte knight = (byte)(Piece.Knight | ColourToMove);
-            for (int i = 0; i < OurKnights.Count; i++)
+            for (int i = 0; i < OurKnights.numPieces; i++)
             {
                 int knightPos = OurKnights[i];
                 squares[knightPos] = 0;
@@ -289,7 +291,7 @@ namespace ChessV1
 
             if (WhiteToMove)
             {
-                for (int i = 0; i < OurPawns.Count; i++)
+                for (int i = 0; i < OurPawns.numPieces; i++)
                 {
                     int pawnPos = OurPawns[i];
                     int sinlgeMovePos = pawnPos - 8;
@@ -417,7 +419,7 @@ namespace ChessV1
             }
             else
             {
-                for (int i = 0; i < OurPawns.Count; i++)
+                for (int i = 0; i < OurPawns.numPieces; i++)
                 {
                     int pawnPos = OurPawns[i];
                     int sinlgeMovePos = pawnPos + 8;
@@ -549,12 +551,12 @@ namespace ChessV1
         public int IsSquareAttackedCount(int square)
         {
             int attackers = 0;
-            if (BitBoardHelper.ContainsSquare(PreInitializeData.King.KingAttacksBitBoard[EnemyKing], square))
+            if (BitBoardHelper.ContainsSquare(PreInitializeDataV1.King.KingAttacksBitBoard[EnemyKing], square))
                 attackers++;
 
-            for (int i = 0; i < EnemyKnights.Count; i++)
+            for (int i = 0; i < EnemyKnights.numPieces; i++)
             {
-                if (BitBoardHelper.ContainsSquare(PreInitializeData.Knight.KnightAttacksBitBoard[EnemyKnights[i]], square))
+                if (BitBoardHelper.ContainsSquare(PreInitializeDataV1.Knight.KnightAttacksBitBoard[EnemyKnights[i]], square))
                     attackers++;
             }
 
@@ -593,12 +595,12 @@ namespace ChessV1
         // just says if anyone attacks this square
         public bool IsSquareAttacked(int square)
         {
-            if (BitBoardHelper.ContainsSquare(PreInitializeData.King.KingAttacksBitBoard[EnemyKing], square))
+            if (BitBoardHelper.ContainsSquare(PreInitializeDataV1.King.KingAttacksBitBoard[EnemyKing], square))
                 return true;
 
-            for (int i = 0; i < EnemyKnights.Count; i++)
+            for (int i = 0; i < EnemyKnights.numPieces; i++)
             {
-                if (BitBoardHelper.ContainsSquare(PreInitializeData.Knight.KnightAttacksBitBoard[EnemyKnights[i]], square))
+                if (BitBoardHelper.ContainsSquare(PreInitializeDataV1.Knight.KnightAttacksBitBoard[EnemyKnights[i]], square))
                     return true;
             }
 
@@ -634,8 +636,8 @@ namespace ChessV1
             {
                 for (int moveCount = 0; moveCount < 7; moveCount++)
                 {
-                    int foo = PreInitializeData.SlidingPieces.SlidingpieceAttacks[square, dir, moveCount];
-                    if (foo == PreInitializeData.SlidingPieces.InvalidMove)
+                    int foo = PreInitializeDataV1.SlidingPieces.SlidingpieceAttacks[square, dir, moveCount];
+                    if (foo == PreInitializeDataV1.SlidingPieces.InvalidMove)
                         break;
                     int piece = squares[foo];
                     if (piece == 0)

@@ -1,6 +1,6 @@
-using ChessV1;
+using ChessV2;
 
-namespace PreInitializeDataV1
+namespace PreInitializeDataV2
 {
     public class ConstBitBoards
     {
