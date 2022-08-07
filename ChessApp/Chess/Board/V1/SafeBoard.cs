@@ -6,13 +6,13 @@ namespace ChessV1
     public class SafeBoard
     {
         private UnsafeBoard _board;
-        private PossibleMovesGenerator _movesGenerator;
+        private PossibleMovesGeneratorV2 _movesGenerator;
         private Move[] _moves;
 
         public SafeBoard()
         {
             _board = new UnsafeBoard();
-            _movesGenerator = new PossibleMovesGenerator(_board);
+            _movesGenerator = new PossibleMovesGeneratorV2(_board);
             _moves = new Move[0];
             _movesGenerator.GenerateMoves();
             _moves = _movesGenerator.GetMoves();
@@ -21,7 +21,7 @@ namespace ChessV1
         public SafeBoard(string FEN)
         {
             _board = new UnsafeBoard(FEN);
-            _movesGenerator = new PossibleMovesGenerator(_board);
+            _movesGenerator = new PossibleMovesGeneratorV2(_board);
             _moves = new Move[0];
             _movesGenerator.GenerateMoves();
             _moves = _movesGenerator.GetMoves();
@@ -70,6 +70,6 @@ namespace ChessV1
         public bool IsKingInCheck() => _movesGenerator.IsKingInCheck();
 
         public UnsafeBoard GetUnsafeBoard() => _board;
-        public PossibleMovesGenerator GetPossibleMovesGenerator() => _movesGenerator;
+        public PossibleMovesGeneratorV2 GetPossibleMovesGenerator() => _movesGenerator;
     }
 }

@@ -89,7 +89,6 @@ namespace ChessV1
             EnemyRooks = _board.rooks[EnemyToMoveIndex];
             EnemyQueens = _board.queens[EnemyToMoveIndex];
 
-
             _moves = new List<Move>(40);
             // another way could maby be to save the previus moves and just loop over those to just count them
             // but not sure if we get more speed out of checking this cause its very rare...

@@ -10,7 +10,7 @@ namespace ChessGUI
         private FormAPI _formGUI;
         private List<Bitmap> _sprites;
         private UnsafeBoard board;
-        private PossibleMovesGenerator pmg;
+        private PossibleMovesGeneratorV2 pmg;
         private Form1 _form;
         public bool _isPrinting = false;
         public ChessPrinter(Form1 form, SafeBoard board)

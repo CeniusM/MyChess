@@ -15,6 +15,7 @@ namespace ChessGUI
         None = 0,
         PlayingMove,
         PlayingChosingPiece,
+        PuttingPiece,
         Settings,
         SelectionScreen1
     }
@@ -24,7 +25,7 @@ namespace ChessGUI
 
         private const int SquareDimensions = 100;
         // private SafeBoard board = new SafeBoard("8/5pq1/4k1p1/1n6/1N6/4K2P/5PQ1/8 w - - 0 1");
-        private SafeBoard board = new SafeBoard();
+        private SafeBoard board = new SafeBoard("7b/b7/5P2/r1PPP3/3K2Pq/2PPP3/8/3r2qk w - - 0 1");
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;
@@ -77,6 +78,9 @@ namespace ChessGUI
                     case 's': // perft
                         searchDepth--;
                         break;
+                    case 'o':
+                        _GameState = GameStates.PuttingPiece;
+                        break;
                         // default:
                 }
             }
@@ -101,6 +105,9 @@ namespace ChessGUI
                     ChosePromotionPiece();
                     _chessPrinter.PrintBoard(_selecktedSquare);
                     break;
+                // case GameStates.PlayingChosingPiece:
+                // PutPiece();
+                // _chessPrinter.PrintBoard(_selecktedSquare);
                 case GameStates.Settings:
                     break;
                 case GameStates.SelectionScreen1:
@@ -110,6 +117,12 @@ namespace ChessGUI
             }
 
         }
+
+        // private void PutPiece()
+        // {
+        //     int pressedSquare = squareX + (squareY * 8);
+        //     _GameState = GameStates.PlayingMove;
+        // }
 
         private bool makingAMove = false;
         private void MakeMove()

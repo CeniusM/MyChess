@@ -1,4 +1,4 @@
-#define vsc // if this is in vsc
+//#define vsc // if this is in vsc
 
 namespace MyLib
 {
@@ -42,9 +42,11 @@ namespace MyLib
     public class MyConsole
     {
 #if vsc
-        public const string _path = @"MyConsole\Console.txt";
+        //public const string _path = @"MyConsole\Console.txt";
+        public const string _path = @"C:\GitHub\MyChess\ChessApp\MyConsole\Console.txt";
 #else
-        public const string _path = @"../../../MyConsole\Console.txt"; // for standalone
+        // public const string _path = @"..\..\..\MyConsole\Console.txt";
+        public const string _path = @"C:\GitHub\MyChess\ChessApp\MyConsole\Console.txt";
 #endif
 
         public static void WriteLine(string text)
