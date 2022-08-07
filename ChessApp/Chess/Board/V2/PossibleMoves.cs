@@ -740,7 +740,11 @@ in bounds
                     continue;
                 else
                 {
-
+                    if (!IsSquareAttacked(move))
+                    {
+                        moves[movesCount] = new(OurKingPos, move, 0);
+                        movesCount++;
+                    }
                 }
             }
             boardPtr[OurKingPos] = (byte)(Piece.King | OurColour);
