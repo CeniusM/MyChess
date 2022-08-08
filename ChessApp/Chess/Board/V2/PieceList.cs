@@ -21,7 +21,7 @@ namespace ChessV2
             maxPieceCount++;
             occupiedSquares = new int[maxPieceCount + 1];
             map = new int[64];
-            fixed (int* ptr = &map[1])
+            fixed (int* ptr = &map[0])
                 mapPtr = ptr;
             fixed (int* ptr = &occupiedSquares[1])
                 occupiedPtr = ptr;
@@ -32,14 +32,29 @@ namespace ChessV2
             occupiedPtr[occupiedPtr[-1]] = square;
             mapPtr[square] = occupiedPtr[-1];
             occupiedPtr[-1]++;
+
+            if (occupiedPtr[occupiedPtr[-1]] < 0 || occupiedPtr[-1] < 0 || mapPtr[square] < 0)
+            {
+
+            }
         }
 
         public void RemovePieceAtSquare(int square)
         {
+            if (occupiedPtr[-1] == 0)
+            {
+
+            }
+
             int pieceIndex = mapPtr[square]; // get the index of this element in the occupiedSquares array
             occupiedPtr[pieceIndex] = occupiedPtr[occupiedPtr[-1] - 1]; // move last element in array to the place of the removed element
             mapPtr[occupiedPtr[pieceIndex]] = pieceIndex; // update map to point to the moved element's new location in the array
             occupiedPtr[-1]--;
+
+            if (occupiedPtr[occupiedPtr[-1]] < 0 || occupiedPtr[-1] < 0 || mapPtr[square] < 0 || pieceIndex < 0 || occupiedPtr[pieceIndex] < 0)
+            {
+
+            }
         }
 
         public void MovePiece(int startSquare, int targetSquare)
@@ -47,6 +62,11 @@ namespace ChessV2
             int pieceIndex = mapPtr[startSquare]; // get the index of this element in the occupiedSquares array
             occupiedPtr[pieceIndex] = targetSquare;
             mapPtr[targetSquare] = pieceIndex;
+
+            if (mapPtr[targetSquare]  < 0 || occupiedPtr[-1] < 0 || mapPtr[startSquare] < 0 || pieceIndex < 0 || occupiedPtr[pieceIndex] < 0)
+            {
+
+            }
         }
     }
 }

@@ -45,7 +45,12 @@ namespace ChessV2
 
         public override string ToString()
         {
-            return "S: " + StartSquare + ", T: " + TargetSquare + ", F: " + MoveFlag;
+            // return "S: " + StartSquare + ", T: " + TargetSquare + ", F: " + MoveFlag;
+            return ChessV1.BoardRepresentation.SquareNameFromCoordinate(
+                ChessV1.BoardRepresentation.FileIndex(StartSquare), ChessV1.BoardRepresentation.RankIndex(StartSquare))
+                +
+                ChessV1.BoardRepresentation.SquareNameFromCoordinate(
+                ChessV1.BoardRepresentation.FileIndex(TargetSquare), ChessV1.BoardRepresentation.RankIndex(TargetSquare));
         }
     }
 }

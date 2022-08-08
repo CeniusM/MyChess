@@ -71,5 +71,133 @@ namespace ChessV2
 
         public UnsafeBoard GetUnsafeBoard() => _board;
         public PossibleMovesGenerator GetPossibleMovesGenerator() => _movesGenerator;
+
+
+
+
+
+
+
+
+
+        // vedy bad code, need update at some point
+        public string GetFen()
+        {
+            char GetCharFromPiece(int i)
+            {
+                switch (i)
+                {
+                    case Piece.WPawn:
+                        return 'P';
+                    case Piece.WKnight:
+                        return 'N';
+                    case Piece.WBishop:
+                        return 'B';
+                    case Piece.WRook:
+                        return 'R';
+                    case Piece.WQueen:
+                        return 'Q';
+                    case Piece.WKing:
+                        return 'K';
+                    case Piece.BPawn:
+                        return 'p';
+                    case Piece.BKnight:
+                        return 'n';
+                    case Piece.BBishop:
+                        return 'b';
+                    case Piece.BRook:
+                        return 'r';
+                    case Piece.BQueen:
+                        return 'q';
+                    case Piece.BKing:
+                        return 'k';
+                    default:
+                        return char.MaxValue;
+                }
+
+            }
+
+            char[] CString = new char[100];
+            int CStringPointer = 0;
+            void SetChar(char c)
+            {
+                CString[CStringPointer] = c;
+                CStringPointer++;
+            }
+
+            int gap = 0;
+            for (int i = 0; i < 64; i++)
+            {
+                if (i % 8 == 0 && i != 0)
+                {
+                    if (gap > 0)
+                    {
+                        SetChar((char)(gap + '0'));
+                        gap = 0;
+                    }
+                    SetChar('/');
+                }
+
+                if (_board.boardPtr[i] == 0)
+                {
+                    gap++;
+                }
+                else
+                {
+                    if (gap > 0)
+                    {
+                        SetChar((char)(gap + '0'));
+                        gap = 0;
+                    }
+                    CString[CStringPointer] = GetCharFromPiece(_board.boardPtr[i]);
+                    CStringPointer++;
+                }
+            }
+            if (gap > 0)
+                SetChar((char)(gap + '0'));
+            SetChar(' ');
+
+            if (_board.playerTurn == 8)
+                SetChar('w');
+            else
+                SetChar('b');
+            SetChar(' ');
+
+            if ((_board.castle & 0b1000) == 0b1000)
+                SetChar('K');
+            if ((_board.castle & 0b0100) == 0b0100)
+                SetChar('Q');
+            if ((_board.castle & 0b0010) == 0b0010)
+                SetChar('k');
+            if ((_board.castle & 0b0001) == 0b0001)
+                SetChar('q');
+            if (CString[CStringPointer - 1] == ' ') // check if anything has acually placed
+                SetChar('-');
+            SetChar(' ');
+
+            if (_board.EPSquare != 64)
+            {
+                // set the collum with letter
+                SetChar((char)((int)'a' + _board.EPSquare % 8));
+
+                // set the rank
+                SetChar((char)(8 - (_board.EPSquare >> 3) + '0'));
+            }
+            else
+                SetChar('-');
+            SetChar(' ');
+
+            SetChar('0');
+            SetChar(' ');
+            SetChar('0');
+
+            char[] temp = new char[CStringPointer];
+            for (int i = 0; i < CStringPointer; i++)
+            {
+                temp[i] = CString[i];
+            }
+            string FENString = new string(temp);
+            return FENString;
+        }
     }
 }

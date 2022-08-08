@@ -32,6 +32,12 @@ in bounds
         bool _KingInCheck = false;
         bool _DoubleCheck = false;
 
+
+
+        ulong attackerOnKingsBitBoardDirectionAttack;
+        int attackerOnKingPos;
+
+
         bool WhiteToMove;
         int OurColour;
         int EnemyColour;
@@ -102,7 +108,7 @@ in bounds
         int* KingAttacksPtr;
 
         /// <summary>
-        /// Ex. PATP[square(2) + (atack from right side of feild(1) * 64) + (attacker is white(1) * 128)]
+        /// Ex. PATP[square(num) + IfWhite(+64) + IfRight(+128)]
         /// </summary>
         bool* PawnAttackThisPiece; // square, right side?, white?
 
@@ -189,6 +195,9 @@ in bounds
                 EnemyQueens = boardRef.whiteQueens;
             }
 
+
+            attackerOnKingsBitBoardDirectionAttack = 0;
+            attackerOnKingPos = 0;
 
             int ourKingAttacks = IsSquareAttackedCount(OurKingPos);
             _KingInCheck = (ourKingAttacks != 0);
@@ -368,13 +377,25 @@ in bounds
             if (_DoubleCheck)
                 return;
 
+            if (_KingInCheck)
+            {
+
+            }
+            else
+            {
+                AddPawnMoves();
+            }
+
             // i need to add to difrent code roads, one for when the king it in check and one when it isent
             // becous when the king is in check you need to check all the pieces if it can block the pin / kill the attacer
             // make a bitboard of the attacker/attacks, if any of the moves land in it, it is a valid move
             // its only one more bitboard check per move, maby no need to split up the moves
             // and when it is a double check only king moves work
 
-            AddPawnMoves();
+            // need to add the piece attack to a single storge,
+            // dosent matter if it ovverides becous of multible attackers caouse then kin is in double check
+            // and only the king moves count anyway
+
         }
 
         private void AddPawnMoves()
@@ -439,19 +460,21 @@ in bounds
                         // EnPassent
                         if (move7 == EPSquare)
                         {
-                            if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move7) & 0x8000000000000000) == 0x8000000000000000)
-                            {
-                                moves[movesCount] = new Move(pawnPos, move7, Move.Flag.EnPassantCapture);
-                                movesCount++;
-                            }
+                            if (((ConstBitBoards.RightSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move7) & 0x8000000000000000) == 0x8000000000000000)
+                                {
+                                    moves[movesCount] = new Move(pawnPos, move7, Move.Flag.EnPassantCapture);
+                                    movesCount++;
+                                }
                         }
                         else if (move9 == EPSquare)
                         {
-                            if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move9) & 0x8000000000000000) == 0x8000000000000000)
-                            {
-                                moves[movesCount] = new Move(pawnPos, move9, Move.Flag.EnPassantCapture);
-                                movesCount++;
-                            }
+                            if (((ConstBitBoards.LeftSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move9) & 0x8000000000000000) == 0x8000000000000000)
+                                {
+                                    moves[movesCount] = new Move(pawnPos, move9, Move.Flag.EnPassantCapture);
+                                    movesCount++;
+                                }
                         }
 
                         // attack move7/right
@@ -519,12 +542,14 @@ in bounds
                         // EnPassent
                         if (move7 == EPSquare)
                         {
-                            moves[movesCount] = new Move(pawnPos, move7, Move.Flag.EnPassantCapture);
+                            if (((ConstBitBoards.RightSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                moves[movesCount] = new Move(pawnPos, move7, Move.Flag.EnPassantCapture);
                             movesCount++;
                         }
                         else if (move9 == EPSquare)
                         {
-                            moves[movesCount] = new Move(pawnPos, move9, Move.Flag.EnPassantCapture);
+                            if (((ConstBitBoards.LeftSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                moves[movesCount] = new Move(pawnPos, move9, Move.Flag.EnPassantCapture);
                             movesCount++;
                         }
 
@@ -607,19 +632,21 @@ in bounds
                         // EnPassent
                         if (move7 == EPSquare)
                         {
-                            if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move7) & 0x8000000000000000) == 0x8000000000000000)
-                            {
-                                moves[movesCount] = new Move(pawnPos, move7, Move.Flag.EnPassantCapture);
-                                movesCount++;
-                            }
+                            if (((ConstBitBoards.LeftSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move7) & 0x8000000000000000) == 0x8000000000000000)
+                                {
+                                    moves[movesCount] = new Move(pawnPos, move7, Move.Flag.EnPassantCapture);
+                                    movesCount++;
+                                }
                         }
                         else if (move9 == EPSquare)
                         {
-                            if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move9) & 0x8000000000000000) == 0x8000000000000000)
-                            {
-                                moves[movesCount] = new Move(pawnPos, move9, Move.Flag.EnPassantCapture);
-                                movesCount++;
-                            }
+                            if (((ConstBitBoards.RightSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                                if (((pinningPiecesAttackDirBitBoardPtr[pawnPos] << move9) & 0x8000000000000000) == 0x8000000000000000)
+                                {
+                                    moves[movesCount] = new Move(pawnPos, move9, Move.Flag.EnPassantCapture);
+                                    movesCount++;
+                                }
                         }
 
                         // attack move7/right
@@ -687,13 +714,19 @@ in bounds
                         // EnPassent
                         if (move7 == EPSquare)
                         {
-                            moves[movesCount] = new Move(pawnPos, move7, Move.Flag.EnPassantCapture);
-                            movesCount++;
+                            if (((ConstBitBoards.LeftSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                            {
+                                moves[movesCount] = new Move(pawnPos, move7, Move.Flag.EnPassantCapture);
+                                movesCount++;
+                            }
                         }
                         else if (move9 == EPSquare)
                         {
-                            moves[movesCount] = new Move(pawnPos, move9, Move.Flag.EnPassantCapture);
-                            movesCount++;
+                            if (((ConstBitBoards.RightSideIs0 << pawnPos) & 0x8000000000000000) == 0x8000000000000000)
+                            {
+                                moves[movesCount] = new Move(pawnPos, move9, Move.Flag.EnPassantCapture);
+                                movesCount++;
+                            }
                         }
 
                         // attack move7/right
@@ -874,43 +907,64 @@ in bounds
             return false;
         }
 
+
+        // is only used for the king so we need to add these attacks to some storage, so instead of all piece
+        // moves need to check if king is safe after, just check if its attakcing the attacker or its bitmap attack
         public int IsSquareAttackedCount(int square)
         {
             int attackers = 0;
 
             // check king atc
             if (((KingAttacksBitBoardPtr[EnemyKingPos] << square) & 0x8000000000000000) == 0x8000000000000000)
+            {
                 attackers++;
+                attackerOnKingPos = EnemyKingPos;
+            }
 
             // check the knights bitboards
             for (int knightNum = 0; knightNum < EnemyKnights[-1]; knightNum++)
             {
                 if (((KnightAttacksBitBoardPtr[EnemyKnights[knightNum]] << square) & 0x8000000000000000) == 0x8000000000000000)
+                {
                     attackers++;
+                    attackerOnKingPos = EnemyKnights[knightNum];
+                }
             }
 
             // pawn, just check if 
             if (WhiteToMove)
             {
                 int move = square - 7;
+                if (PawnAttackThisPiece[square + 64 + 128])
+                    if (boardPtr[move] == Piece.BPawn)
+                    {
+                        attackers++;
+                        attackerOnKingPos = move;
+                    }
+                move = square - 9;
                 if (PawnAttackThisPiece[square + 64])
                     if (boardPtr[move] == Piece.BPawn)
+                    {
                         attackers++;
-                move = square - 9;
-                if (PawnAttackThisPiece[square])
-                    if (boardPtr[move] == Piece.BPawn)
-                        attackers++;
+                        attackerOnKingPos = move;
+                    }
             }
             else
             {
                 int move = square + 9;
-                if (PawnAttackThisPiece[square + 64 + 128])
-                    if (boardPtr[move] == Piece.WPawn)
-                        attackers++;
-                move = square + 7;
                 if (PawnAttackThisPiece[square + 128])
                     if (boardPtr[move] == Piece.WPawn)
+                    {
                         attackers++;
+                        attackerOnKingPos = move;
+                    }
+                move = square + 7;
+                if (PawnAttackThisPiece[square])
+                    if (boardPtr[move] == Piece.WPawn)
+                    {
+                        attackers++;
+                        attackerOnKingPos = move;
+                    }
             }
 
             // Queens
@@ -931,7 +985,11 @@ in bounds
                             {
                                 int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
                                 if (move == square)
+                                {
+                                    attackerOnKingPos = pos;
                                     attackers++;
+                                    break;
+                                }
                                 if (boardPtr[move] != 0)
                                     break;
                             }
@@ -959,7 +1017,11 @@ in bounds
                             {
                                 int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
                                 if (move == square)
+                                {
+                                    attackerOnKingPos = pos;
                                     attackers++;
+                                    break;
+                                }
                                 if (boardPtr[move] != 0)
                                     break;
                             }
@@ -987,7 +1049,11 @@ in bounds
                             {
                                 int move = SlidingpieceAttacks[pos + (dir * 64) + (moveCount * 512)];
                                 if (move == square)
+                                {
                                     attackers++;
+                                    attackerOnKingPos = pos;
+                                    break;
+                                }
                                 if (boardPtr[move] != 0)
                                     break;
                             }

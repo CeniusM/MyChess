@@ -26,7 +26,7 @@ namespace ChessGUI
         private const int SquareDimensions = 100;
         // private SafeBoard board = new SafeBoard("8/5pq1/4k1p1/1n6/1N6/4K2P/5PQ1/8 w - - 0 1");
         // private SafeBoard board = new SafeBoard("3r3b/b7/5P2/2PPP3/3K2Pq/2PPP3/8/6qk w - - 0 1"); // pines
-        private SafeBoard board = new SafeBoard("3k4/p3pp1p/8/8/8/8/P1PP3P/4K3 w - - 0 1"); // pawns / king
+        private SafeBoard board = new SafeBoard("1k6/p4ppp/1p3p2/8/8/5P2/PPPPP2P/5K2 w - - 0 1"); // pawns / king
 
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
@@ -53,7 +53,7 @@ namespace ChessGUI
             _chessPrinter.PrintBoard(_selecktedSquare);
         }
 
-        private int searchDepth = 4;
+        private int searchDepth = 3;
         private void KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (_chessPrinter._isPrinting)
@@ -68,11 +68,12 @@ namespace ChessGUI
                         board.UnMakeMove();
                         _chessPrinter.PrintBoard(_selecktedSquare);
                         break;
-                    case 'p': // perft
-                        Console.WriteLine(PerftTester.PerftTest.Perft(board.GetUnsafeBoard(), board.GetPossibleMovesGenerator(), searchDepth) + ", Depth: " + searchDepth);
-                        break;
-                    case 'r': // perft
+                    case 'r': // regenerateMoves
                         board.GetPossibleMovesGenerator().GenerateMoves();
+                        break;
+                    case 'p': // perft
+                        // Console.WriteLine(PerftTester.PerftTest.Perft(board.GetUnsafeBoard(), board.GetPossibleMovesGenerator(), searchDepth) + ", Depth: " + searchDepth);
+                        PerftTester.PerftTest.Start(board.GetFen(), searchDepth);
                         break;
                     case 'w': // perft
                         searchDepth++;
@@ -83,7 +84,14 @@ namespace ChessGUI
                     case 'o':
                         _GameState = GameStates.PuttingPiece;
                         break;
-                        // default:
+                    // default:
+                    case 'f': // return "position fen " + fen
+                        Console.WriteLine("position fen " + board.GetFen());
+                        break;
+                    case 'q': // return "position fen " + fen
+                        Console.WriteLine("position fen " + board.GetFen() + "\n" + "go perft " + searchDepth);
+                        PerftTester.PerftTest.Start(board.GetFen(), searchDepth);
+                        break;
                 }
             }
         }

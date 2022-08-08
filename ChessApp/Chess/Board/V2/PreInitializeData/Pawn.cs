@@ -29,8 +29,7 @@ namespace PreInitializeDataV2
 
 
         /// <summary>
-        /// Ex. PATP[square(num) + (if white turn + 64) + (if attack is from right side + 128)]
-        /// to see if black can attack from right side
+        /// Ex. PATP[square(num) + IfWhite(+64) + IfRight(+128)]
         /// </summary>
         public static readonly bool[] PawnCanAttackThisPiece = new bool[64 * 2 * 2];
 
