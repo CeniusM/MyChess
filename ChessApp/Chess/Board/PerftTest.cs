@@ -8,12 +8,13 @@ namespace PerftTester
         public static void Start()
         {
             // warmup 
-            UnsafeBoard foo1 = new(); PossibleMovesGenerator foo2 = new(foo1); Perft(foo1, foo2, 4);
+            // UnsafeBoard foo1 = new(); PossibleMovesGenerator foo2 = new(foo1); Perft(foo1, foo2, 4);
 
 
 
 
-            UnsafeBoard ub = new UnsafeBoard("4k3/ppp2ppp/8/8/8/8/PPP2PPP/4K3 w - - 0 1"); // 971165 at perft 5
+            // UnsafeBoard ub = new UnsafeBoard("4k3/ppp2ppp/8/8/8/8/PPP2PPP/4K3 w - - 0 1"); // 971165 at perft 5
+            UnsafeBoard ub = new UnsafeBoard("3k4/p3pp1p/8/8/8/8/P1PP3P/4K3 w - - 0 1"); // pawns and king, 253744 at perft 5
             PossibleMovesGenerator pmg = new PossibleMovesGenerator(ub);
 
 

@@ -195,7 +195,7 @@ in bounds
             _DoubleCheck = (ourKingAttacks > 1);
             if (ourKingAttacks < 2)
                 InitPinnedPieces();
-            Console.WriteLine(ChessV1.BitBoardHelper.GetBitBoardString(pinnedPieces));
+            // Console.WriteLine(ChessV1.BitBoardHelper.GetBitBoardString(pinnedPieces));
         }
 
         private void InitPinnedPieces()

@@ -27,7 +27,7 @@ namespace ChessV2
 
 
         // Bits 0-3 store castles
-        // Bits 4-9 store ep square (64 = nothing)
+        // Bits 4-9 store ep square (0 = nothing)
         // Bits 10-14 captured piece
         // Bits 15-20 startSquare
         // Bits 21-26 targetSquare
@@ -81,6 +81,38 @@ namespace ChessV2
 
         public void MakeMove(Move move)
         {
+            // checks across multible pointers
+            // looking for ghost pieces
+            // for (int i = 0; i < 64; i++)
+            // {
+            //     if (boardPtr[i] != 0 && (boardPtr[i] & 0b11000) == 0)
+            //     {
+            //         Console.WriteLine("error at:" + i);
+            //     }
+            // }
+
+            // for (int i = 0; i < 64; i++)
+            // {
+            //     if (boardPtr[i] < 0 || boardPtr[i] > Piece.BQueen)
+            //     {
+
+            //     }
+            // }
+
+            // for (int i = 0; i < gameStateHistoryCount; i++)
+            // {
+                
+            // }
+
+
+
+
+
+
+
+
+
+
             int startSquare = move.StartSquare;
             int targetSquare = move.TargetSquare;
             int moveFlag = move.MoveFlag;
@@ -95,9 +127,9 @@ namespace ChessV2
             int OurKingPos = kingPosPtr[OurColourIndex];
 
             gameStateHistoryPtr[gameStateHistoryCount] =
-                (castle) + (EPSquare << 4) + (capturedPiece << 10) + (startSquare << 15) + (targetSquare << 21) + (moveFlag << 27);
+                (castle) | (EPSquare << 4) | (capturedPiece << 10) | (startSquare << 15) | (targetSquare << 21) | (moveFlag << 27);
             gameStateHistoryCount++;
-            EPSquare = 64;
+            EPSquare = 0;
 
             boardPtr[targetSquare] = boardPtr[startSquare];
             boardPtr[startSquare] = 0;
@@ -258,12 +290,12 @@ namespace ChessV2
                 {
                     if (WhiteToMove)
                     {
-                        boardPtr[targetSquare + 8] = Piece.WPawn;
+                        boardPtr[targetSquare + 8] = Piece.BPawn;
                         pawns[WhiteIndex].AddPieceAtSquare(targetSquare - 8);
                     }
                     else
                     {
-                        boardPtr[targetSquare + 8] = Piece.BPawn;
+                        boardPtr[targetSquare + 8] = Piece.WPawn;
                         pawns[BlackIndex].AddPieceAtSquare(targetSquare + 8);
                     }
                 }
