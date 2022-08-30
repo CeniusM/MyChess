@@ -111,7 +111,7 @@ namespace MyChessGUI
         {
             if (e.X > 800 || e.X < 0 || e.Y > 800 || e.Y < 0)
             {
-                _selecktedSquare = 0;
+                _selecktedSquare = -1;
                 return;
             }
 
