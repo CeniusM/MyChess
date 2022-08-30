@@ -109,6 +109,12 @@ namespace MyChessGUI
         int squareY = 0;
         private void MouseClick(object? sender, MouseEventArgs e)
         {
+            if (e.X > 800 || e.X < 0 || e.Y > 800 || e.Y < 0)
+            {
+                _selecktedSquare = 0;
+                return;
+            }
+
             squareX = (int)((float)8 / 800 * (float)e.X);
             squareY = (int)((float)8 / 800 * (float)e.Y);
 
