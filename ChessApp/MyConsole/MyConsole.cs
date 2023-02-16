@@ -1,4 +1,4 @@
-#define vsc // if this is in vsc
+//#define vsc // if this is in vsc
 
 namespace MyLib
 {
@@ -49,10 +49,18 @@ namespace MyLib
 
         public static void WriteLine(string text)
         {
-            List<string> lines = new List<string>();
-            lines = File.ReadAllLines(_path).ToList();
-            lines.Add(text);
-            File.WriteAllLines(_path, lines);
+            try
+            {
+                List<string> lines = new List<string>();
+                lines = File.ReadAllLines(_path).ToList();
+                lines.Add(text);
+                File.WriteAllLines(_path, lines);
+            }
+            catch
+            {
+                Console.WriteLine("Failed to write to the given console -- message down below --");
+                Console.WriteLine(text);
+            }
         }
     }
 
