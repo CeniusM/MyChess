@@ -49,10 +49,18 @@ namespace MyLib
 
         public static void WriteLine(string text)
         {
-            List<string> lines = new List<string>();
-            lines = File.ReadAllLines(_path).ToList();
-            lines.Add(text);
-            File.WriteAllLines(_path, lines);
+            try
+            {
+                List<string> lines = new List<string>();
+                lines = File.ReadAllLines(_path).ToList();
+                lines.Add(text);
+                File.WriteAllLines(_path, lines);
+            }
+            catch
+            {
+                Console.WriteLine("Failed to write the given console -- message down below --");
+                Console.WriteLine(text);
+            }
         }
     }
 

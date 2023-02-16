@@ -2,6 +2,7 @@ using MyChess;
 using winForm;
 using MyChess.ChessBoard;
 using MyChess.ChessBoard.AIs;
+using System.Diagnostics;
 
 /*
 Ideers:
@@ -29,14 +30,16 @@ namespace MyChessGUI
 
         // ai used
         private
-        OnlyMinMax1
+        AlphaBetaPruning
+        //OnlyMinMax1
         // MisterRandom
         ai;
 
 
         private const int SquareDimensions = 100;
         // private ChessGame chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B1n3/8/PPP1N1PP/RNBQK2R b KQ - 1 8");
-        // private ChessGame chessGame = new ChessGame("8/8/8/8/7k/8/5r2/7K w - - 0 1");
+        //private ChessGame chessGame = new ChessGame("6k1/1p1qn1r1/1p2R3/3P2pp/1N6/2P4P/P5P1/1R1Q3K b - - 0 1");
+        //private ChessGame chessGame = new ChessGame("1r4k1/R1pbb1pp/2p1pp2/2P1P3/3P1P2/5N2/5P1P/6K1 w - - 3 31");
         private ChessGame chessGame = new ChessGame();
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
@@ -230,7 +233,9 @@ namespace MyChessGUI
 
         private void AIThinkingOfMove()
         {
+            var sw = Stopwatch.StartNew();
             chessGame.MakeMove(ai.GetMove());
+            Console.WriteLine("Move took: " + sw.Elapsed.TotalMilliseconds + "ms");
             _chessPrinter.PrintBoard(_selecktedSquare);
             _GameState = GameStates.PlayingMove;
             AIThinking = false;
@@ -247,11 +252,11 @@ namespace MyChessGUI
             // ChessGame cg = new("r2qk2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/5N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
             ChessGame cg = new();
             ChessPrinter cp = new(_form, cg);
-            OnlyMinMax1 ai1 = new(cg); // white
-            AlphaBetaPruning ai2 = new(cg); // black
+            AlphaBetaPruning ai1 = new(cg); // white
+            PureAlphaBetaPruning ai2 = new(cg); // black
 
-            OnlyMinMax1 ai1SideKick = new(cg);
-            AlphaBetaPruning ai2SideKick = new(cg);
+            AlphaBetaPruning ai1SideKick = new(cg);
+            PureAlphaBetaPruning ai2SideKick = new(cg);
 
             // MisterRandom ai2 = new(cg);
             // AlphaBetaPruning ai2 = new(cg);
@@ -350,8 +355,10 @@ namespace MyChessGUI
             gamesToPlay--;
             if (gamesToPlay == 0)
             {
-                MyLib.DebugConsole.WriteLine("Player 1: " + player1Win + "/" + gamesPlayed + " Won");
-                MyLib.DebugConsole.WriteLine("Player 2: " + player2Win + "/" + gamesPlayed + " Won");
+                //MyLib.DebugConsole.WriteLine("Player 1: " + player1Win + "/" + gamesPlayed + " Won");
+                //MyLib.DebugConsole.WriteLine("Player 2: " + player2Win + "/" + gamesPlayed + " Won");
+                Console.WriteLine("Player 1: " + player1Win + "/" + gamesPlayed + " Won");
+                Console.WriteLine("Player 2: " + player2Win + "/" + gamesPlayed + " Won");
                 _GameState = GameStates.PlayingMove;
                 return;
             }

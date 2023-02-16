@@ -128,10 +128,21 @@ namespace MyChessGUI
 
         public void PrintEvalBar()
         {
-            _formGUI.DrawSquare(Settings.Dimensions.ScreenWidth - Settings.Dimensions.EvalBarWidth, 0, Settings.Dimensions.ScreenHeight, Settings.Dimensions.EvalBarWidth, Color.White);
+            //_formGUI.DrawSquare(Settings.Dimensions.ScreenWidth - Settings.Dimensions.EvalBarWidth, 0, Settings.Dimensions.ScreenHeight, Settings.Dimensions.EvalBarWidth, Color.White);
 
-            float evaluation = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count) / 300f; // idk 
-                                                                                                                  // float evaluation = new OnlyMinMax(chessGame).minimax(OnlyMinMax.Depth, chessGame.GetPossibleMoves().Count) / 300f;
+            //float evaluation = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count) / 300f; // idk 
+            //                                                                                                      // float evaluation = new OnlyMinMax(chessGame).minimax(OnlyMinMax.Depth, chessGame.GetPossibleMoves().Count) / 300f;
+
+            //float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f, 15); // returs a num between -15 and 15
+
+            //int evalHeightpx = (int)((-evalHeight / 15f + 1) * 400f); // make eval height into a range between 0, 800
+
+            //_formGUI.DrawSquare(800, 0, evalHeightpx, 100, Color.Black);
+
+            _formGUI.DrawSquare(Settings.Dimensions.ScreenWidth - Settings.Dimensions.EvalBarWidth, 0, Settings.Dimensions.ScreenHeight, Settings.Dimensions.EvalBarWidth, Color.White);
+            //float evaluation = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count) / 300f; // idk 
+            float evaluation = new PureAlphaBetaPruning(chessGame).AlphaBeta(4, chessGame.GetPossibleMoves().Count, (chessGame.board.playerTurn == 8), int.MinValue, int.MaxValue) / 300f;
+            chessGame.possibleMoves.GenerateMoves();
 
             float evalHeight = MyMath.LogisticCurve((float)evaluation, 30, 0.3f, 15); // returs a num between -15 and 15
 

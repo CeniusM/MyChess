@@ -2,10 +2,10 @@
 
 namespace MyChess.ChessBoard.AIs
 {
-    public class AlphaBetaPruning : ChessAIBase
+    public class PureAlphaBetaPruning : ChessAIBase
     {
         public const int Depth = 5;
-        public AlphaBetaPruning(ChessGame chessGame) : base(chessGame)
+        public PureAlphaBetaPruning(ChessGame chessGame) : base(chessGame)
         {
         }
         //public override (Move move, int Eval) GetMove()
@@ -89,28 +89,13 @@ namespace MyChess.ChessBoard.AIs
             //return (moves[bestMove], bestMoveEval);
         }
 
-        public int AlphaBeta(int depth, int LASTMOVECOUNT, bool maxPlayer, int alpha, int beta, bool onlyCaptures = false)
+        public int AlphaBeta(int depth, int LASTMOVECOUNT, bool maxPlayer, int alpha, int beta)
         {
-            if (depth == 0 && onlyCaptures)
-                return AlphaBeta(1, LASTMOVECOUNT, maxPlayer, alpha, beta, true);
             if (depth == 0)
                 return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
 
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesRef = chessGame.GetPossibleMoves();
-            if (onlyCaptures)
-            {
-                for (int i = 0; i < movesRef.Count; i++)
-                {
-                    if (movesRef[i].CapturedPiece == 0)
-                    {
-                        movesRef.RemoveAt(i);
-                        i--;
-                    }
-                }
-                if (movesRef.Count == 0)
-                    return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
-            }
             int Count = movesRef.Count();
             if (Count == 0)
                 return evaluator.EvaluateBoardLight(0);
@@ -123,7 +108,7 @@ namespace MyChess.ChessBoard.AIs
                 foreach (Move move in moves)
                 {
                     board.MakeMove(move);
-                    int eval = AlphaBeta(depth - 1, Count, false, alpha, beta, onlyCaptures);
+                    int eval = AlphaBeta(depth - 1, Count, false, alpha, beta);
                     board.UnMakeMove();
                     maxEval = Math.Max(maxEval, eval);
                     alpha = Math.Max(alpha, eval);
@@ -138,7 +123,7 @@ namespace MyChess.ChessBoard.AIs
                 foreach (Move move in moves)
                 {
                     board.MakeMove(move);
-                    int eval = AlphaBeta(depth - 1, Count, true, alpha, beta, onlyCaptures);
+                    int eval = AlphaBeta(depth - 1, Count, true, alpha, beta);
                     board.UnMakeMove();
                     minEval = Math.Min(minEval, eval);
                     beta = Math.Min(beta, eval);
