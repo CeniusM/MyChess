@@ -29,6 +29,11 @@ namespace MyChess.ChessBoard.Evaluators
             // gives you a range between 0 - 1
             //float lateGameBonusMultiplyer = (float)(32 - board.piecePoses.Count) / 32f;
 
+
+            // Try and get the ai to move up the pawns, at the cost of pawn structure, try and push pawns
+            //chessGame.board.piecePoses
+
+
             int evaluation = matCounter.GetMaterialAdvantage(chessGame, evaluateMatPlacement);
 
             return evaluation;

@@ -30,7 +30,8 @@ namespace MyChessGUI
 
         // ai used
         private
-        AlphaBetaPruning
+        //AlphaBetaPruning
+        AlphaBetaIterativeDeepening
         //OnlyMinMax1
         // MisterRandom
         ai;
