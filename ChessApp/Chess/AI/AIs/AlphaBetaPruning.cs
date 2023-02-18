@@ -99,6 +99,8 @@ namespace MyChess.ChessBoard.AIs
 
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesRef = chessGame.GetPossibleMoves();
+            if (movesRef.Count == 0)
+                return evaluator.EvaluateBoardLight(0);
             if (onlyCaptures)
             {
                 for (int i = 0; i < movesRef.Count; i++)
@@ -113,8 +115,6 @@ namespace MyChess.ChessBoard.AIs
                     return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
             }
             int Count = movesRef.Count();
-            if (Count == 0)
-                return evaluator.EvaluateBoardLight(0);
             Move[] moves = new Move[Count];
             movesRef.CopyTo(moves);
 
