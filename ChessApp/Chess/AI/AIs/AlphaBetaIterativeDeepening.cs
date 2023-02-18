@@ -1,16 +1,23 @@
+﻿
 
+using System.Diagnostics;
 
 namespace MyChess.ChessBoard.AIs
 {
-    public class AlphaBetaPruning : ChessAIBase
+    public class AlphaBetaIterativeDeepening : ChessAIBase
     {
+        public const int MAXDEPTH_Debuging = 100;
         public const int Depth = 5;
-        public AlphaBetaPruning(ChessGame chessGame) : base(chessGame)
+        public const int TimeToThinkMS = 10_000;
+        private bool ALlowedToThink = true;
+        private void StopClock() => ALlowedToThink = false;
+        public AlphaBetaIterativeDeepening(ChessGame chessGame) : base(chessGame)
         {
         }
         //public override (Move move, int Eval) GetMove()
         public override Move GetMove()
         {
+            ALlowedToThink = true;
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesRef = chessGame.GetPossibleMoves();
             int Count = movesRef.Count();
@@ -46,25 +53,66 @@ namespace MyChess.ChessBoard.AIs
                 //return (new(0, 0, 0, board.Square[0]), 0);
                 return new(0, 0, 0, board.Square[0]);
 
+            Task.Delay(new TimeSpan(0, 0, 0, 0, TimeToThinkMS)).ContinueWith(o => { StopClock(); });
 
-            // maby needs to be a ref? prb not tho
-            int alpha = int.MinValue;
-            int beta = int.MinValue;
+            Stopwatch thinkTime = Stopwatch.StartNew();
 
+            int DepthReached = 0;
+            Move bestMove = new Move(0, 0, 0);
+
+            while (ALlowedToThink)
+            {
+                DepthReached++;
+                var results = Search(DepthReached, moves);
+                if (results.Finished)
+                {
+                    bestMove = moves[results.BestMoveIndex];
+
+                    //for (int i = 0; i < Count; i++)
+                    //{
+                    //    Console.WriteLine("val: " + results.Values[i] + " Move: " + moves[i].ToString());
+                    //}
+                    // Sort moves
+                    Array.Sort(results.Values, moves);
+
+                    //for (int i = 0; i < Count; i++)
+                    //{
+                    //    Console.WriteLine("val: " + results.Values[i] + " Move: " + moves[i].ToString());
+                    //}
+                    Console.WriteLine("Time Spent: " + thinkTime.ElapsedMilliseconds + "ms Detph: " + DepthReached);
+                }
+                else break;
+                if (DepthReached == MAXDEPTH_Debuging)
+                    break;
+            }
+
+            //Console.WriteLine("Time spent thinking: " + thinkTime.Elapsed.TotalSeconds + "s And reached a depth of: " + DepthReached);
+            //Console.WriteLine("Time: " + thinkTime.Elapsed.TotalSeconds + "s to depth of: " + DepthReached);
+
+            return bestMove;
+            //return (moves[bestMove], bestMoveEval);
+        }
+
+        /// <summary>
+        /// Return the scores of the difrent moves, and take in the moves 
+        /// </summary>
+        public (int[] Values, bool Finished, int BestMoveIndex) Search(int depth, Move[] moves)
+        {
+            int moveCount = moves.Length;
             int bestMove = 0;
             int bestMoveEval = (board.playerTurn == 8) ? int.MinValue : int.MaxValue;
             int eval = 0;
-            for (int i = 0; i < Count; i++)
+            int[] values = new int[moveCount];
+            for (int i = 0; i < moveCount; i++)
             {
+                if (!ALlowedToThink)
+                    return (values, false, -1);
                 board.MakeMove(moves[i]);
-                eval = AlphaBeta(Depth - 1, Count, (board.playerTurn == 8), int.MinValue, int.MaxValue);//(board.playerTurn == 8) ? true : false
+                eval = AlphaBeta(depth - 1, moveCount, (board.playerTurn == 8), int.MinValue, int.MaxValue);//(board.playerTurn == 8) ? true : false
                 board.UnMakeMove();
 
                 if (board.playerTurn == 8) // max
                 {
-                    // alpha = Math.Max(alpha, eval);
-                    // if (beta <= alpha)
-                    //     break;
                     if (eval > bestMoveEval)
                     {
                         bestMoveEval = eval;
@@ -73,45 +121,25 @@ namespace MyChess.ChessBoard.AIs
                 }
                 else    // min
                 {
-                    // beta = Math.Min(beta, eval);
-                    // if (alpha <= beta)
-                    //     break;
                     if (eval < bestMoveEval)
                     {
                         bestMoveEval = eval;
                         bestMove = i;
                     }
                 }
+                values[i] = eval;
             }
 
-            chessGame.possibleMoves.GenerateMoves();
-            return moves[bestMove];
-            //return (moves[bestMove], bestMoveEval);
+            return (values, true, bestMove);
         }
 
         public int AlphaBeta(int depth, int LASTMOVECOUNT, bool maxPlayer, int alpha, int beta, bool onlyCaptures = false)
         {
-            if (depth == 0 && onlyCaptures)
-                return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
             if (depth == 0)
-                //return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
-                return AlphaBeta(1, LASTMOVECOUNT, maxPlayer, alpha, beta, true);
+                return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
 
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesRef = chessGame.GetPossibleMoves();
-            if (onlyCaptures)
-            {
-                for (int i = 0; i < movesRef.Count; i++)
-                {
-                    if (movesRef[i].CapturedPiece == 0)
-                    {
-                        movesRef.RemoveAt(i);
-                        i--;
-                    }
-                }
-                if (movesRef.Count == 0)
-                    return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
-            }
             int Count = movesRef.Count();
             if (Count == 0)
                 return evaluator.EvaluateBoardLight(0);
