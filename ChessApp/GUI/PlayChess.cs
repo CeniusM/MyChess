@@ -41,7 +41,8 @@ namespace MyChessGUI
         // private ChessGame chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B1n3/8/PPP1N1PP/RNBQK2R b KQ - 1 8");
         //private ChessGame chessGame = new ChessGame("6k1/1p1qn1r1/1p2R3/3P2pp/1N6/2P4P/P5P1/1R1Q3K b - - 0 1");
         //private ChessGame chessGame = new ChessGame("1r4k1/R1pbb1pp/2p1pp2/2P1P3/3P1P2/5N2/5P1P/6K1 w - - 3 31");
-        private ChessGame chessGame = new ChessGame();
+        private ChessGame chessGame = new ChessGame("r1b2rk1/pp2bppp/2n1pn2/1BP5/2N1pB2/2q2N2/P1P2PPP/1R1Q1RK1 w - - 0 1");
+        //private ChessGame chessGame = new ChessGame();
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;
@@ -68,7 +69,7 @@ namespace MyChessGUI
             _chessPrinter.PrintBoard(_selecktedSquare);
         }
 
-        private async void KeyPress(object? sender, KeyPressEventArgs e)
+        private void KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (_GameState != GameStates.AIPlaying)
             {
@@ -89,7 +90,22 @@ namespace MyChessGUI
                         AIMoveStart(true);
                         break;
                     case 'o':
-                        await Task.Run(AIDuel);
+                    case 'O':
+                        statsAllreadyRenderd = false;
+                        gamesToPlay = 100;
+                        gamesPlayed = 0;
+                        player1Win = 0;
+                        player2Win = 0;
+                        bool done1 = false;
+                        bool done2 = false;
+                        bool done3 = false;
+                        bool done4 = false;
+                        Task.Run(() => AIDuel(ref done1, true));
+                        Task.Run(() => AIDuel(ref done2, false));
+                        Task.Run(() => AIDuel(ref done3, false));
+                        Task.Run(() => AIDuel(ref done4, false));
+                        while (!done1 || !done2 || !done3 || !done4)
+                            Thread.Sleep(100);
                         _chessPrinter.PrintBoard(_selecktedSquare);
                         break;
                     case 'g':
@@ -243,21 +259,23 @@ namespace MyChessGUI
         }
 
 
-        int gamesToPlay = 10;
-        int gamesPlayed = 0;
-        int player1Win = 0;
-        int player2Win = 0;
-        private void AIDuel()
+        bool statsAllreadyRenderd;
+        int gamesToPlay;
+        int gamesPlayed;
+        int player1Win;
+        int player2Win;
+        private void AIDuel(ref bool done, bool renderboard = false)
         {
+            int _50RuleThingy = 0;
             _GameState = GameStates.AIDueling;
             // ChessGame cg = new("r2qk2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/5N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
             ChessGame cg = new();
             ChessPrinter cp = new(_form, cg);
-            AlphaBetaPruning ai1 = new(cg); // white
-            PureAlphaBetaPruning ai2 = new(cg); // black
+            PureAlphaBetaPruning ai1 = new(cg); // white
+            AlphaBetaPruning ai2 = new(cg); // black
 
-            AlphaBetaPruning ai1SideKick = new(cg);
-            PureAlphaBetaPruning ai2SideKick = new(cg);
+            //PureAlphaBetaPruning ai1SideKick = new(cg);
+            //AlphaBetaPruning ai2SideKick = new(cg);
 
             // MisterRandom ai2 = new(cg);
             // AlphaBetaPruning ai2 = new(cg);
@@ -268,7 +286,7 @@ namespace MyChessGUI
 
 
             // starts of with 2 random moves for each couse its all detemenistik
-            int randomMoves = 4;
+            int randomMoves = 2;
             var r = new Random();
             for (int i = 0; i < randomMoves; i++)
                 cg.MakeMove(cg.GetPossibleMoves()[r.Next(0, cg.GetPossibleMoves().Count())]);
@@ -311,8 +329,17 @@ namespace MyChessGUI
 
             while (true)
             {
-                cp.PrintBoard(-1);
+                if (renderboard)
+                    cp.PrintBoard(-1);
                 Move move1 = ai1.GetMove();
+                _50RuleThingy++;
+                if (move1.CapturedPiece != 0)
+                    _50RuleThingy = 0;
+                if (_50RuleThingy == 50)
+                {
+                    same = true;
+                    break;
+                }
                 // Move move2 = ai1SideKick.GetMove();
 
 
@@ -327,9 +354,18 @@ namespace MyChessGUI
 
 
                 move1 = ai2.GetMove();
+                _50RuleThingy++;
+                if (move1.CapturedPiece != 0)
+                    _50RuleThingy = 0;
+                if (_50RuleThingy == 50)
+                {
+                    same = true;
+                    break;
+                }
                 // move2 = ai2SideKick.GetMove();
 
-                cp.PrintBoard(-1);
+                if (renderboard)
+                    cp.PrintBoard(-1);
                 cg.MakeMove(move1);
                 if (cg.GetPossibleMoves().Count == 0)
                     break;
@@ -337,33 +373,53 @@ namespace MyChessGUI
                 //     break;
 
             }
-            cp.PrintBoard(-1);
+            if (renderboard)
+                cp.PrintBoard(-1);
             // Thread.Sleep(5000);
+            //if (same)
+            //    //MyLib.DebugConsole.WriteLine("Draw due to repetition");
+            //    Console.WriteLine("Draw due to repetition");
+            //else if (cg.evaluator.EvaluateBoardLight(0) == 0)
+            //    //MyLib.DebugConsole.WriteLine("Draw");
+            //    Console.WriteLine("Draw");
+            //else
+            //    //MyLib.DebugConsole.WriteLine("Winner: " + ((cg.evaluator.EvaluateBoardLight(0) == int.MaxValue) ? "White" : "Black"));
+            //    Console.WriteLine("Winner: " + ((cg.evaluator.EvaluateBoardLight(0) == int.MaxValue) ? "White" : "Black"));
+
             if (same)
-                MyLib.DebugConsole.WriteLine("Draw due to repetition");
+                Console.WriteLine("Draw due to repetition");
             else if (cg.evaluator.EvaluateBoardLight(0) == 0)
                 MyLib.DebugConsole.WriteLine("Draw");
-            else
-                MyLib.DebugConsole.WriteLine("Winner: " + ((cg.evaluator.EvaluateBoardLight(0) == int.MaxValue) ? "White" : "Black"));
-
-            if (cg.evaluator.EvaluateBoardLight(0) == int.MaxValue)
+            else if (cg.evaluator.EvaluateBoardLight(0) == int.MaxValue)
+            {
                 player1Win++;
+                Console.WriteLine("Winner: " + "White");
+            }
             else if (cg.evaluator.EvaluateBoardLight(0) == int.MinValue)
+            {
                 player2Win++;
+                Console.WriteLine("Winner: " + "Black");
+            }
 
             gamesPlayed++;
 
             gamesToPlay--;
-            if (gamesToPlay == 0)
+            if (gamesToPlay < 1)
             {
-                //MyLib.DebugConsole.WriteLine("Player 1: " + player1Win + "/" + gamesPlayed + " Won");
-                //MyLib.DebugConsole.WriteLine("Player 2: " + player2Win + "/" + gamesPlayed + " Won");
-                Console.WriteLine("Player 1: " + player1Win + "/" + gamesPlayed + " Won");
-                Console.WriteLine("Player 2: " + player2Win + "/" + gamesPlayed + " Won");
-                _GameState = GameStates.PlayingMove;
+                if (!statsAllreadyRenderd)
+                {
+                    statsAllreadyRenderd = true;
+                    //MyLib.DebugConsole.WriteLine("Player 1: " + player1Win + "/" + gamesPlayed + " Won");
+                    //MyLib.DebugConsole.WriteLine("Player 2: " + player2Win + "/" + gamesPlayed + " Won");
+                    Console.WriteLine("Player 1: " + player1Win + "/" + gamesPlayed + " Won");
+                    Console.WriteLine("Player 2: " + player2Win + "/" + gamesPlayed + " Won");
+                    _GameState = GameStates.PlayingMove;
+                }
+                done = true;
                 return;
             }
-            AIDuel();
+            if (gamesToPlay > 0)
+                AIDuel(ref done, renderboard);
         }
     }
 }
