@@ -43,6 +43,11 @@ namespace MyChessGUI
         //private ChessGame chessGame = new ChessGame("1r4k1/R1pbb1pp/2p1pp2/2P1P3/3P1P2/5N2/5P1P/6K1 w - - 3 31");
         //private ChessGame chessGame = new ChessGame("r1b2rk1/pp2bppp/2n1pn2/1BP5/2N1pB2/2q2N2/P1P2PPP/1R1Q1RK1 w - - 0 1");
         //private ChessGame chessGame = new ChessGame("r1b1kr2/pppp3p/2n2B2/q7/2B1P3/2P2Q2/P4PPP/R3K2R w KQ - 4 20");
+        //private ChessGame chessGame = new ChessGame("8/8/1p6/2kp3P/7P/5K2/8/8 b - - 0 1");
+        //private ChessGame chessGame = new ChessGame("");
+        //private ChessGame chessGame = new ChessGame("");
+        //private ChessGame chessGame = new ChessGame("");
+        //private ChessGame chessGame = new ChessGame("");
         //private ChessGame chessGame = new ChessGame("");
         //private ChessGame chessGame = new ChessGame("");
         private ChessGame chessGame = new ChessGame();
@@ -74,10 +79,20 @@ namespace MyChessGUI
 
         private void KeyPress(object? sender, KeyPressEventArgs e)
         {
+
             if (_GameState != GameStates.AIPlaying)
             {
                 switch (e.KeyChar)
                 {
+                    case 'L': // Load in moves via the console
+                        var str = Console.ReadLine();
+
+                        break;
+                    case 'P':
+                        var moves = chessGame.board.moves.ToArray();
+                        for (int i = 0; i < moves.Length; i++)
+                            Console.WriteLine(moves[i].ToString());
+                        break;
                     case ' ':
                         chessGame.UnMakeMove();
                         _chessPrinter.PrintBoard(_selecktedSquare);
@@ -122,6 +137,9 @@ namespace MyChessGUI
             {
                 switch (e.KeyChar)
                 {
+                    case 'S':
+                            ai.StopClock();
+                        break;
                     default:
                         break;
                 }
