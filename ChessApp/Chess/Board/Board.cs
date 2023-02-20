@@ -2,6 +2,10 @@
 // or maby make chessGame take care of that
 // while this is only used for a quick engine
 
+using MyChess.PossibleMoves.Pieces;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+
 namespace MyChess.ChessBoard
 {
     public readonly struct GameStatusFlag
@@ -32,8 +36,19 @@ namespace MyChess.ChessBoard
 
     public class Board
     {
+        public Random rand = new Random(17823568); // seed for consistency
+
         // Zobrist hashing
-         
+        /// <summary>
+        /// Use piece values as indexes.
+        /// The 0th index for side to move (1)
+        /// The 1st gets used for castle rights (4)
+        /// The 2th for en passant (8)
+        /// </summary>
+        private ulong[,] ZobristKeysTable = new ulong[25, 64];
+        private ulong[] RandomHashTable = new ulong[2048];
+        public ulong HashKey = 0;
+        private void HashKeyFurther(int Index, int Square) => HashKey ^= ZobristKeysTable[Index, Square];
 
         public Stack<DataICouldentGetToWork> gameData = new Stack<DataICouldentGetToWork>();
         public Stack<Move> moves = new Stack<Move>();
@@ -56,6 +71,28 @@ namespace MyChess.ChessBoard
 
         public Board()
         {
+            // Init zobrist hashing
+            for (int i = 0; i < ZobristKeysTable.GetLength(0); i++)
+                for (int j = 0; j < ZobristKeysTable.GetLength(1); j++)
+                    ZobristKeysTable[i, j] = BitConverter.ToUInt64(BitConverter.GetBytes(rand.NextInt64()));
+            for (int i = 0; i < RandomHashTable.Length; i++)
+                RandomHashTable[i] = BitConverter.ToUInt64(BitConverter.GetBytes(rand.NextInt64()));
+
+            for (int i = 0; i < Square.Length; i++)
+                if (Square[i] != 0)
+                    HashKeyFurther(Square[i], i);
+
+            // Side to move
+            //HashKeyFurther(0, 0);
+
+            // Castle Rights
+            HashKeyFurther(CASTLE.W_King_Side, 1);
+            HashKeyFurther(CASTLE.W_Queen_Side, 1);
+            HashKeyFurther(CASTLE.B_King_Side, 1);
+            HashKeyFurther(CASTLE.B_Queen_Side, 1);
+
+            // Enpassan not made...
+
             InitPiecePoses();
         }
 
@@ -111,6 +148,14 @@ namespace MyChess.ChessBoard
 
             moves.Push(move);
             gameData.Push(new(castle, enPassantPiece));
+
+
+            HashKeyFurther(Square[move.StartSquare], move.StartSquare);
+            HashKeyFurther(Square[move.StartSquare], move.TargetSquare);
+            if (Square[move.TargetSquare] != 0)
+                HashKeyFurther(Square[move.TargetSquare], move.TargetSquare);
+            HashKeyFurther(0, 0); // color
+            HashKey ^= RandomHashTable[gameData.Count()];
 
 
 
@@ -238,6 +283,7 @@ namespace MyChess.ChessBoard
 
         public void UnMakeMove()
         {
+            HashKey ^= RandomHashTable[gameData.Count()];
             Move move = moves.Pop();
             DataICouldentGetToWork data = gameData.Pop();
             castle = data.castle;
@@ -336,6 +382,13 @@ namespace MyChess.ChessBoard
                 Square[move.StartSquare] = Piece.Pawn | playerTurn;
                 Square[move.TargetSquare] = move.CapturedPiece;
             }
+
+
+            HashKeyFurther(Square[move.StartSquare], move.StartSquare);
+            HashKeyFurther(Square[move.StartSquare], move.TargetSquare);
+            if (Square[move.TargetSquare] != 0)
+                HashKeyFurther(Square[move.TargetSquare], move.TargetSquare);
+            HashKeyFurther(0, 0); // color
         }
 
         public void ChangePlayer() => playerTurn ^= ColorMask;
@@ -387,6 +440,15 @@ namespace MyChess.ChessBoard
             // MyChess.UnitTester.Tests.Test.CompareBoardsWithMove(original, board, new(0, 0, 0, 0));
 
             return board;
+        }
+
+        public void PrintMoves()
+        {
+            for (int i = 0; i < moves.Count; i++)
+            {
+                var arr = moves.ToArray();
+                Console.WriteLine(arr[i].ToString());
+            }
         }
     }
 }
