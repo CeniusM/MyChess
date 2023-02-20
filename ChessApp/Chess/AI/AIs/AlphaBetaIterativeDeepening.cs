@@ -96,7 +96,7 @@ namespace MyChess.ChessBoard.AIs
         /// <summary>
         /// Return the scores of the difrent moves, and take in the moves 
         /// </summary>
-        public (int[] Values, bool Finished, int BestMoveIndex) Search(int depth, Move[] moves)
+        public (int[] Values, bool Finished, int BestMoveIndex, int MovesEvaluated) Search(int depth, Move[] moves)
         {
             int moveCount = moves.Length;
             int bestMove = 0;
@@ -106,7 +106,7 @@ namespace MyChess.ChessBoard.AIs
             for (int i = 0; i < moveCount; i++)
             {
                 if (!ALlowedToThink)
-                    return (values, false, -1);
+                    return (values, false, -1, i);
                 board.MakeMove(moves[i]);
                 eval = AlphaBeta(depth - 1, moveCount, (board.playerTurn == 8), int.MinValue, int.MaxValue);//(board.playerTurn == 8) ? true : false
                 board.UnMakeMove();
@@ -130,7 +130,7 @@ namespace MyChess.ChessBoard.AIs
                 values[i] = eval;
             }
 
-            return (values, true, bestMove);
+            return (values, true, bestMove, moveCount);
         }
 
         public int AlphaBeta(int depth, int LASTMOVECOUNT, bool maxPlayer, int alpha, int beta, bool onlyCaptures = false)
