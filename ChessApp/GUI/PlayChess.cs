@@ -41,8 +41,11 @@ namespace MyChessGUI
         // private ChessGame chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B1n3/8/PPP1N1PP/RNBQK2R b KQ - 1 8");
         //private ChessGame chessGame = new ChessGame("6k1/1p1qn1r1/1p2R3/3P2pp/1N6/2P4P/P5P1/1R1Q3K b - - 0 1");
         //private ChessGame chessGame = new ChessGame("1r4k1/R1pbb1pp/2p1pp2/2P1P3/3P1P2/5N2/5P1P/6K1 w - - 3 31");
-        private ChessGame chessGame = new ChessGame("r1b2rk1/pp2bppp/2n1pn2/1BP5/2N1pB2/2q2N2/P1P2PPP/1R1Q1RK1 w - - 0 1");
-        //private ChessGame chessGame = new ChessGame();
+        //private ChessGame chessGame = new ChessGame("r1b2rk1/pp2bppp/2n1pn2/1BP5/2N1pB2/2q2N2/P1P2PPP/1R1Q1RK1 w - - 0 1");
+        //private ChessGame chessGame = new ChessGame("r1b1kr2/pppp3p/2n2B2/q7/2B1P3/2P2Q2/P4PPP/R3K2R w KQ - 4 20");
+        //private ChessGame chessGame = new ChessGame("");
+        //private ChessGame chessGame = new ChessGame("");
+        private ChessGame chessGame = new ChessGame();
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;
@@ -251,8 +254,9 @@ namespace MyChessGUI
         private void AIThinkingOfMove()
         {
             var sw = Stopwatch.StartNew();
-            chessGame.MakeMove(ai.GetMove());
-            Console.WriteLine("Move took: " + sw.Elapsed.TotalMilliseconds + "ms");
+            var move = ai.GetMove();
+            chessGame.MakeMove(move);
+            //Console.WriteLine("Move took: " + sw.Elapsed.TotalMilliseconds + "ms " + " Move: " + move);
             _chessPrinter.PrintBoard(_selecktedSquare);
             _GameState = GameStates.PlayingMove;
             AIThinking = false;
