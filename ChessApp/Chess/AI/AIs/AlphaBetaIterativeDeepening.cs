@@ -8,16 +8,17 @@ namespace MyChess.ChessBoard.AIs
     {
         public const int MAXDEPTH_Debuging = 100;
         public const int Depth = 999999999;
+        //public const int TimeToThinkMS = 1;
         public const int TimeToThinkMS = 10_000;
-        private bool ALlowedToThink = true;
-        private void StopClock() => ALlowedToThink = false;
+        private bool AllowedToThink = true;
+        public void StopClock() => AllowedToThink = false;
         public AlphaBetaIterativeDeepening(ChessGame chessGame) : base(chessGame)
         {
         }
         //public override (Move move, int Eval) GetMove()
         public override Move GetMove()
         {
-            ALlowedToThink = true;
+            AllowedToThink = true;
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesRef = chessGame.GetPossibleMoves();
             int Count = movesRef.Count();
@@ -59,11 +60,22 @@ namespace MyChess.ChessBoard.AIs
 
             int DepthReached = 0;
             Move bestMove = new Move(0, 0, 0);
+            int bestMoveIndex = 0;
 
-            while (ALlowedToThink)
+            while (AllowedToThink)
             {
                 DepthReached++;
-                var results = Search(DepthReached, moves);
+                var results = Search(DepthReached, moves, bestMoveIndex);
+                //Console.WriteLine("Time Spent: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
+                //        " Best. eval: " + results.Values[results.BestMoveIndex] + " MovesFinished: " + results.MovesFinished + "/" + Count +
+                //        " Alpha Beta Snips: " + ABSnips + ". Nodes: " + Nodes);
+                Console.WriteLine("Time: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
+                        ". eval: " + results.Values[results.BestMoveIndex] + ". MovesFinished: " + results.MovesFinished + "/" + Count);
+                Nodes = 0;
+                ABSnips = 0;
+
+                bestMoveIndex = results.BestMoveIndex;
+                //Console.WriteLine();
                 if (results.Finished)
                 {
                     bestMove = moves[results.BestMoveIndex];
@@ -80,14 +92,18 @@ namespace MyChess.ChessBoard.AIs
                     //    Console.WriteLine("val: " + results.Values[i] + " Move: " + moves[i].ToString());
                     //}
                     //Console.WriteLine("Time Spent: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached + " Best. eval: " + results.Values[results.BestMoveIndex] + ". Nodes " + Nodes);
-                    Console.WriteLine("Time Spent: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached + " Best. eval: " + results.Values[results.BestMoveIndex]);
+
                 }
-                else break;
+                else
+                {
+                    //Array.Copy(results.Values, be);
+                    break;
+                }
                 if (DepthReached == MAXDEPTH_Debuging)
                     break;
                 // If half of the time have allready gone by, we just stop it there
-                if (thinkTime.Elapsed.TotalMilliseconds > TimeToThinkMS / 2)
-                    break;
+                //if (thinkTime.Elapsed.TotalMilliseconds > TimeToThinkMS / 2)
+                //    break;
             }
             chessGame.possibleMoves.GenerateMoves();
 
@@ -101,7 +117,7 @@ namespace MyChess.ChessBoard.AIs
         /// <summary>
         /// Return the scores of the difrent moves, and take in the moves 
         /// </summary>
-        public (int[] Values, bool Finished, int BestMoveIndex) Search(int depth, Move[] moves)
+        public (int[] Values, bool Finished, int BestMoveIndex, int MovesFinished) Search(int depth, Move[] moves, int previousBestMove)
         {
             int moveCount = moves.Length;
             int bestMove = 0;
@@ -110,15 +126,17 @@ namespace MyChess.ChessBoard.AIs
             int[] values = new int[moveCount];
             for (int i = 0; i < moveCount; i++)
             {
-                if (!ALlowedToThink)
-                    return (values, false, -1);
+                if (!AllowedToThink)
+                    return (values, false, previousBestMove, i);
                 board.MakeMove(moves[i]);
                 eval = AlphaBeta(depth - 1, moveCount, (board.playerTurn == 8), int.MinValue, int.MaxValue);//(board.playerTurn == 8) ? true : false
                 board.UnMakeMove();
+                if (!AllowedToThink)
+                    return (values, false, previousBestMove, i);
 
                 if (board.playerTurn == 8) // max
                 {
-                    if (eval > bestMoveEval)
+                    if (eval > bestMoveEval && eval != bestMoveEval)
                     {
                         bestMoveEval = eval;
                         bestMove = i;
@@ -126,7 +144,7 @@ namespace MyChess.ChessBoard.AIs
                 }
                 else    // min
                 {
-                    if (eval < bestMoveEval)
+                    if (eval < bestMoveEval && eval != bestMoveEval)
                     {
                         bestMoveEval = eval;
                         bestMove = i;
@@ -135,15 +153,20 @@ namespace MyChess.ChessBoard.AIs
                 values[i] = eval;
             }
 
-            return (values, true, bestMove);
+            return (values, true, bestMove, moveCount);
         }
 
         long Nodes = 0;
+        long ABSnips = 0;
         public int AlphaBeta(int depth, int LASTMOVECOUNT, bool maxPlayer, int alpha, int beta)
         {
             Nodes++;
+            if (!AllowedToThink)
+                return 0;
             if (depth == 0)
                 return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
+            //if (depth == 0)
+            //    return AlphaBetaOnlyCaptures(LASTMOVECOUNT, maxPlayer);
 
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesList = chessGame.GetPossibleMoves();
@@ -166,7 +189,10 @@ namespace MyChess.ChessBoard.AIs
                     maxEval = Math.Max(maxEval, eval);
                     alpha = Math.Max(alpha, eval);
                     if (beta <= alpha)
+                    {
+                        ABSnips++;
                         break;
+                    }
                 }
                 return maxEval;
             }
@@ -183,8 +209,64 @@ namespace MyChess.ChessBoard.AIs
                     minEval = Math.Min(minEval, eval);
                     beta = Math.Min(beta, eval);
                     if (beta <= alpha)
+                    {
+                        ABSnips++;
                         break;
+                    }
                 }
+                return minEval;
+            }
+        }
+
+        public int AlphaBetaOnlyCaptures(int LASTMOVECOUNT, bool maxPlayer)
+        {
+            Nodes++;
+            if (!AllowedToThink)
+                return 0;
+
+            chessGame.possibleMoves.GenerateMoves();
+            List<Move> movesList = chessGame.GetPossibleMoves();
+            int TotalCount = movesList.Count();
+            if (TotalCount == 0)
+                return evaluator.EvaluateBoardLight(0);
+            Move[] moves = new Move[movesList.Count];
+            movesList.CopyTo(moves);
+            bool Ran = false;
+            if (maxPlayer)
+            {
+                int maxEval = int.MinValue;
+                foreach (Move move in moves)
+                {
+                    if (move.CapturedPiece == 0)
+                        continue;
+                    Ran = true;
+                    //if (onlyCaptures && move.CapturedPiece == 0)
+                    //    continue;
+                    board.MakeMove(move);
+                    int eval = AlphaBetaOnlyCaptures(TotalCount, false);
+                    board.UnMakeMove();
+                    maxEval = Math.Max(maxEval, eval);
+                }
+                if (!Ran)
+                    return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
+                return maxEval;
+            }
+            else
+            {
+                int minEval = int.MaxValue;
+                foreach (Move move in moves)
+                {
+                    if (move.CapturedPiece == 0)
+                        continue;
+                    //if (onlyCaptures && move.CapturedPiece == 0)
+                    //    continue;
+                    board.MakeMove(move);
+                    int eval = AlphaBetaOnlyCaptures(TotalCount, true);
+                    board.UnMakeMove();
+                    minEval = Math.Min(minEval, eval);
+                }
+                if (!Ran)
+                    return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
                 return minEval;
             }
         }
