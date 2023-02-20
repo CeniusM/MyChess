@@ -32,6 +32,9 @@ namespace MyChess.ChessBoard
 
     public class Board
     {
+        // Zobrist hashing
+         
+
         public Stack<DataICouldentGetToWork> gameData = new Stack<DataICouldentGetToWork>();
         public Stack<Move> moves = new Stack<Move>();
         public PieceList piecePoses = new PieceList();
