@@ -8,10 +8,12 @@ namespace MyChess.ChessBoard.AIs
     {
         private Dictionary<ulong, int> TransportationTable = new Dictionary<ulong, int>();
 
-        public const int MAXDEPTH_Debuging = 10000;
-        public const int Depth = 999999999;
+        /// <summary>
+        /// Max depth
+        /// </summary>
+        public const int Depth = 40;
         //public const int TimeToThinkMS = 1;
-        public const int TimeToThinkMS = 600_000;
+        public const int TimeToThinkMS = 10_000;
         private bool AllowedToThink = true;
         public void StopClock() => AllowedToThink = false;
         public AlphaBetaIterativeDeepening(ChessGame chessGame) : base(chessGame)
@@ -103,7 +105,7 @@ namespace MyChess.ChessBoard.AIs
                     //Array.Copy(results.Values, be);
                     break;
                 }
-                if (DepthReached == MAXDEPTH_Debuging)
+                if (DepthReached == Depth)
                     break;
                 // If half of the time have allready gone by, we just stop it there
                 //if (thinkTime.Elapsed.TotalMilliseconds > TimeToThinkMS / 2)
