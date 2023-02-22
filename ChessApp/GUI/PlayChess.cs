@@ -175,7 +175,7 @@ namespace MyChessGUI
                     break;
                 case GameStates.AIPlaying:
                     // some kind of options while the ai is playing or thinking
-                    MyLib.DebugConsole.WriteLine("AI Thinking");
+                    Console.WriteLine("AI Thinking");
                     break;
                 default:
                     throw new NotImplementedException("This GameState has not been implementet some how");

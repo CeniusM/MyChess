@@ -259,9 +259,11 @@ namespace MyChess.ChessBoard.AIs
             }
         }
 
-        public int AlphaBetaOnlyCaptures(int LASTMOVECOUNT, bool maxPlayer)
+        public int AlphaBetaOnlyCaptures(int LASTMOVECOUNT, bool maxPlayer, int depth = 20)
         {
             Nodes++;
+            if (depth == 0)
+                return evaluator.EvaluateBoardLight(LASTMOVECOUNT);
             if (!AllowedToThink)
                 return 0;
 
@@ -281,10 +283,8 @@ namespace MyChess.ChessBoard.AIs
                     if (move.CapturedPiece == 0)
                         continue;
                     Ran = true;
-                    //if (onlyCaptures && move.CapturedPiece == 0)
-                    //    continue;
                     board.MakeMove(move);
-                    int eval = AlphaBetaOnlyCaptures(TotalCount, false);
+                    int eval = AlphaBetaOnlyCaptures(TotalCount, false, depth - 1);
                     board.UnMakeMove();
                     maxEval = Math.Max(maxEval, eval);
                 }
@@ -299,10 +299,9 @@ namespace MyChess.ChessBoard.AIs
                 {
                     if (move.CapturedPiece == 0)
                         continue;
-                    //if (onlyCaptures && move.CapturedPiece == 0)
-                    //    continue;
+                    Ran = true;
                     board.MakeMove(move);
-                    int eval = AlphaBetaOnlyCaptures(TotalCount, true);
+                    int eval = AlphaBetaOnlyCaptures(TotalCount, true, depth - 1);
                     board.UnMakeMove();
                     minEval = Math.Min(minEval, eval);
                 }
