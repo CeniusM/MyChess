@@ -12,8 +12,8 @@ namespace MyChess.ChessBoard.AIs
         /// Max depth
         /// </summary>
         public const int Depth = 40;
-        //public const int TimeToThinkMS = 10_000;
-        public const int TimeToThinkMS = 10_000;
+        public const int TimeToThinkMS = 1000000_000;
+        //public const int TimeToThinkMS = 10;
         private bool AllowedToThink = true;
         public void StopClock() => AllowedToThink = false;
         public AlphaBetaIterativeDeepening(ChessGame chessGame) : base(chessGame)
@@ -58,6 +58,9 @@ namespace MyChess.ChessBoard.AIs
                 //return (new(0, 0, 0, board.Square[0]), 0);
                 return new(0, 0, 0, board.Square[0]);
 
+
+            // THIS also runs into errors if you stop search manuely and then this searches again
+            // And the previous delays stops the search
             Task.Delay(new TimeSpan(0, 0, 0, 0, TimeToThinkMS)).ContinueWith(o => { StopClock(); });
 
             Stopwatch thinkTime = Stopwatch.StartNew();

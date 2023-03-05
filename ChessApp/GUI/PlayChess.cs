@@ -36,6 +36,7 @@ namespace MyChessGUI
         // MisterRandom
         ai;
 
+        List<string> movesPreLoaded = "{S:12, T:14, F:0, C:0}\n{S:7, T:6, F:0, C:0}\n{S:29, T:21, F:0, C:0}\n{S:15, T:7, F:0, C:0}\n{S:5, T:12, F:0, C:0}\n{S:23, T:15, F:0, C:0}\n{S:12, T:5, F:0, C:19}\n{S:14, T:23, F:0, C:0}\n{S:20, T:12, F:0, C:0}\n{S:15, T:5, F:0, C:0}\n{S:30, T:37, F:0, C:0}\n{S:21, T:15, F:0, C:0}\n{S:38, T:30, F:0, C:0}\n{S:15, T:21, F:0, C:0}\n{S:19, T:20, F:0, C:17}\n{S:13, T:20, F:0, C:9}\n{S:28, T:20, F:0, C:0}\n{S:30, T:15, F:0, C:0}\n{S:45, T:38, F:0, C:0}\n{S:20, T:30, F:0, C:0}\n{S:36, T:29, F:0, C:17}\n{S:22, T:29, F:0, C:11}\n{S:46, T:29, F:0, C:0}\n{S:5, T:20, F:0, C:0}\n{S:11, T:19, F:0, C:0}\n{S:20, T:5, F:0, C:0}\n{S:44, T:36, F:0, C:0}\n{S:10, T:20, F:0, C:0}\n{S:27, T:11, F:0, C:0}\n{S:20, T:10, F:0, C:0}\n{S:53, T:45, F:0, C:0}\n{S:5, T:20, F:0, C:0}\n{S:62, T:53, F:0, C:0}\n{S:15, T:22, F:0, C:9}\n{S:29, T:22, F:0, C:17}\n{S:20, T:5, F:0, C:0}\n{S:37, T:29, F:0, C:0}\n{S:5, T:14, F:0, C:0}\n{S:61, T:46, F:0, C:0}\n{S:14, T:22, F:0, C:0}\n{S:9, T:27, F:0, C:17}\n{S:6, T:5, F:0, C:13}\n{S:0, T:5, F:0, C:21}\n{S:4, T:5, F:0, C:0}\n{S:8, T:0, F:4, C:0}\n{S:5, T:20, F:0, C:0}\n{S:16, T:8, F:0, C:0}\n{S:32, T:4, F:0, C:0}\n{S:2, T:9, F:0, C:0}\n{S:59, T:32, F:0, C:0}\n{S:24, T:16, F:0, C:0}\n{S:20, T:5, F:0, C:0}\n{S:10, T:2, F:0, C:0}\n{S:3, T:20, F:0, C:0}\n{S:26, T:10, F:0, C:18}\n{S:2, T:10, F:0, C:10}\n{S:46, T:61, F:0, C:0}\n{S:38, T:59, F:0, C:0}\n{S:9, T:10, F:0, C:0}\n{S:18, T:3, F:0, C:0}\n{S:57, T:9, F:0, C:18}\n{S:1, T:9, F:0, C:10}\n{S:41, T:9, F:0, C:17}\n{S:3, T:2, F:0, C:11}\n{S:17, T:2, F:0, C:20}\n{S:4, T:3, F:0, C:0}\n{S:35, T:28, F:0, C:17}\n{S:20, T:28, F:0, C:0}\n{S:56, T:57, F:0, C:0}\n{S:22, T:38, F:0, C:0}\n{S:43, T:41, F:0, C:0}\n{S:31, T:22, F:0, C:0}\n{S:52, T:46, F:0, C:0}\n{S:23, T:31, F:0, C:0}\n{S:59, T:43, F:0, C:19}\n{S:33, T:43, F:0, C:12}\n{S:45, T:37, F:0, C:0}\n{S:39, T:23, F:0, C:0}\n{S:34, T:17, F:0, C:0}\n{S:11, T:27, F:1, C:0}\n{S:61, T:59, F:0, C:0}\n{S:38, T:39, F:0, C:0}\n{S:53, T:45, F:0, C:0}\n{S:27, T:33, F:0, C:0}\n{S:17, T:26, F:0, C:0}\n{S:21, T:27, F:0, C:0}\n{S:51, T:34, F:0, C:17}\n{S:27, T:34, F:0, C:9}\n{S:42, T:34, F:0, C:0}\n{S:12, T:18, F:0, C:0}\n{S:41, T:17, F:0, C:17}\n{S:8, T:17, F:0, C:9}\n{S:25, T:17, F:0, C:0}\n{S:19, T:27, F:0, C:0}\n{S:32, T:24, F:0, C:0}\n{S:0, T:1, F:0, C:0}\n{S:48, T:32, F:1, C:0}\n{S:27, T:21, F:0, C:0}\n{S:59, T:41, F:0, C:0}\n{S:18, T:12, F:0, C:0}\n{S:33, T:25, F:0, C:0}\n{S:5, T:4, F:0, C:0}\n{S:49, T:33, F:1, C:0}\n{S:39, T:38, F:0, C:0}\n{S:57, T:51, F:0, C:0}\n{S:4, T:6, F:3, C:0}\n{S:60, T:62, F:3, C:0}\n{S:3, T:39, F:0, C:0}\n{S:62, T:52, F:0, C:0}\n{S:10, T:19, F:0, C:12}\n{S:46, T:19, F:0, C:20}\n{S:33, T:19, F:0, C:0}\n{S:50, T:42, F:0, C:0}\n{S:5, T:33, F:0, C:0}\n{S:37, T:46, F:0, C:0}\n{S:21, T:27, F:0, C:0}\n{S:61, T:43, F:0, C:0}\n{S:6, T:21, F:0, C:0}\n{S:52, T:44, F:0, C:0}\n{S:1, T:18, F:0, C:0}\n{S:58, T:37, F:0, C:0}\n{S:12, T:20, F:0, C:0}\n{S:51, T:35, F:1, C:0}".Split('\n').ToList();
 
         private const int SquareDimensions = 100;
         // private ChessGame chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B1n3/8/PPP1N1PP/RNBQK2R b KQ - 1 8");
@@ -44,7 +45,7 @@ namespace MyChessGUI
         //private ChessGame chessGame = new ChessGame("r1b2rk1/pp2bppp/2n1pn2/1BP5/2N1pB2/2q2N2/P1P2PPP/1R1Q1RK1 w - - 0 1");
         //private ChessGame chessGame = new ChessGame("r1b1kr2/pppp3p/2n2B2/q7/2B1P3/2P2Q2/P4PPP/R3K2R w KQ - 4 20");
         //private ChessGame chessGame = new ChessGame("8/8/1p6/2kp2PP/7P/5K2/8/8 b - - 0 1");
-        //private ChessGame chessGame = new ChessGame("");
+        //private ChessGame chessGame = new ChessGame("1rb1r1k1/1p1p1ppp/2n1p3/P1Qn4/2NP2q1/3BP3/4NPPP/R4RK1 b - - 0 1");
         //private ChessGame chessGame = new ChessGame("");
         //private ChessGame chessGame = new ChessGame("");
         //private ChessGame chessGame = new ChessGame("");
@@ -128,6 +129,15 @@ namespace MyChessGUI
                         break;
                     case 'g':
                         chessGame.possibleMoves.GenerateMoves();
+                        break;
+                    case '0':
+                        //if (movesPreLoaded.Count != 0)
+                        //{
+                        //    string strMove = movesPreLoaded[0];
+                        //    movesPreLoaded.RemoveAt(0);
+                        //    Move move = Move.FromString(strMove);
+                        //    chessGame.MakeMove(move);
+                        //}
                         break;
                     default:
                         break;

@@ -63,6 +63,32 @@ namespace MyChess
             );
         }
 
+        public static Move FromString(string input)
+        {
+            var str = input.Replace("{", "");
+            str = str.Replace("}", "");
+            str = str.Replace("S:", "");
+            str = str.Replace("T:", "");
+            str = str.Replace("F:", "");
+            str = str.Replace("C:", "");
+            str = str.Replace(" ", "");
+            string[] values = str.Split(',');
+            byte s = 0, t = 0, f = 0, c = 0;
+
+            if (int.TryParse(values[0], out var i))
+                s = (byte)i;
+            if (int.TryParse(values[1], out var j))
+                t = (byte)j;
+            if (int.TryParse(values[2], out var k))
+                f = (byte)k;
+            if (int.TryParse(values[3], out var foo))
+                c = (byte)foo;
+
+            return new Move(s,t,f,c);
+        }
+
+        //public static Move TryParse(string str);
+
         public override string ToString()
         {
             return "{S:" + StartSquare + ", T:" + TargetSquare + ", F:" + MoveFlag + ", C:" + CapturedPiece + "}";
