@@ -1,5 +1,6 @@
 ﻿
 
+using MyChess.Chess.Evaluation;
 using System.Diagnostics;
 
 namespace MyChess.ChessBoard.AIs
@@ -13,9 +14,20 @@ namespace MyChess.ChessBoard.AIs
         /// </summary>
         public const int Depth = 40;
         //public const int TimeToThinkMS = 10_000;
+        //public const int TimeToThinkMS = 10_000;
         public const int TimeToThinkMS = 10_000;
         private bool AllowedToThink = true;
-        public void StopClock() => AllowedToThink = false;
+
+        public int round = 0; // to stop previus watches from stoping new searches
+        public void StopClock(int clockRound)
+        {
+            Console.WriteLine("Clock try stop");
+            if (round == clockRound)
+            {
+                Console.WriteLine("Clock stopped");
+                AllowedToThink = false;
+            }
+        }
         public AlphaBetaIterativeDeepening(ChessGame chessGame) : base(chessGame)
         {
         }
@@ -57,8 +69,8 @@ namespace MyChess.ChessBoard.AIs
             if (Count == 0)
                 //return (new(0, 0, 0, board.Square[0]), 0);
                 return new(0, 0, 0, board.Square[0]);
-
-            Task.Delay(new TimeSpan(0, 0, 0, 0, TimeToThinkMS)).ContinueWith(o => { StopClock(); });
+            int someNum = round;
+            Task.Delay(new TimeSpan(0, 0, 0, 0, TimeToThinkMS)).ContinueWith(o => { StopClock(someNum); });
 
             Stopwatch thinkTime = Stopwatch.StartNew();
 
@@ -84,6 +96,7 @@ namespace MyChess.ChessBoard.AIs
                 //Console.WriteLine();
                 if (results.Finished)
                 {
+
                     bestMove = moves[results.BestMoveIndex];
 
                     //for (int i = 0; i < Count; i++)
@@ -105,17 +118,20 @@ namespace MyChess.ChessBoard.AIs
                     //Array.Copy(results.Values, be);
                     break;
                 }
+                if (results.Values[results.BestMoveIndex] > 1000000 || results.Values[results.BestMoveIndex] < -1000000)
+                    break;
                 if (DepthReached == Depth)
                     break;
-                // If half of the time have allready gone by, we just stop it there
-                //if (thinkTime.Elapsed.TotalMilliseconds > TimeToThinkMS / 2)
-                //    break;
+                // If 1/4 of the time have allready gone by, we just stop it there
+                if (thinkTime.Elapsed.TotalMilliseconds > TimeToThinkMS / 4)
+                    break;
             }
             chessGame.possibleMoves.GenerateMoves();
 
             //Console.WriteLine("Time spent thinking: " + thinkTime.Elapsed.TotalSeconds + "s And reached a depth of: " + DepthReached);
             //Console.WriteLine("Time: " + thinkTime.Elapsed.TotalSeconds + "s to depth of: " + DepthReached);
 
+            round++;
             return bestMove;
             //return (moves[bestMove], bestMoveEval);
         }
@@ -134,16 +150,26 @@ namespace MyChess.ChessBoard.AIs
             {
                 if (!AllowedToThink)
                 {
-                    TransportationTable.Clear();
-                    return (values, false, previousBestMove, i);
+                    if ((float)i / moveCount < 0.75f)
+                    {
+
+                        TransportationTable.Clear();
+                        return (values, false, previousBestMove, i);
+                    }
                 }
                 board.MakeMove(moves[i]);
                 eval = AlphaBeta(depth - 1, moveCount, (board.playerTurn == 8), int.MinValue, int.MaxValue);//(board.playerTurn == 8) ? true : false
                 board.UnMakeMove();
                 if (!AllowedToThink)
                 {
-                    TransportationTable.Clear();
-                    return (values, false, previousBestMove, i);
+                    if ((float)i / moveCount < 0.75f)
+                    {
+                        // if we allmost done we dont stop, 3/4 of the way
+                        // This would not be a problem if we could just get the captures only to work
+
+                        TransportationTable.Clear();
+                        return (values, false, previousBestMove, i);
+                    }
                 }
 
                 if (board.playerTurn == 8) // max
@@ -177,8 +203,8 @@ namespace MyChess.ChessBoard.AIs
         public int AlphaBeta(int depth, int LASTMOVECOUNT, bool maxPlayer, int alpha, int beta)
         {
             Nodes++;
-            if (!AllowedToThink)
-                return 0;
+            //if (!AllowedToThink)
+            //    return 0;
             if (depth == 0)
                 return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
             //if (depth == 0)
@@ -262,34 +288,28 @@ namespace MyChess.ChessBoard.AIs
         public int AlphaBetaOnlyCaptures(int LASTMOVECOUNT, bool maxPlayer, int depth = 20)
         {
             Nodes++;
-            if (depth == 0)
-                return evaluator.EvaluateBoardLight(LASTMOVECOUNT);
-            if (!AllowedToThink)
-                return 0;
 
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesList = chessGame.GetPossibleMoves();
             int TotalCount = movesList.Count();
             if (TotalCount == 0)
                 return evaluator.EvaluateBoardLight(0);
-            Move[] moves = new Move[movesList.Count];
-            movesList.CopyTo(moves);
-            bool Ran = false;
+            List<Move> moves = new List<Move>(movesList.Count);
+            for (int i = 0; i < movesList.Count; i++)
+                if (board.Square[movesList[i].TargetSquare] != 0)
+                    moves.Add(movesList[i]);
+            if (moves.Count == 0)
+                return evaluator.EvaluateBoardLight(TotalCount, true);
             if (maxPlayer)
             {
                 int maxEval = int.MinValue;
                 foreach (Move move in moves)
                 {
-                    if (move.CapturedPiece == 0)
-                        continue;
-                    Ran = true;
                     board.MakeMove(move);
                     int eval = AlphaBetaOnlyCaptures(TotalCount, false, depth - 1);
                     board.UnMakeMove();
                     maxEval = Math.Max(maxEval, eval);
                 }
-                if (!Ran)
-                    return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
                 return maxEval;
             }
             else
@@ -297,16 +317,11 @@ namespace MyChess.ChessBoard.AIs
                 int minEval = int.MaxValue;
                 foreach (Move move in moves)
                 {
-                    if (move.CapturedPiece == 0)
-                        continue;
-                    Ran = true;
                     board.MakeMove(move);
                     int eval = AlphaBetaOnlyCaptures(TotalCount, true, depth - 1);
                     board.UnMakeMove();
                     minEval = Math.Min(minEval, eval);
                 }
-                if (!Ran)
-                    return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
                 return minEval;
             }
         }

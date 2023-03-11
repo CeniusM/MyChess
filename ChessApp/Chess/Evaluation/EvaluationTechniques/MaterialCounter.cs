@@ -1,5 +1,7 @@
 
 
+using MyChess.Chess.Evaluation.EvaluationTechniques;
+
 namespace MyChess.ChessBoard.Evaluators.Methods
 {
     public abstract class MaterialCounterBase
@@ -59,11 +61,19 @@ namespace MyChess.ChessBoard.Evaluators.Methods
             int whiteEval = CountMaterial(board, Piece.White, evaluateMatPlacement);
             int blackEval = CountMaterial(board, Piece.Black, evaluateMatPlacement);
 
+            if (board.Square[59] == Piece.WQueen) // White queen
+                whiteEval += Math.Max(10 - board.moves.Count, 0) * 20;
+            if (board.Square[3] == Piece.BQueen) // Black queen
+                blackEval += Math.Max(10 - board.moves.Count, 0) * 20;
 
-            blackEval += LateGameKingToEadge.GetBonus(chessGame, chessGame.board.piecePoses.Count, 16);
-            whiteEval += LateGameKingToEadge.GetBonus(chessGame, chessGame.board.piecePoses.Count, 8);
+            float lateGameMultiplier = (float)(32 - chessGame.board.piecePoses.Count) / 32;
+            if (lateGameMultiplier < 0.5f)
+                lateGameMultiplier = 0;
 
-            return whiteEval - blackEval;
+            whiteEval += LateGameKingToEadge.GetBonus(chessGame, lateGameMultiplier, 8);
+            blackEval += LateGameKingToEadge.GetBonus(chessGame, lateGameMultiplier, 16);
+
+            return whiteEval - blackEval + PawnStructure.GetEval(board, lateGameMultiplier);
         }
 
         private static int CountMaterial(Board board, int color, bool evaluateMatPlacement = false)
