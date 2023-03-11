@@ -5,12 +5,12 @@ namespace MyChess.PossibleMoves
         public readonly struct Index
         {
             public const int North = 0;
-            public const int East = 2;
-            public const int South = 4;
-            public const int West = 6;
-            public const int NorthEast = 1;
-            public const int SouthEast = 3;
-            public const int SouthWest = 5;
+            public const int East = 1;
+            public const int South = 2;
+            public const int West = 3;
+            public const int NorthEast = 4;
+            public const int SouthEast = 5;
+            public const int SouthWest = 6;
             public const int NorthWest = 7;
         }
         public readonly struct Value

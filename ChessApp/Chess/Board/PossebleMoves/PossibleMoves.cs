@@ -26,16 +26,18 @@ namespace MyChess.PossibleMoves
         private int OpponentKing = 0;
         private Board board;
         public List<Move> moves;
+        Chess.Board.PossebleMoves.FastIsSquareAttacked checkChecker;
         public PossibleMovesGenerator(Board board)
         {
             moves = new List<Move>();
             this.board = board;
+            checkChecker = new(board);
             GenerateMoves();
         }
 
         public void GenerateMoves()
         {
-            moves = new List<Move>(30); // avg moves for random pos
+            moves = new List<Move>(64); // avg moves for random pos
 
             // so we dont need to loop over all square everytime we try and fint the right piece
             // for (int i = 0; i < board.piecePoses.Count; i++)
@@ -82,23 +84,55 @@ namespace MyChess.PossibleMoves
         private void KingCheckCheck()
         {
             List<Move> ValidMoves = new List<Move>(moves.Count);
+            checkChecker.Init(board.playerTurn);
 
             // go through each move
-            int kingPos = GetKingsPos(board.playerTurn);
+            //int kingPos = GetKingsPos(board.playerTurn);
+            int kingPos = board.piecePoses[0];
+            if ((board.Square[kingPos] & Piece.ColorBits) != board.playerTurn)
+                kingPos = board.piecePoses[1];
             int kingPosTemp = kingPos;
             int kingPiece = Piece.King | board.playerTurn;
             for (int i = 0; i < moves.Count; i++)
             {
-                board.MakeMove(moves[i]);
+                // This does not work with enpassant yet
 
-                // save the new possible moves
-                if (board.Square[moves[i].TargetSquare] == kingPiece)
-                    kingPosTemp = GetKingsPos(board.playerTurn ^ Board.ColorMask);
-                if (!IsSquareAttacked(kingPosTemp, board.playerTurn))
-                    ValidMoves.Add(moves[i]);
-                kingPosTemp = kingPos;
+                Move move = moves[i];
 
-                board.UnMakeMove();
+                if (move.MoveFlag == Move.Flag.EnPassantCapture)
+                {
+                    board.MakeMove(move);
+                    if (board.Square[move.TargetSquare] == kingPiece)
+                        kingPosTemp = move.TargetSquare;
+                    if (!IsSquareAttacked(kingPosTemp, board.playerTurn))
+                        ValidMoves.Add(move);
+                    kingPosTemp = kingPos;
+                    board.UnMakeMove();
+                }
+                else
+                {
+                    int movingPiece = board.Square[move.StartSquare];
+                    int capturedPiece = board.Square[move.TargetSquare];
+                    board.Square[move.StartSquare] = 0;
+                    board.Square[move.TargetSquare] = movingPiece;
+
+                    // change the FastCheckCheckers Bitboards
+                    checkChecker.poses[movingPiece] ^= (1UL << move.StartSquare) | (1UL << move.TargetSquare);
+                    checkChecker.poses[capturedPiece] ^= 1UL << move.TargetSquare;
+
+                    if (board.Square[move.TargetSquare] == kingPiece)
+                        kingPosTemp = move.TargetSquare;
+                    if (!checkChecker.IsSquareAttacked(kingPosTemp))
+                        ValidMoves.Add(move);
+                    kingPosTemp = kingPos;
+
+                    checkChecker.poses[movingPiece] ^= (1UL << move.StartSquare) | (1UL << move.TargetSquare);
+                    checkChecker.poses[capturedPiece] ^= 1UL << move.TargetSquare;
+
+                    board.Square[move.StartSquare] = movingPiece;
+                    board.Square[move.TargetSquare] = capturedPiece;
+                }
+
             }
 
             moves = ValidMoves;
@@ -314,7 +348,9 @@ namespace MyChess.PossibleMoves
             for (int i = 0; i < board.piecePoses.Count; i++)
             {
                 int piece = board.Square[board.piecePoses[i]];
-                if (piece == ThisQueen)
+                if (piece == 0)
+                    continue;
+                else if (piece == ThisQueen)
                 {
                     fromDir = 0;
                     toDir = 8;

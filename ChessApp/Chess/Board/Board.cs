@@ -310,7 +310,6 @@ namespace MyChess.ChessBoard
                 piecePoses.MovePiece(move.TargetSquare, move.StartSquare);
                 Square[move.StartSquare] = Square[move.TargetSquare];
                 Square[move.TargetSquare] = 0;
-                // enPassantPiece = 64;
             }
             else if (move.MoveFlag == Move.Flag.EnPassantCapture)
             {
@@ -327,7 +326,6 @@ namespace MyChess.ChessBoard
                     Square[move.TargetSquare - 8] = Piece.WPawn;
                     piecePoses.AddPieceAtSquare(move.TargetSquare - 8);
                 }
-                // enPassantPiece = move.TargetSquare;
             }
             else if (move.MoveFlag == Move.Flag.Castling)
             {
