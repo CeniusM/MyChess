@@ -15,7 +15,7 @@ namespace MyChess.Chess.Evaluation
         public static void OrderMoves(ChessBoard.Board board, Move[] moves)
         {
             // could not make it work
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
 
             int length = moves.Length;
             int[] values = new int[length];
@@ -31,30 +31,30 @@ namespace MyChess.Chess.Evaluation
                 //int movingPieceValue = MaterialCounterBase.PieceValue.Indexed[movingPiece];
 
                 // Check if we walk into pawns
-                //bool walkingIntoPawn = false;
-                //if (playerTurn == 8)
-                //{
-                //    if (IsPieceInBound(move.TargetSquare - 7))
-                //        if (board.Square[move.TargetSquare - 7] == Piece.BPawn)
-                //            walkingIntoPawn = true;
-                //    if (IsPieceInBound(move.TargetSquare - 9))
-                //        if (board.Square[move.TargetSquare - 9] == Piece.BPawn)
-                //            walkingIntoPawn = true;
-                //}
-                //else
-                //{
-                //    if (IsPieceInBound(move.TargetSquare + 7))
-                //        if (board.Square[move.TargetSquare + 7] == Piece.WPawn)
-                //            walkingIntoPawn = true;
-                //    if (IsPieceInBound(move.TargetSquare + 9))
-                //        if (board.Square[move.TargetSquare + 9] == Piece.WPawn)
-                //            walkingIntoPawn = true;
-                //}
+                bool walkingIntoPawn = false;
+                if (playerTurn == 8)
+                {
+                    if (IsPieceInBound(move.TargetSquare - 7))
+                        if (board.Square[move.TargetSquare - 7] == Piece.BPawn)
+                            walkingIntoPawn = true;
+                    if (IsPieceInBound(move.TargetSquare - 9))
+                        if (board.Square[move.TargetSquare - 9] == Piece.BPawn)
+                            walkingIntoPawn = true;
+                }
+                else
+                {
+                    if (IsPieceInBound(move.TargetSquare + 7))
+                        if (board.Square[move.TargetSquare + 7] == Piece.WPawn)
+                            walkingIntoPawn = true;
+                    if (IsPieceInBound(move.TargetSquare + 9))
+                        if (board.Square[move.TargetSquare + 9] == Piece.WPawn)
+                            walkingIntoPawn = true;
+                }
 
-                //if (walkingIntoPawn)
-                //{
-                //    value -= Math.Min(100 - MaterialCounterBase.PieceValue.Indexed[movingPiece] >> 2, 0);
-                //}
+                if (walkingIntoPawn)
+                {
+                    value -= Math.Min(100 - MaterialCounterBase.PieceValue.Indexed[movingPiece] >> 2, 0);
+                }
 
                 if ((move.MoveFlag & 0b100) == 0b100) // Promotions
                 {
@@ -70,7 +70,7 @@ namespace MyChess.Chess.Evaluation
                     value += MaterialCounterBase.PieceValue.Indexed[move.CapturedPiece];
                 }
 
-                values[i] = value;
+                values[i] = -value;
             }
 
             Array.Sort(values, moves);

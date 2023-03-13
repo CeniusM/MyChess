@@ -389,6 +389,19 @@ namespace MyChess.ChessBoard
             HashKeyFurther(0, 0); // color
         }
 
+        //public bool IsSquareHitByPawn(int square, int enemyPawn)
+        //{
+        //    if (enemyPawn == Piece.White)
+        //    {
+        //        if (IsPieceInBound(square  - 7))
+        //            if (board.Square[square - 7] != 0)
+        //                eval += 10;
+        //        if (IsPieceInBound(square - 9))
+        //            if (board.Square[square - 9] != 0)
+        //                eval += 10;
+        //    }
+        //}
+
         public void ChangePlayer() => playerTurn ^= ColorMask;
 
         public static string GetPrettyBoard(Board board)

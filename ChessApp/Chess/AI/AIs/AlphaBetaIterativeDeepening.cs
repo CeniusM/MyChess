@@ -5,6 +5,15 @@ using System.Diagnostics;
 
 namespace MyChess.ChessBoard.AIs
 {
+    //class WhiteComparer : IComparer<int>
+    //{
+    //    public int Compare(int x, int y)
+    //    {
+    //        if (x > y)
+
+    //    }
+    //}
+
     public class AlphaBetaIterativeDeepening : ChessAIBase
     {
         private Dictionary<ulong, int> TransportationTable = new Dictionary<ulong, int>();
@@ -13,8 +22,8 @@ namespace MyChess.ChessBoard.AIs
         /// Max depth
         /// </summary>
         public const int Depth = 40;
-        //public const int TimeToThinkMS = 10_000;
-        //public const int TimeToThinkMS = 10_000;
+        //public const int TimeToThinkMS = 40;
+        //public const int TimeToThinkMS = 1_000;
         public const int TimeToThinkMS = 10_000;
         private bool AllowedToThink = true;
 
@@ -104,6 +113,8 @@ namespace MyChess.ChessBoard.AIs
                     //    Console.WriteLine("val: " + results.Values[i] + " Move: " + moves[i].ToString());
                     //}
                     // Sort moves
+                    
+
                     Array.Sort(results.Values, moves);
 
                     //for (int i = 0; i < Count; i++)
@@ -141,6 +152,13 @@ namespace MyChess.ChessBoard.AIs
         /// </summary>
         public (int[] Values, bool Finished, int BestMoveIndex, int MovesFinished) Search(int depth, Move[] moves, int previousBestMove)
         {
+            // NOTE
+            // Also use alpha beta pruning in HERE
+            // And also make sure the values/moves get sorted the right way since black and white wants difrent values
+
+
+
+
             int moveCount = moves.Length;
             int bestMove = 0;
             int bestMoveEval = (board.playerTurn == 8) ? int.MinValue : int.MaxValue;
@@ -220,6 +238,7 @@ namespace MyChess.ChessBoard.AIs
                 return evaluator.EvaluateBoardLight(0);
             Move[] moves = new Move[movesList.Count];
             movesList.CopyTo(moves);
+            MoveOrder.OrderMoves(board, moves);
 
             if (maxPlayer)
             {

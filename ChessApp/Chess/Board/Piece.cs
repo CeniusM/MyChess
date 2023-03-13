@@ -25,5 +25,10 @@ namespace MyChess.ChessBoard
         public const int BBishop = 4 + Black;
         public const int BQueen = 5 + Black;
         public const int BKing = 6 + Black;
+
+        public static bool IsColor(int piece, int color)
+        {
+            return (piece & color) == color;
+        }
     }
 }

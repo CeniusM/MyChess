@@ -10,7 +10,7 @@ namespace MyChess.ChessBoard.Evaluators.Methods
             int moveNum = board.board.moves.Count;
 
             int kingPos = board.possibleMoves.GetKingsPos(color ^ Piece.ColorBits);
-            int bonusMultiplyer = (int)(KingBonus[kingPos] * lateGameMultiplier * 0.5f);
+            int bonusMultiplyer = (int)(KingBonus[kingPos] * lateGameMultiplier);
             // MyLib.DebugConsole.WriteLine(bonusMultiplyer + " . " + (float)(32 - Material) / 32 + " . " + Material);
 
             return bonusMultiplyer;

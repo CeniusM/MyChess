@@ -15,13 +15,13 @@ namespace MyChess.Chess.Evaluation.EvaluationTechniques
             float eval = 0f;
             for (int i = 0; i < 64; i++)
             {
-                int square = board.Square[i];
-                if ((square & Piece.Pawn) == Piece.Pawn)
+                int piece = board.Square[i];
+                if ((piece & Piece.Pawn) == Piece.Pawn)
                 {
-                    if ((square & Piece.ColorBits) == Piece.White)
-                        eval += (GetRank(square) / 7) * 350;
+                    if ((piece & Piece.ColorBits) == Piece.White)
+                        eval += (GetRank(i) / 7) * 350;
                     else
-                        eval += ((8 - GetRank(square)) / 7) * 350;
+                        eval += ((8 - GetRank(i)) / 7) * 350;
                 }
             }
             return eval;
@@ -38,10 +38,10 @@ namespace MyChess.Chess.Evaluation.EvaluationTechniques
 
             for (int i = 0; i < 64; i++)
             {
-                int square = board.Square[i];
-                if ((square & Piece.Pawn) == Piece.Pawn)
+                int piece = board.Square[i];
+                if ((piece & Piece.Pawn) == Piece.Pawn)
                 {
-                    if ((square & Piece.ColorBits) == Piece.White)
+                    if ((piece & Piece.ColorBits) == Piece.White)
                         whitePawns[GetCollum(i)]++;
                     else
                         blackPawns[GetCollum(i)]++;

@@ -1,6 +1,7 @@
 
 
 using MyChess.Chess.Evaluation.EvaluationTechniques;
+using MyChess.PossibleMoves;
 
 namespace MyChess.ChessBoard.Evaluators.Methods
 {
@@ -79,6 +80,7 @@ namespace MyChess.ChessBoard.Evaluators.Methods
         private static int CountMaterial(Board board, int color, bool evaluateMatPlacement = false)
         {
             int material = 0;
+            bool foundOneBishop = false;
             for (int i = 0; i < board.piecePoses.Count; i++)
             {
                 int piece = board.Square[board.piecePoses[i]];
@@ -91,6 +93,46 @@ namespace MyChess.ChessBoard.Evaluators.Methods
                         // if (color == 8 && piece == 9)
                         //     MyLib.DebugConsole.WriteLine("Piece: " + piece + " + " + PiecePosesBonus.PieceBonuses[piece, board.piecePoses[i]] + " Cord: " + board.piecePoses[i]);
                     }
+
+                    //int type = piece & Piece.PieceBits;
+
+                    //// Get activity for rooks, knights and bishops
+                    //if (type == Piece.Rook)
+                    //{
+
+                    //}
+                    //else if (type == Piece.Bishop)
+                    //{
+                    //    if (foundOneBishop)
+                    //    {
+                    //        material += 30;
+                    //        foundOneBishop = false;
+                    //    }
+                    //    foundOneBishop = true;
+
+                    //    for (int dir = 4; dir < 8; dir++)
+                    //    {
+                    //        int pos = i;
+                    //        int offset = Directions.Value.Indexed[dir];
+                    //        int length = Directions.LenghtToSide[i, dir];
+                    //        for (int foo = 0; foo < length; foo++)
+                    //        {
+                    //            pos += offset;
+                    //            int hitPiece = board.Square[pos];
+                    //            if (hitPiece != 0)
+                    //            {
+                    //                if (Piece.IsColor(hitPiece, color))
+                    //                    IsSquareHitByPawn
+                    //                break;
+                    //            }
+                    //        }
+                    //    }
+
+                    //}
+                    //else if (type == Piece.Knight)
+                    //{
+
+                    //}
                 }
             }
             // if (evaluateMatPlacement)
