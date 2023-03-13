@@ -35,6 +35,11 @@ namespace MyChess.ChessBoard.Evaluators
             //chessGame.board.piecePoses
 
 
+
+
+
+            // Need king safty
+            // and piece activity
             int evaluation = matCounter.GetMaterialAdvantage(chessGame, evaluateMatPlacement);
             
 
