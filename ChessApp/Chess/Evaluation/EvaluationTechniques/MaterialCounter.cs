@@ -73,8 +73,9 @@ namespace MyChess.ChessBoard.Evaluators.Methods
 
             whiteEval += LateGameKingToEadge.GetBonus(chessGame, lateGameMultiplier, 8);
             blackEval += LateGameKingToEadge.GetBonus(chessGame, lateGameMultiplier, 16);
-
-            return whiteEval - blackEval + PawnStructure.GetEval(board, lateGameMultiplier);
+            int eval = whiteEval - blackEval;
+            eval += PawnStructure.GetEval(board, lateGameMultiplier);
+            return eval;
         }
 
         private static int CountMaterial(Board board, int color, bool evaluateMatPlacement = false)
