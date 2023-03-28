@@ -30,10 +30,10 @@ namespace MyChess.ChessBoard.AIs
         public int round = 0; // to stop previus watches from stoping new searches
         public void StopClock(int clockRound)
         {
-            Console.WriteLine("Clock try stop");
+            //Console.WriteLine("Clock try stop");
             if (round == clockRound)
             {
-                Console.WriteLine("Clock stopped");
+                //Console.WriteLine("Clock stopped");
                 AllowedToThink = false;
             }
         }
