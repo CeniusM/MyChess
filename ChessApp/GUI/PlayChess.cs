@@ -464,7 +464,7 @@ namespace MyChessGUI
             if (winner == 1)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Grats, you won, vell played :D");
+                Console.WriteLine("Grats, you won, well played :D");
             }
             else if (winner == 2)
             {
