@@ -24,16 +24,16 @@ namespace MyChess.ChessBoard.AIs
         public const int Depth = 40;
         //public const int TimeToThinkMS = 40;
         //public const int TimeToThinkMS = 1_000;
-        public const int TimeToThinkMS = 10_000;
+        public int TimeToThinkMS = 10_000;
         private bool AllowedToThink = true;
 
         public int round = 0; // to stop previus watches from stoping new searches
         public void StopClock(int clockRound)
         {
-            Console.WriteLine("Clock try stop");
+            //Console.WriteLine("Clock try stop");
             if (round == clockRound)
             {
-                Console.WriteLine("Clock stopped");
+                //Console.WriteLine("Clock stopped");
                 AllowedToThink = false;
             }
         }
@@ -94,9 +94,9 @@ namespace MyChess.ChessBoard.AIs
                 //Console.WriteLine("Time Spent: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
                 //        " Best. eval: " + results.Values[results.BestMoveIndex] + " MovesFinished: " + results.MovesFinished + "/" + Count +
                 //        " Alpha Beta Snips: " + ABSnips + ". Nodes: " + Nodes);
-                Console.WriteLine("Time: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
-                        ". eval: " + results.Values[results.BestMoveIndex] + ". MovesFinished: " + results.MovesFinished + "/" + Count +
-                        ". HashCollisions: " + HashKeyCollisuions + ". Nodes: " + Nodes);
+                //Console.WriteLine("Time: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
+                //        ". eval: " + results.Values[results.BestMoveIndex] + ". MovesFinished: " + results.MovesFinished + "/" + Count +
+                //        ". HashCollisions: " + HashKeyCollisuions + ". Nodes: " + Nodes);
                 Nodes = 0;
                 ABSnips = 0;
                 HashKeyCollisuions = 0;

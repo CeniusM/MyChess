@@ -37,6 +37,13 @@ namespace MyChessGUI
         ai;
 
 
+        private int PlayerTimeToThink = 240_000;
+        private int AITimeToThink = 240_000;
+
+        private bool RunningTimer = false;
+
+        private bool PausedForEdeting = false;
+
         private const int SquareDimensions = 100;
         // private ChessGame chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B1n3/8/PPP1N1PP/RNBQK2R b KQ - 1 8");
         //private ChessGame chessGame = new ChessGame("6k1/1p1qn1r1/1p2R3/3P2pp/1N6/2P4P/P5P1/1R1Q3K b - - 0 1");
@@ -79,19 +86,23 @@ namespace MyChessGUI
 
         private void KeyPress(object? sender, KeyPressEventArgs e)
         {
-
+            if (PausedForEdeting)
+                return;
             if (_GameState != GameStates.AIPlaying)
             {
                 switch (e.KeyChar)
                 {
-                    case 'L': // Load in moves via the console
+                    case 'l': // Load in moves via the console
                         var str = Console.ReadLine();
-
                         break;
-                    case 'P':
+                    case 'p':
                         var moves = chessGame.board.moves.ToArray();
                         for (int i = 0; i < moves.Length; i++)
                             Console.WriteLine(moves[i].ToString());
+                        break;
+                    case 'c':
+                        Console.ResetColor();
+                        Console.Clear();
                         break;
                     case ' ':
                         chessGame.UnMakeMove();
@@ -129,6 +140,15 @@ namespace MyChessGUI
                     case 'g':
                         chessGame.possibleMoves.GenerateMoves();
                         break;
+                    case 'e':
+                        Task.Run(EditTimes);
+                        break;
+                    case 't':
+                        Task.Run(ChessTimer);
+                        break;
+                    case 'T':
+                        RunningTimer = false;
+                        break;
                     default:
                         break;
                 }
@@ -138,7 +158,7 @@ namespace MyChessGUI
                 switch (e.KeyChar)
                 {
                     case 'S':
-                            ai.StopClock(ai.round);
+                        ai.StopClock(ai.round);
                         break;
                     default:
                         break;
@@ -146,10 +166,129 @@ namespace MyChessGUI
             }
         }
 
+        private string GetTimeFormated(double ms)
+        {
+            return Math.Round(ms / 1000 / 60, 0, MidpointRounding.ToZero) + ":" + string.Format("{0:00}", ((int)(ms / 1000)) % 60);
+        }
+
+        enum EditTimeSelections
+        {
+            PlayerTime,
+            AITime,
+            Increments,
+        }
+
+        private void EditTimes()
+        {
+            if (RunningTimer)
+                return;
+            PausedForEdeting = true;
+
+            Console.ResetColor();
+            Console.Clear();
+            Console.CursorVisible = false;
+
+            int playerTime = PlayerTimeToThink;
+            int aiTime = AITimeToThink;
+            int increments = 60 * 1000;
+
+            EditTimeSelections selection = 0;
+
+            void PrintEdit()
+            {
+                Console.SetCursorPosition(0, 0);
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Press \"Ecs\" to exit");
+                Console.WriteLine("Press \"D\" to increase, \"A\" to decrease and \"W\"/\"S\" to traverse menu");
+                Console.WriteLine("                            ");
+                Console.WriteLine("                            ");
+                Console.WriteLine("                            ");
+                Console.WriteLine("                            ");
+                Console.SetCursorPosition(0, 2);
+                Console.ForegroundColor = ConsoleColor.Blue;
+
+                if (selection == EditTimeSelections.PlayerTime)
+                    Console.BackgroundColor = ConsoleColor.DarkGray;
+                else
+                    Console.BackgroundColor = ConsoleColor.Black;
+                Console.WriteLine("Player timer: " + GetTimeFormated(playerTime));
+
+
+                if (selection == EditTimeSelections.AITime)
+                    Console.BackgroundColor = ConsoleColor.DarkGray;
+                else
+                    Console.BackgroundColor = ConsoleColor.Black;
+                Console.WriteLine("AI timer:     " + GetTimeFormated(aiTime));
+
+
+                if (selection == EditTimeSelections.Increments)
+                    Console.BackgroundColor = ConsoleColor.DarkGray;
+                else
+                    Console.BackgroundColor = ConsoleColor.Black;
+                Console.WriteLine("Increment:    " + GetTimeFormated(increments));
+            }
+
+            while (true)
+            {
+                PrintEdit();
+                var key = Console.ReadKey();
+                if (key.Key == ConsoleKey.Escape)
+                    break;
+
+                else if (key.Key == ConsoleKey.D)
+                {
+                    if (selection == EditTimeSelections.PlayerTime)
+                        playerTime += increments;
+                    else if (selection == EditTimeSelections.AITime)
+                        aiTime += increments;
+                    else if (selection == EditTimeSelections.Increments)
+                        increments += 1000;
+                }
+
+                else if (key.Key == ConsoleKey.A)
+                {
+                    if (selection == EditTimeSelections.PlayerTime)
+                        playerTime -= increments;
+                    else if (selection == EditTimeSelections.AITime)
+                        aiTime -= increments;
+                    else if (selection == EditTimeSelections.Increments)
+                        increments -= 1000;
+                }
+
+                else if (key.Key == ConsoleKey.W)
+                {
+                    selection--;
+                }
+
+                else if (key.Key == ConsoleKey.S)
+                {
+                    selection++;
+                }
+
+
+                playerTime = Math.Clamp(playerTime, 0, 100 * 60 * 1000 - 1); // Max 99min and 59 seconds
+                aiTime = Math.Clamp(aiTime, 0, 100 * 60 * 1000 - 1);
+                increments = Math.Clamp(increments, 0, 100 * 60 * 1000 - 1);
+                selection = (EditTimeSelections)Math.Clamp((int)selection, 0, 2);
+            }
+
+            PlayerTimeToThink = playerTime;
+            AITimeToThink = aiTime;
+
+            Console.ResetColor();
+            Console.Clear();
+            Console.CursorVisible = true;
+
+            PausedForEdeting = false;
+        }
+
         int squareX = 0;
         int squareY = 0;
         private void MouseClick(object? sender, MouseEventArgs e)
         {
+            if (PausedForEdeting)
+                return;
             if (e.X > 800 || e.X < 0 || e.Y > 800 || e.Y < 0)
             {
                 _selecktedSquare = -1;
@@ -175,7 +314,7 @@ namespace MyChessGUI
                     break;
                 case GameStates.AIPlaying:
                     // some kind of options while the ai is playing or thinking
-                    Console.WriteLine("AI Thinking");
+                    //Console.WriteLine("AI Thinking");
                     break;
                 default:
                     throw new NotImplementedException("This GameState has not been implementet some how");
@@ -233,7 +372,113 @@ namespace MyChessGUI
             }
 
             makingAMove = false;
-            Console.WriteLine(board.HashKey);
+            //Console.WriteLine(board.HashKey);
+        }
+
+        private void ChessTimer()
+        {
+            if (RunningTimer)
+                return;
+            RunningTimer = true;
+            Console.ResetColor();
+            Console.Clear();
+            Console.CursorVisible = false;
+
+            ai.TimeToThinkMS = AITimeToThink / 120;
+
+            double PlayerTimeLeft = PlayerTimeToThink;
+            double AITimeLeft = AITimeToThink;
+
+            int cycles = 1;
+
+            bool lastAIPlaying = !AIThinking;
+
+            void PrintTimer()
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.SetCursorPosition(0, 0);
+                Console.WriteLine("                           \n                           \n                           \n                           \n                           \n");
+                Console.SetCursorPosition(0, 0);
+
+                Console.ForegroundColor = ConsoleColor.Blue;
+
+                if (AIThinking)
+                    Console.BackgroundColor = ConsoleColor.Black;
+                else
+                    Console.BackgroundColor = ConsoleColor.DarkRed;
+
+                Console.WriteLine("Player time left: " + GetTimeFormated(PlayerTimeLeft));
+
+
+                if (AIThinking)
+                    Console.BackgroundColor = ConsoleColor.DarkRed;
+                else
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                Console.WriteLine("AI time left:     " + GetTimeFormated(AITimeLeft));
+            }
+
+            Stopwatch sw = new Stopwatch();
+            int winner = 0;
+            while (RunningTimer)
+            {
+                sw.Restart();
+
+                Thread.Sleep(1);
+                cycles--;
+                if (cycles == 0)
+                {
+                    cycles = 15;
+                    PrintTimer();
+                }
+
+                if (AIThinking)
+                {
+                    AITimeLeft -= sw.Elapsed.TotalMilliseconds;
+                    if (AITimeLeft < 0)
+                    {
+                        winner = 1;
+                        break;
+                    }
+                }
+                else
+                {
+                    PlayerTimeLeft -= sw.Elapsed.TotalMilliseconds;
+                    if (PlayerTimeLeft < 0)
+                    {
+                        winner = 2;
+                        break;
+                    }
+                }
+
+                if (lastAIPlaying != AIThinking)
+                    PrintTimer();
+
+                lastAIPlaying = AIThinking;
+            }
+
+            Console.ResetColor();
+            Console.Clear();
+            Console.CursorVisible = true;
+
+            if (winner == 1)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Grats, you won, vell played :D");
+            }
+            else if (winner == 2)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("You lost, 'bepp boop' better luck next time :>");
+            }
+            else if (winner == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Exited");
+            }
+
+            Console.ResetColor();
+            RunningTimer = false;
         }
 
         int StartSquareOfPromotionPiece = 0;
