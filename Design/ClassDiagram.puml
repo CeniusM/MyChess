@@ -1,0 +1,50 @@
+@startuml
+Class Player {
+    - Dictionary<ChessPiece, BoardSquare> _moveHistory
+}
+
+Class Human {
+    
+}
+
+
+Class AI {
+
+}
+
+Class Board {
+    - List<ChessPiece> _chessPieces
+    - List<BoardSquares> _boardSquares
+    - Dictionary<ChessPiece, BoardSquare> _moveHistory
+    - Player _playerOne 
+    - Player _playerTwo
+    + bool : JoinGame(Player player)
+    + bool : Move(ChessPiece cp, BoardSquare bs)
+    + void : UndoMove()
+}
+
+Class BoardSquare {
+    + ChessPiece Occupant
+}
+
+Class ChessPiece{
+    - Player _owner
+    + BoardSquare CurrentLocation
+    + ChessPiece(Player owner)
+    + void : SetCurrentLocation(BoardSquare bs)
+}
+
+Class MiniMax {
+
+}
+
+Human -up-|> Player
+AI -up-|> Player
+MiniMax -up-|> AI
+NeuralNetwork -up-|> AI
+
+Board *-- BoardSquare
+Board *-- Player : 2 player game
+Board *-- ChessPiece
+
+@enduml
