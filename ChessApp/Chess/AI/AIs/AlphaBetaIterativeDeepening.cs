@@ -94,9 +94,9 @@ namespace MyChess.ChessBoard.AIs
                 //Console.WriteLine("Time Spent: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
                 //        " Best. eval: " + results.Values[results.BestMoveIndex] + " MovesFinished: " + results.MovesFinished + "/" + Count +
                 //        " Alpha Beta Snips: " + ABSnips + ". Nodes: " + Nodes);
-                Console.WriteLine("Time: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
-                        ". eval: " + results.Values[results.BestMoveIndex] + ". MovesFinished: " + results.MovesFinished + "/" + Count +
-                        ". HashCollisions: " + HashKeyCollisuions + ". Nodes: " + Nodes);
+                //Console.WriteLine("Time: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
+                //        ". eval: " + results.Values[results.BestMoveIndex] + ". MovesFinished: " + results.MovesFinished + "/" + Count +
+                //        ". HashCollisions: " + HashKeyCollisuions + ". Nodes: " + Nodes);
                 Nodes = 0;
                 ABSnips = 0;
                 HashKeyCollisuions = 0;

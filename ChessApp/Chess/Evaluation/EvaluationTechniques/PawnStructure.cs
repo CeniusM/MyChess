@@ -1,5 +1,4 @@
-﻿
-using MyChess.ChessBoard;
+﻿using MyChess.ChessBoard;
 
 namespace MyChess.Chess.Evaluation.EvaluationTechniques
 {
@@ -29,22 +28,30 @@ namespace MyChess.Chess.Evaluation.EvaluationTechniques
 
         private static int Structure(ChessBoard.Board board)
         {
-            const int DoublePenelty = -20;
-            const int TriplePenelty = -80;
-            const int IsolationPenelty = -50;
+            const int DoublePenelty = -25;
+            const int TriplePenelty = -70;
+            const int IsolationPenelty = -35;
 
             int[] whitePawns = new int[8];
             int[] blackPawns = new int[8];
 
+            ulong whiteBitboard = 0;
+            ulong blackBitboard = 0;
+
+            // Gotta move this into make and unmake move...
+
             for (int i = 0; i < 64; i++)
             {
                 int piece = board.Square[i];
-                if ((piece & Piece.Pawn) == Piece.Pawn)
+                if (piece == Piece.WPawn)
                 {
-                    if ((piece & Piece.ColorBits) == Piece.White)
-                        whitePawns[GetCollum(i)]++;
-                    else
-                        blackPawns[GetCollum(i)]++;
+                    whiteBitboard |= 0b1UL << i;
+                    whitePawns[GetCollum(i)]++;
+                }
+                else if (piece == Piece.BPawn)
+                {
+                    blackBitboard |= 0b1UL << i;
+                    blackPawns[GetCollum(i)]++;
                 }
             }
 
@@ -61,12 +68,26 @@ namespace MyChess.Chess.Evaluation.EvaluationTechniques
                     eval -= DoublePenelty;
                 else if (blackPawns[i] == 3)
                     eval -= TriplePenelty;
+            }
 
-                // check isolation
-                //if (i == 0)
-                //{
-                //    if ()
-                //}
+            ulong[] isolationChecks = { 144680345676153346, 361700864190383365, 723401728380766730, 1446803456761533460, 2893606913523066920, 5787213827046133840, 11574427654092267680, 4629771061636907072 };
+
+            for (int i = 0; i < 64; i++)
+            {
+                // Check for isolation, and passed pawns
+                int piece = board.Square[i];
+                if (piece == Piece.WPawn)
+                {
+                    if ((whiteBitboard & isolationChecks[i % 8]) == 0)
+                        eval += IsolationPenelty;
+                }
+                else if (piece == Piece.BPawn)
+                {
+                    if ((blackBitboard & isolationChecks[i % 8]) == 0)
+                        eval -= IsolationPenelty;
+                }
+
+                // Check for passed pawns
             }
 
             return eval;

@@ -1,5 +1,6 @@
 
 
+using Microsoft.VisualBasic.Devices;
 using MyChess.Chess.Evaluation.EvaluationTechniques;
 using MyChess.PossibleMoves;
 
@@ -55,84 +56,185 @@ namespace MyChess.ChessBoard.Evaluators.Methods
 
     public class MaterialCounterV1 : MaterialCounterBase
     {
+        // MobilityBonus values borrowed from stockfish, https://github.com/official-stockfish/Stockfish/blob/master/src/evaluate.cpp
+        public static readonly int[] KnightMobilityBonus = { -62, -53, -12, -3, 3, 12, 21, 28, 37 };
+        public static readonly int[] RookMobilityBonus = { -60, -24, 0, 3, 4, 14, 20, 30, 41, 41, 41, 45, 57, 58, 67 };
+        public static readonly int[] BishopMobilityBonus = { -47, -20, 14, 29, 39, 53, 53, 60, 62, 69, 78, 83, 91, 96 };
+        public static readonly int[] QueenMobilityBonus = { -29, -16, -8, -8, 18, 25, 23, 37, 41, 54, 65, 68, 69, 70, 70, 70, 71, 72, 74, 76, 90, 104, 105, 106, 112, 114, 114, 119 };
+
+
+
         public MaterialCounterV1(Board board) : base(board) { }
 
         public override int GetMaterialAdvantage(ChessGame chessGame)
         {
-            int whiteEval = CountMaterial(board, Piece.White);
-            int blackEval = CountMaterial(board, Piece.Black);
+            int eval = CountMaterialAndMobility(board);
 
             if (board.Square[59] == Piece.WQueen) // White queen
-                whiteEval += Math.Max(10 - board.moves.Count, 0) * 20;
+                eval += Math.Max(12 - board.moves.Count, 0) * 20;
             if (board.Square[3] == Piece.BQueen) // Black queen
-                blackEval += Math.Max(10 - board.moves.Count, 0) * 20;
+                eval -= Math.Max(12 - board.moves.Count, 0) * 20;
 
             float lateGameMultiplier = (float)(32 - chessGame.board.piecePoses.Count) / 32;
             if (lateGameMultiplier < 0.5f)
                 lateGameMultiplier = 0;
 
-            whiteEval += LateGameKingToEadge.GetBonus(chessGame, lateGameMultiplier, 8);
-            blackEval += LateGameKingToEadge.GetBonus(chessGame, lateGameMultiplier, 16);
-            int eval = whiteEval - blackEval;
+            eval += LateGameKingToEadge.GetBonus(chessGame, lateGameMultiplier, 8);
+            eval -= LateGameKingToEadge.GetBonus(chessGame, lateGameMultiplier, 16);
+
             eval += PawnStructure.GetEval(board, lateGameMultiplier);
             return eval;
         }
 
-        private static int CountMaterial(Board board, int color)
+        private static int CountMaterialAndMobility(Board board)
         {
             int material = 0;
             bool foundOneBishop = false;
-            for (int i = 0; i < board.piecePoses.Count; i++)
+            for (int i = 0; i < 64; i++)
             {
-                int piece = board.Square[board.piecePoses[i]];
-                if ((piece & Piece.ColorBits) == color)
+                int piece = board.Square[i];
+                if (piece != 0)
                 {
-                    material += PieceValue.Indexed[piece];
-                    material += PiecePosesBonus.PieceBonuses[piece, board.piecePoses[i]];
+                    int color = piece & Piece.ColorBits;
+                    if (color == 8)
+                    {
+                        material += PieceValue.Indexed[piece];
+                        material += PiecePosesBonus.PieceBonuses[piece, i];
+                    }
+                    else
+                    {
+                        material -= PieceValue.Indexed[piece];
+                        material -= PiecePosesBonus.PieceBonuses[piece, i];
+                    }
 
-                    //int type = piece & Piece.PieceBits;
 
-                    //// Get activity for rooks, knights and bishops
-                    //if (type == Piece.Rook)
-                    //{
 
-                    //}
-                    //else if (type == Piece.Bishop)
-                    //{
-                    //    if (foundOneBishop)
-                    //    {
-                    //        material += 30;
-                    //        foundOneBishop = false;
-                    //    }
-                    //    foundOneBishop = true;
 
-                    //    for (int dir = 4; dir < 8; dir++)
-                    //    {
-                    //        int pos = i;
-                    //        int offset = Directions.Value.Indexed[dir];
-                    //        int length = Directions.LenghtToSide[i, dir];
-                    //        for (int foo = 0; foo < length; foo++)
-                    //        {
-                    //            pos += offset;
-                    //            int hitPiece = board.Square[pos];
-                    //            if (hitPiece != 0)
-                    //            {
-                    //                if (Piece.IsColor(hitPiece, color))
-                    //                    IsSquareHitByPawn
-                    //                break;
-                    //            }
-                    //        }
-                    //    }
+                    // Get activity for rooks, knights and bishops
 
-                    //}
-                    //else if (type == Piece.Knight)
-                    //{
+                    int type = piece & Piece.PieceBits;
 
-                    //}
+                    if (type == Piece.Rook)
+                    {
+                        int count = 0;
+                        for (int dir = 0; dir < 4; dir++)
+                        {
+                            int move = i;
+                            for (int moveCount = 0; moveCount < 7; moveCount++)
+                            {
+                                if (MovesFromSquare.SlidingpieceMoves[i, dir, moveCount] == MovesFromSquare.InvalidMove)
+                                    break;
+                                move = MovesFromSquare.SlidingpieceMoves[i, dir, moveCount];
+
+                                if (board.Square[move] == 0)
+                                {
+                                    count++;
+                                }
+                                else if ((board.Square[move] & Piece.ColorBits) != board.playerTurn)
+                                {
+                                    count++;
+                                    break;
+                                }
+                                else
+                                    break;
+                            }
+                        }
+                        if (color == 8)
+                            material += RookMobilityBonus[count];
+                        else
+                            material -= RookMobilityBonus[count];
+                    }
+                    else if (type == Piece.Bishop)
+                    {
+                        if (foundOneBishop)
+                        {
+                            material += 30;
+                            foundOneBishop = false;
+                        }
+                        else
+                            foundOneBishop = true;
+
+                        int count = 0;
+                        for (int dir = 4; dir < 8; dir++)
+                        {
+                            int move = i;
+                            for (int moveCount = 0; moveCount < 7; moveCount++)
+                            {
+                                if (MovesFromSquare.SlidingpieceMoves[i, dir, moveCount] == MovesFromSquare.InvalidMove)
+                                    break;
+                                move = MovesFromSquare.SlidingpieceMoves[i, dir, moveCount];
+
+                                if (board.Square[move] == 0)
+                                {
+                                    count++;
+                                }
+                                else if ((board.Square[move] & Piece.ColorBits) != board.playerTurn)
+                                {
+                                    count++;
+                                    break;
+                                }
+                                else
+                                    break;
+                            }
+                        }
+                        if (color == 8)
+                            material += BishopMobilityBonus[count];
+                        else
+                            material -= BishopMobilityBonus[count];
+                    }
+                    else if (type == Piece.Queen)
+                    {
+                        int count = 0;
+                        for (int dir = 0; dir < 8; dir++)
+                        {
+                            int move = i;
+                            for (int moveCount = 0; moveCount < 7; moveCount++)
+                            {
+                                if (MovesFromSquare.SlidingpieceMoves[i, dir, moveCount] == MovesFromSquare.InvalidMove)
+                                    break;
+                                move = MovesFromSquare.SlidingpieceMoves[i, dir, moveCount];
+
+                                if (board.Square[move] == 0)
+                                {
+                                    count++;
+                                }
+                                else if ((board.Square[move] & Piece.ColorBits) != board.playerTurn)
+                                {
+                                    count++;
+                                    break;
+                                }
+                                else
+                                    break;
+                            }
+                        }
+                        if (color == 8)
+                            material += QueenMobilityBonus[count];
+                        else
+                            material -= QueenMobilityBonus[count];
+                    }
+                    else if (type == Piece.Knight)
+                    {
+                        int count = 0;
+
+                        for (int j = 0; j < 8; j++)
+                        {
+                            int knightMove = i + MovesFromSquare.KnightMoves[i, j];
+                            if (MovesFromSquare.KnightMoves[i, j] == MovesFromSquare.InvalidMove)
+                                continue;
+                            else if ((board.Square[knightMove] & Piece.ColorBits) != board.playerTurn)
+                            {
+                                count++;
+                            }
+                        }
+
+                        if (color == 8)
+                            material += QueenMobilityBonus[count];
+                        else
+                            material -= QueenMobilityBonus[count];
+                    }
                 }
             }
-            // if (evaluateMatPlacement)
-            //     MyLib.DebugConsole.WriteLine("");
+
             return material;
         }
 
