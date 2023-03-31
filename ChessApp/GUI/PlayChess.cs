@@ -153,6 +153,13 @@ namespace MyChessGUI
                     case 'T':
                         RunningTimer = false;
                         break;
+                    case 'd':
+                        ai.ShowAIThinking = !ai.ShowAIThinking;
+                        if (ai.ShowAIThinking)
+                            Console.WriteLine("Toggle AI output on");
+                        else
+                            Console.WriteLine("Toggle AI output off");
+                        break;
                     default:
                         break;
                 }
@@ -188,6 +195,7 @@ namespace MyChessGUI
             Console.WriteLine("\"t\" to start timer");
             Console.WriteLine("\"T\" to stop timer");
             Console.WriteLine("\"c\" to clear console");
+            Console.WriteLine("\"d\" to toggle ai output");
             //Console.WriteLine("\"\"");
             //Console.WriteLine("");
         }

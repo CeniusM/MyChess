@@ -25,6 +25,7 @@ namespace MyChess.ChessBoard.AIs
         //public const int TimeToThinkMS = 40;
         //public const int TimeToThinkMS = 1_000;
         public int TimeToThinkMS = 10_000;
+        public bool ShowAIThinking = false;
         private bool AllowedToThink = true;
 
         public int round = 0; // to stop previus watches from stoping new searches
@@ -94,9 +95,10 @@ namespace MyChess.ChessBoard.AIs
                 //Console.WriteLine("Time Spent: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
                 //        " Best. eval: " + results.Values[results.BestMoveIndex] + " MovesFinished: " + results.MovesFinished + "/" + Count +
                 //        " Alpha Beta Snips: " + ABSnips + ". Nodes: " + Nodes);
-                //Console.WriteLine("Time: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
-                //        ". eval: " + results.Values[results.BestMoveIndex] + ". MovesFinished: " + results.MovesFinished + "/" + Count +
-                //        ". HashCollisions: " + HashKeyCollisuions + ". Nodes: " + Nodes);
+                if (ShowAIThinking)
+                    Console.WriteLine("Time: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
+                            ". eval: " + results.Values[results.BestMoveIndex] + ". MovesFinished: " + results.MovesFinished + "/" + Count +
+                            ". HashCollisions: " + HashKeyCollisuions + ". Nodes: " + Nodes);
                 Nodes = 0;
                 ABSnips = 0;
                 HashKeyCollisuions = 0;

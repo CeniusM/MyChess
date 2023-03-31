@@ -71,16 +71,18 @@ namespace MyChess.ChessBoard.Evaluators.Methods
             int eval = CountMaterialAndMobility(board);
 
             if (board.Square[59] == Piece.WQueen) // White queen
-                eval += Math.Max(12 - board.moves.Count, 0) * 20;
+                eval += Math.Max(10 - board.moves.Count, 0) * 20;
             if (board.Square[3] == Piece.BQueen) // Black queen
-                eval -= Math.Max(12 - board.moves.Count, 0) * 20;
+                eval -= Math.Max(10 - board.moves.Count, 0) * 20;
 
             float lateGameMultiplier = (float)(32 - chessGame.board.piecePoses.Count) / 32;
-            if (lateGameMultiplier < 0.5f)
+            if (lateGameMultiplier < 0.3f)
                 lateGameMultiplier = 0;
 
             eval += LateGameKingToEadge.GetBonus(chessGame, lateGameMultiplier, 8);
             eval -= LateGameKingToEadge.GetBonus(chessGame, lateGameMultiplier, 16);
+
+            eval += KingSafty.GetEval(board, lateGameMultiplier);
 
             eval += PawnStructure.GetEval(board, lateGameMultiplier);
             return eval;
