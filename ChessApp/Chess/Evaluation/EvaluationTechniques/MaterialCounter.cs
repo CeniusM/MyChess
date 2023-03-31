@@ -44,12 +44,12 @@ namespace MyChess.ChessBoard.Evaluators.Methods
             };
         }
         public Board board;
-        public MaterialCounterBase(Board board, bool evaluateMatPlacement = false)
+        public MaterialCounterBase(Board board)
         {
             this.board = board;
         }
 
-        public abstract int GetMaterialAdvantage(ChessGame chessGame, bool evaluateMatPlacement = false);
+        public abstract int GetMaterialAdvantage(ChessGame chessGame);
     }
 
 
@@ -57,10 +57,10 @@ namespace MyChess.ChessBoard.Evaluators.Methods
     {
         public MaterialCounterV1(Board board) : base(board) { }
 
-        public override int GetMaterialAdvantage(ChessGame chessGame, bool evaluateMatPlacement = false)
+        public override int GetMaterialAdvantage(ChessGame chessGame)
         {
-            int whiteEval = CountMaterial(board, Piece.White, evaluateMatPlacement);
-            int blackEval = CountMaterial(board, Piece.Black, evaluateMatPlacement);
+            int whiteEval = CountMaterial(board, Piece.White);
+            int blackEval = CountMaterial(board, Piece.Black);
 
             if (board.Square[59] == Piece.WQueen) // White queen
                 whiteEval += Math.Max(10 - board.moves.Count, 0) * 20;
@@ -78,7 +78,7 @@ namespace MyChess.ChessBoard.Evaluators.Methods
             return eval;
         }
 
-        private static int CountMaterial(Board board, int color, bool evaluateMatPlacement = false)
+        private static int CountMaterial(Board board, int color)
         {
             int material = 0;
             bool foundOneBishop = false;
@@ -88,12 +88,7 @@ namespace MyChess.ChessBoard.Evaluators.Methods
                 if ((piece & Piece.ColorBits) == color)
                 {
                     material += PieceValue.Indexed[piece];
-                    if (evaluateMatPlacement)
-                    {
-                        material += PiecePosesBonus.PieceBonuses[piece, board.piecePoses[i]];
-                        // if (color == 8 && piece == 9)
-                        //     MyLib.DebugConsole.WriteLine("Piece: " + piece + " + " + PiecePosesBonus.PieceBonuses[piece, board.piecePoses[i]] + " Cord: " + board.piecePoses[i]);
-                    }
+                    material += PiecePosesBonus.PieceBonuses[piece, board.piecePoses[i]];
 
                     //int type = piece & Piece.PieceBits;
 

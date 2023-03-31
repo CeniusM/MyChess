@@ -92,7 +92,7 @@ namespace MyChess.ChessBoard.AIs
         public int AlphaBeta(int depth, int LASTMOVECOUNT, bool maxPlayer, int alpha, int beta)
         {
             if (depth == 0)
-                return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
+                return evaluator.EvaluateBoardLight(LASTMOVECOUNT);
 
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesRef = chessGame.GetPossibleMoves();

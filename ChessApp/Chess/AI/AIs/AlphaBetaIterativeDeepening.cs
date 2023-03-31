@@ -230,7 +230,7 @@ namespace MyChess.ChessBoard.AIs
             //if (!AllowedToThink)
             //    return 0;
             if (depth == 0)
-                return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
+                return evaluator.EvaluateBoardLight(LASTMOVECOUNT);
             //if (depth == 0)
             //    return AlphaBetaOnlyCaptures(LASTMOVECOUNT, maxPlayer);
 
@@ -324,7 +324,7 @@ namespace MyChess.ChessBoard.AIs
                 if (board.Square[movesList[i].TargetSquare] != 0)
                     moves.Add(movesList[i]);
             if (moves.Count == 0)
-                return evaluator.EvaluateBoardLight(TotalCount, true);
+                return evaluator.EvaluateBoardLight(TotalCount);
             if (maxPlayer)
             {
                 int maxEval = int.MinValue;

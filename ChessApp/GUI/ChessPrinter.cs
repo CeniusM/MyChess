@@ -152,7 +152,7 @@ namespace MyChessGUI
 
 
 
-            float evaluationv2 = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count, true) / 300f; // idk 
+            float evaluationv2 = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count) / 300f; // idk 
 
             float evalHeightv2 = MyMath.LogisticCurve((float)evaluationv2, 30, 0.3f, 15); // returs a num between -15 and 15
 

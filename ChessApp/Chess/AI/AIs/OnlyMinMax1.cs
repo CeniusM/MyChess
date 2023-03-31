@@ -54,7 +54,7 @@ namespace MyChess.ChessBoard.AIs
         public int minimax(int depth, int LASTMOVECOUNT, bool maxPlayer)
         {
             if (depth == 0)
-                return evaluator.EvaluateBoardLight(LASTMOVECOUNT, true);
+                return evaluator.EvaluateBoardLight(LASTMOVECOUNT);
 
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesRef = chessGame.GetPossibleMoves();
@@ -62,7 +62,7 @@ namespace MyChess.ChessBoard.AIs
             Move[] moves = new Move[Count];
             movesRef.CopyTo(moves);
             if (Count == 0)
-                return evaluator.EvaluateBoardLight(0, true);
+                return evaluator.EvaluateBoardLight(0);
 
             if (maxPlayer)
             {
