@@ -94,9 +94,9 @@ namespace MyChess.ChessBoard.AIs
                 //Console.WriteLine("Time Spent: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
                 //        " Best. eval: " + results.Values[results.BestMoveIndex] + " MovesFinished: " + results.MovesFinished + "/" + Count +
                 //        " Alpha Beta Snips: " + ABSnips + ". Nodes: " + Nodes);
-                //Console.WriteLine("Time: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
-                //        ". eval: " + results.Values[results.BestMoveIndex] + ". MovesFinished: " + results.MovesFinished + "/" + Count +
-                //        ". HashCollisions: " + HashKeyCollisuions + ". Nodes: " + Nodes);
+                Console.WriteLine("Time: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
+                        ". eval: " + results.Values[results.BestMoveIndex] + ". MovesFinished: " + results.MovesFinished + "/" + Count +
+                        ". HashCollisions: " + HashKeyCollisuions + ". Nodes: " + Nodes);
                 Nodes = 0;
                 ABSnips = 0;
                 HashKeyCollisuions = 0;
@@ -113,7 +113,7 @@ namespace MyChess.ChessBoard.AIs
                     //    Console.WriteLine("val: " + results.Values[i] + " Move: " + moves[i].ToString());
                     //}
                     // Sort moves
-                    
+
 
                     Array.Sort(results.Values, moves);
 
@@ -164,6 +164,10 @@ namespace MyChess.ChessBoard.AIs
             int bestMoveEval = (board.playerTurn == 8) ? int.MinValue : int.MaxValue;
             int eval = 0;
             int[] values = new int[moveCount];
+
+            int alpha = int.MinValue;
+            int beta = int.MaxValue;
+
             for (int i = 0; i < moveCount; i++)
             {
                 if (!AllowedToThink)
@@ -176,7 +180,7 @@ namespace MyChess.ChessBoard.AIs
                     }
                 }
                 board.MakeMove(moves[i]);
-                eval = AlphaBeta(depth - 1, moveCount, (board.playerTurn == 8), int.MinValue, int.MaxValue);//(board.playerTurn == 8) ? true : false
+                eval = AlphaBeta(depth - 1, moveCount, (board.playerTurn == 8), alpha, beta);//(board.playerTurn == 8) ? true : false
                 board.UnMakeMove();
                 if (!AllowedToThink)
                 {
@@ -197,6 +201,7 @@ namespace MyChess.ChessBoard.AIs
                         bestMoveEval = eval;
                         bestMove = i;
                     }
+                    alpha = Math.Max(alpha, eval);
                 }
                 else    // min
                 {
@@ -205,6 +210,7 @@ namespace MyChess.ChessBoard.AIs
                         bestMoveEval = eval;
                         bestMove = i;
                     }
+                    beta = Math.Min(beta, eval);
                 }
                 values[i] = eval;
             }
