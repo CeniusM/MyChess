@@ -35,7 +35,7 @@ namespace MyChess.PossibleMoves
             GenerateMoves();
         }
 
-        public void GenerateMoves()
+        public void GenerateMoves(bool removeNonCaptures = false)
         {
             moves = new List<Move>(64); // avg moves for random pos
 
@@ -69,7 +69,7 @@ namespace MyChess.PossibleMoves
             AddSlidingPieces();
             AddKingMoves();
 
-            KingCheckCheck();
+            KingCheckCheck(removeNonCaptures);
         }
 
         public int GetKingsPos(int color)
@@ -81,7 +81,7 @@ namespace MyChess.PossibleMoves
             return -1;
         }
 
-        private void KingCheckCheck()
+        private void KingCheckCheck(bool removeNonCaptures)
         {
             List<Move> ValidMoves = new List<Move>(moves.Count);
             checkChecker.Init(board.playerTurn);
@@ -98,6 +98,10 @@ namespace MyChess.PossibleMoves
                 // This does not work with enpassant yet
 
                 Move move = moves[i];
+
+                if (removeNonCaptures)
+                    if (board.Square[move.TargetSquare] != 0)
+                        continue;
 
                 if (move.MoveFlag == Move.Flag.EnPassantCapture)
                 {
