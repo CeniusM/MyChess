@@ -36,6 +36,7 @@ namespace MyChessGUI
         // MisterRandom
         ai;
 
+        private bool MenuOpen = false;
 
         private int PlayerTimeToThink = 240_000;
         private int AITimeToThink = 240_000;
@@ -80,6 +81,7 @@ namespace MyChessGUI
 
         public void Play()
         {
+            PrintMenu();
             _GameState = GameStates.PlayingMove;
             _chessPrinter.PrintBoard(_selecktedSquare);
         }
@@ -95,14 +97,16 @@ namespace MyChessGUI
                     case 'l': // Load in moves via the console
                         var str = Console.ReadLine();
                         break;
+                    case 'm':
+                        PrintMenu();
+                        break;
                     case 'p':
                         var moves = chessGame.board.moves.ToArray();
                         for (int i = 0; i < moves.Length; i++)
                             Console.WriteLine(moves[i].ToString());
                         break;
                     case 'c':
-                        Console.ResetColor();
-                        Console.Clear();
+                        ClearConsole();
                         break;
                     case ' ':
                         chessGame.UnMakeMove();
@@ -166,6 +170,28 @@ namespace MyChessGUI
             }
         }
 
+        private void ClearConsole()
+        {
+            MenuOpen = false;
+            Console.ResetColor();
+            Console.Clear();
+        }
+
+        private void PrintMenu()
+        {
+            ClearConsole();
+            MenuOpen = true;
+
+            Console.WriteLine("Help menu");
+            Console.WriteLine("\"m\" to open this menu");
+            Console.WriteLine("\"e\" to open time editor");
+            Console.WriteLine("\"t\" to start timer");
+            Console.WriteLine("\"T\" to stop timer");
+            Console.WriteLine("\"c\" to clear console");
+            //Console.WriteLine("\"\"");
+            //Console.WriteLine("");
+        }
+
         private string GetTimeFormated(double ms)
         {
             return Math.Round(ms / 1000 / 60, 0, MidpointRounding.ToZero) + ":" + string.Format("{0:00}", ((int)(ms / 1000)) % 60);
@@ -184,8 +210,7 @@ namespace MyChessGUI
                 return;
             PausedForEdeting = true;
 
-            Console.ResetColor();
-            Console.Clear();
+            ClearConsole();
             Console.CursorVisible = false;
 
             int playerTime = PlayerTimeToThink;
@@ -276,8 +301,7 @@ namespace MyChessGUI
             PlayerTimeToThink = playerTime;
             AITimeToThink = aiTime;
 
-            Console.ResetColor();
-            Console.Clear();
+            PrintMenu();
             Console.CursorVisible = true;
 
             PausedForEdeting = false;
@@ -380,8 +404,7 @@ namespace MyChessGUI
             if (RunningTimer)
                 return;
             RunningTimer = true;
-            Console.ResetColor();
-            Console.Clear();
+            ClearConsole();
             Console.CursorVisible = false;
 
             ai.TimeToThinkMS = AITimeToThink / 120;
@@ -457,9 +480,9 @@ namespace MyChessGUI
                 lastAIPlaying = AIThinking;
             }
 
-            Console.ResetColor();
-            Console.Clear();
             Console.CursorVisible = true;
+
+            PrintMenu();
 
             if (winner == 1)
             {
