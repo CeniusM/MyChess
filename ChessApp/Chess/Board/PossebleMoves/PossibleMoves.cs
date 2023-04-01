@@ -100,7 +100,7 @@ namespace MyChess.PossibleMoves
                 Move move = moves[i];
 
                 if (removeNonCaptures)
-                    if (board.Square[move.TargetSquare] != 0)
+                    if (board.Square[move.TargetSquare] == 0)
                         continue;
 
                 if (move.MoveFlag == Move.Flag.EnPassantCapture)

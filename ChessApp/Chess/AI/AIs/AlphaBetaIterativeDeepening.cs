@@ -21,10 +21,11 @@ namespace MyChess.ChessBoard.AIs
         /// <summary>
         /// Max depth
         /// </summary>
-        public const int Depth = 40;
+        public const int Depth = 100;
         //public const int TimeToThinkMS = 40;
         //public const int TimeToThinkMS = 1_000;
         public int TimeToThinkMS = 10_000;
+        //public int TimeToThinkMS = 100000_000;
         public bool ShowAIThinking = false;
         private bool AllowedToThink = true;
 
@@ -234,7 +235,7 @@ namespace MyChess.ChessBoard.AIs
             if (depth == 0)
                 return evaluator.EvaluateBoardLight(LASTMOVECOUNT);
             //if (depth == 0)
-            //    return AlphaBetaOnlyCaptures(LASTMOVECOUNT, maxPlayer);
+            //return AlphaBetaOnlyCaptures(maxPlayer, alpha, beta);
 
             if (TransportationTable.ContainsKey(board.HashKey))
                 return TransportationTable[board.HashKey];
@@ -312,43 +313,96 @@ namespace MyChess.ChessBoard.AIs
             }
         }
 
-        public int AlphaBetaOnlyCaptures(int LASTMOVECOUNT, bool maxPlayer, int depth = 20)
+        public int AlphaBetaOnlyCaptures(bool maxPlayer, int alpha, int beta)
         {
-            Nodes++;
+            if (TransportationTable.ContainsKey(board.HashKey))
+                return TransportationTable[board.HashKey];
 
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesList = chessGame.GetPossibleMoves();
             int TotalCount = movesList.Count();
             if (TotalCount == 0)
                 return evaluator.EvaluateBoardLight(0);
-            List<Move> moves = new List<Move>(movesList.Count);
-            for (int i = 0; i < movesList.Count; i++)
-                if (board.Square[movesList[i].TargetSquare] != 0)
-                    moves.Add(movesList[i]);
-            if (moves.Count == 0)
-                return evaluator.EvaluateBoardLight(TotalCount);
+            Move[] moves = new Move[movesList.Count];
+            movesList.CopyTo(moves);
+            MoveOrder.OrderMoves(board, moves);
+
             if (maxPlayer)
             {
                 int maxEval = int.MinValue;
+                bool ran = false;
                 foreach (Move move in moves)
                 {
+                    if (board.Square[move.TargetSquare] == 0)
+                        continue;
+                    ran = true;
+                    Nodes++;
                     board.MakeMove(move);
-                    int eval = AlphaBetaOnlyCaptures(TotalCount, false, depth - 1);
+                    int eval = AlphaBetaOnlyCaptures(false, alpha, beta);
                     board.UnMakeMove();
                     maxEval = Math.Max(maxEval, eval);
+                    alpha = Math.Max(alpha, eval);
+                    if (beta <= alpha)
+                    {
+                        ABSnips++;
+                        break;
+                    }
                 }
+
+                if (!ran)
+                    return evaluator.EvaluateBoardLight(TotalCount);
+
+                if (!TransportationTable.ContainsKey(board.HashKey))
+                {
+                    TransportationTable.Add(board.HashKey, maxEval);
+                }
+                else
+                {
+                    HashKeyCollisuions++;
+                    board.PrintMoves();
+                    AllowedToThink = false;
+                    return 0;
+                }
+
                 return maxEval;
             }
             else
             {
                 int minEval = int.MaxValue;
+                bool ran = false;
                 foreach (Move move in moves)
                 {
+                    if (board.Square[move.TargetSquare] == 0)
+                        continue;
+                    ran = true;
+                    Nodes++;
                     board.MakeMove(move);
-                    int eval = AlphaBetaOnlyCaptures(TotalCount, true, depth - 1);
+                    int eval = AlphaBetaOnlyCaptures(true, alpha, beta);
                     board.UnMakeMove();
                     minEval = Math.Min(minEval, eval);
+                    beta = Math.Min(beta, eval);
+                    if (beta <= alpha)
+                    {
+                        ABSnips++;
+                        break;
+                    }
                 }
+
+                if (!ran)
+                    return evaluator.EvaluateBoardLight(TotalCount);
+
+                if (!TransportationTable.ContainsKey(board.HashKey))
+                {
+                    TransportationTable.Add(board.HashKey, minEval);
+                }
+                else
+                {
+                    HashKeyCollisuions++;
+                    board.PrintMoves();
+                    AllowedToThink = false;
+                    return 0;
+                }
+
                 return minEval;
             }
         }

@@ -56,7 +56,7 @@ namespace MyChessGUI
         //private ChessGame chessGame = new ChessGame("6k1/p7/1p4p1/3ppnPp/1Kb5/8/5P2/2r5 w - - 2 55");
         //private ChessGame chessGame = new ChessGame("");
         //private ChessGame chessGame = new ChessGame("");
-        //private ChessGame chessGame = new ChessGame("");
+        //private ChessGame chessGame = new ChessGame("8/8/5k2/4p3/8/3N3P/2K5/8 w - - 0 1");
         //private ChessGame chessGame = new ChessGame("8/1pp5/k7/8/8/8/8/7K w - - 0 1");
         private ChessGame chessGame = new ChessGame();
         private int _selecktedSquare = -1;
@@ -64,6 +64,7 @@ namespace MyChessGUI
         private ChessPrinter _chessPrinter;
         private Form1 _form;
         private bool _isRunning = true;
+        private bool CapturesOnly = false;
         public GameOfChess(Form1 form)
         {
             _form = form;
@@ -99,6 +100,18 @@ namespace MyChessGUI
                         break;
                     case 'm':
                         PrintMenu();
+                        break;
+                    case 'y':
+                        if (!CapturesOnly)
+                        {
+                            chessGame.SetCapturesOnlyOn();
+                            CapturesOnly = true;
+                        }
+                        else
+                        {
+                            chessGame.SetCapturesOnlyOff();
+                            CapturesOnly = false;
+                        }
                         break;
                     case 'p':
                         var moves = chessGame.board.moves.ToArray();

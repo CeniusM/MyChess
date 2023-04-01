@@ -36,7 +36,7 @@ namespace MyChessGUI
 
             DrawPieces();
 
-            //PrintEvalBar();
+            PrintEvalBar();
 
             _formGUI.Print();
         }

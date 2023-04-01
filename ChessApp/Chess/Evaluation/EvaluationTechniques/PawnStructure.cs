@@ -18,9 +18,9 @@ namespace MyChess.Chess.Evaluation.EvaluationTechniques
                 if ((piece & Piece.Pawn) == Piece.Pawn)
                 {
                     if ((piece & Piece.ColorBits) == Piece.White)
-                        eval += (GetRank(i) / 7) * 350;
+                        eval += ((float)GetRank(i) / 7) * 350;
                     else
-                        eval += ((8 - GetRank(i)) / 7) * 350;
+                        eval -= ((float)(8 - GetRank(i)) / 7) * 350;
                 }
             }
             return eval;
