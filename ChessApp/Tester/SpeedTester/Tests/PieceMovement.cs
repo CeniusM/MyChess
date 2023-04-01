@@ -20,7 +20,7 @@ namespace MyChess.SpeedTester.Tests
             for (int i = 0; i < FENStringAmount; i++)
             {
                 ChessGame chessGame = new ChessGame(RandomFENList.GetFEN(i));
-                avg += (ulong)MyStopwatch.Measure(chessGame.possibleMoves.GenerateMoves, reps, repsPerRep);
+                avg += (ulong)MyStopwatch.Measure(() => chessGame.possibleMoves.GenerateMoves(false), reps, repsPerRep);
             }
             avg /= (ulong)reps;
 
