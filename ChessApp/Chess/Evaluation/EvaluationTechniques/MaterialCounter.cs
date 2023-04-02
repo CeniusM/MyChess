@@ -57,10 +57,10 @@ namespace MyChess.ChessBoard.Evaluators.Methods
     public class MaterialCounterV1 : MaterialCounterBase
     {
         // MobilityBonus values borrowed from stockfish, https://github.com/official-stockfish/Stockfish/blob/master/src/evaluate.cpp
-        public static readonly int[] KnightMobilityBonus = { -62, -53, -12, -3, 3, 12, 21, 28, 37 };
-        public static readonly int[] RookMobilityBonus = { -60, -24, 0, 3, 4, 14, 20, 30, 41, 41, 41, 45, 57, 58, 67 };
-        public static readonly int[] BishopMobilityBonus = { -47, -20, 14, 29, 39, 53, 53, 60, 62, 69, 78, 83, 91, 96 };
-        public static readonly int[] QueenMobilityBonus = { -29, -16, -8, -8, 18, 25, 23, 37, 41, 54, 65, 68, 69, 70, 70, 70, 71, 72, 74, 76, 90, 104, 105, 106, 112, 114, 114, 119 };
+        public static readonly int[] KnightMobilityBonus = { -62 >> 2, -53 >> 2, -12 >> 2, -3 >> 2, 3 >> 2, 12 >> 2, 21 >> 2, 28 >> 2, 37 >> 2};
+        public static readonly int[] RookMobilityBonus = { -60 >> 2, -24 >> 2, 0 >> 2, 3 >> 2, 4 >> 2, 14 >> 2, 20 >> 2, 30 >> 2, 41 >> 2, 41 >> 2, 41 >> 2, 45 >> 2, 57 >> 2, 58 >> 2, 67 >> 2};
+        public static readonly int[] BishopMobilityBonus = { -47 >> 2, -20 >> 2, 14 >> 2, 29 >> 2, 39 >> 2, 53 >> 2, 53 >> 2, 60 >> 2, 62 >> 2, 69 >> 2, 78 >> 2, 83 >> 2, 91 >> 2, 96 >> 2};
+        public static readonly int[] QueenMobilityBonus = { -29 >> 2, -16 >> 2, -8 >> 2, -8 >> 2, 18 >> 2, 25 >> 2, 23 >> 2, 37 >> 2, 41 >> 2, 54 >> 2, 65 >> 2, 68 >> 2, 69 >> 2, 70 >> 2, 70 >> 2, 70 >> 2, 71 >> 2, 72 >> 2, 74 >> 2, 76 >> 2, 90 >> 2, 104 >> 2, 105 >> 2, 106 >> 2, 112 >> 2, 114 >> 2, 114 >> 2, 119 >> 2};
 
 
 

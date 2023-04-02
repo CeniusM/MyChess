@@ -16,6 +16,7 @@ namespace MyChessGUI
         private List<Bitmap> _sprites;
         private ChessGame chessGame;
         private Form1 _form;
+        private bool _Stop = false;
         // private bool _isPrinting = false;
         public ChessPrinter(Form1 form, ChessGame chessGame)
         {
@@ -26,7 +27,17 @@ namespace MyChessGUI
             form.Paint += (s, e) => PrintBoardAgain();
         }
 
-        public void PrintBoardAgain() => _formGUI.Print();
+        public void Stop()
+        {
+            _Stop = true;
+        }
+
+        public void PrintBoardAgain()
+        {
+            if (_Stop)
+                return;
+            _formGUI.Print();
+        }
 
         public void PrintBoard(int selecktedPiece)
         {

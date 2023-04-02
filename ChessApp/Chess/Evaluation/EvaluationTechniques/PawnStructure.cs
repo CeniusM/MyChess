@@ -151,7 +151,7 @@ namespace MyChess.Chess.Evaluation.EvaluationTechniques
         public static int GetEval(ChessBoard.Board board, float LateGameMultiplier)
         {
             //return 0;
-            const float PawnLink = 20;
+            const float PawnLink = 15;
             const float PawnDefendingFellows = 25;
             const float NonPawnAttackedByPawnPenelty = -20;
 
