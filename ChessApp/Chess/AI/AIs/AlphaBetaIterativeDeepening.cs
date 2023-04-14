@@ -1,6 +1,7 @@
 ﻿
 
 using MyChess.Chess.Evaluation;
+using MyChess.ChessBoard.Evaluators;
 using System.Diagnostics;
 
 namespace MyChess.ChessBoard.AIs
@@ -178,12 +179,12 @@ namespace MyChess.ChessBoard.AIs
                     if ((float)i / moveCount < 0.75f)
                     {
 
-                        TransportationTable.Clear();
+                        //TransportationTable.Clear();
                         return (values, false, previousBestMove, i);
                     }
                 }
                 board.MakeMove(moves[i]);
-                eval = AlphaBeta(depth - 1, moveCount, (board.playerTurn == 8), alpha, beta);//(board.playerTurn == 8) ? true : false
+                eval = AlphaBeta(depth - 1, (board.playerTurn == 8), alpha, beta);//(board.playerTurn == 8) ? true : false
                 board.UnMakeMove();
                 if (!AllowedToThink)
                 {
@@ -192,7 +193,7 @@ namespace MyChess.ChessBoard.AIs
                         // if we allmost done we dont stop, 3/4 of the way
                         // This would not be a problem if we could just get the captures only to work
 
-                        TransportationTable.Clear();
+                        //TransportationTable.Clear();
                         return (values, false, previousBestMove, i);
                     }
                 }
@@ -218,33 +219,31 @@ namespace MyChess.ChessBoard.AIs
                 values[i] = eval;
             }
 
-            //Console.WriteLine(TransportationTable.Count);
-            TransportationTable.Clear();
-            //Console.WriteLine(TransportationTable.Count);
+            //TransportationTable.Clear();
             return (values, true, bestMove, moveCount);
         }
 
         long Nodes = 0;
         long ABSnips = 0;
         long HashKeyCollisuions = 0;
-        public int AlphaBeta(int depth, int LASTMOVECOUNT, bool maxPlayer, int alpha, int beta)
+        public int AlphaBeta(int depth, bool maxPlayer, int alpha, int beta)
         {
             Nodes++;
             //if (!AllowedToThink)
             //    return 0;
             if (depth == 0)
-                return evaluator.EvaluateBoardLight(LASTMOVECOUNT);
+                return EvaluatorV2.EvaluateBoardLight(chessGame, 1);
             //if (depth == 0)
             //return AlphaBetaOnlyCaptures(maxPlayer, alpha, beta);
 
-            if (TransportationTable.ContainsKey(board.HashKey))
-                return TransportationTable[board.HashKey];
+            //if (TransportationTable.ContainsKey(board.HashKey))
+                //return TransportationTable[board.HashKey];
 
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesList = chessGame.GetPossibleMoves();
             int TotalCount = movesList.Count();
             if (TotalCount == 0)
-                return evaluator.EvaluateBoardLight(0);
+                return EvaluatorV2.EvaluateBoardLight(chessGame, 0);
             Move[] moves = new Move[movesList.Count];
             movesList.CopyTo(moves);
             MoveOrder.OrderMoves(board, moves);
@@ -255,7 +254,7 @@ namespace MyChess.ChessBoard.AIs
                 foreach (Move move in moves)
                 {
                     board.MakeMove(move);
-                    int eval = AlphaBeta(depth - 1, TotalCount, false, alpha, beta);
+                    int eval = AlphaBeta(depth - 1, false, alpha, beta);
                     board.UnMakeMove();
                     maxEval = Math.Max(maxEval, eval);
                     alpha = Math.Max(alpha, eval);
@@ -266,17 +265,17 @@ namespace MyChess.ChessBoard.AIs
                     }
                 }
 
-                if (!TransportationTable.ContainsKey(board.HashKey))
-                {
-                    TransportationTable.Add(board.HashKey, maxEval);
-                }
-                else
-                {
-                    HashKeyCollisuions++;
-                    board.PrintMoves();
-                    AllowedToThink = false;
-                    return 0;
-                }
+                //if (!TransportationTable.ContainsKey(board.HashKey))
+                //{
+                //    TransportationTable.Add(board.HashKey, maxEval);
+                //}
+                //else
+                //{
+                //    HashKeyCollisuions++;
+                //    board.PrintMoves();
+                //    AllowedToThink = false;
+                //    return 0;
+                //}
 
                 return maxEval;
             }
@@ -286,7 +285,7 @@ namespace MyChess.ChessBoard.AIs
                 foreach (Move move in moves)
                 {
                     board.MakeMove(move);
-                    int eval = AlphaBeta(depth - 1, TotalCount, true, alpha, beta);
+                    int eval = AlphaBeta(depth - 1, true, alpha, beta);
                     board.UnMakeMove();
                     minEval = Math.Min(minEval, eval);
                     beta = Math.Min(beta, eval);
@@ -297,17 +296,17 @@ namespace MyChess.ChessBoard.AIs
                     }
                 }
 
-                if (!TransportationTable.ContainsKey(board.HashKey))
-                {
-                    TransportationTable.Add(board.HashKey, minEval);
-                }
-                else
-                {
-                    HashKeyCollisuions++;
-                    board.PrintMoves();
-                    AllowedToThink = false;
-                    return 0;
-                }
+                //if (!TransportationTable.ContainsKey(board.HashKey))
+                //{
+                //    TransportationTable.Add(board.HashKey, minEval);
+                //}
+                //else
+                //{
+                //    HashKeyCollisuions++;
+                //    board.PrintMoves();
+                //    AllowedToThink = false;
+                //    return 0;
+                //}
 
                 return minEval;
             }
@@ -315,14 +314,14 @@ namespace MyChess.ChessBoard.AIs
 
         public int AlphaBetaOnlyCaptures(bool maxPlayer, int alpha, int beta)
         {
-            if (TransportationTable.ContainsKey(board.HashKey))
-                return TransportationTable[board.HashKey];
+            //if (TransportationTable.ContainsKey(board.HashKey))
+            //    return TransportationTable[board.HashKey];
 
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesList = chessGame.GetPossibleMoves();
             int TotalCount = movesList.Count();
             if (TotalCount == 0)
-                return evaluator.EvaluateBoardLight(0);
+                return EvaluatorV2.EvaluateBoardLight(chessGame, 0);
             Move[] moves = new Move[movesList.Count];
             movesList.CopyTo(moves);
             MoveOrder.OrderMoves(board, moves);
@@ -350,19 +349,19 @@ namespace MyChess.ChessBoard.AIs
                 }
 
                 if (!ran)
-                    return evaluator.EvaluateBoardLight(TotalCount);
+                    return EvaluatorV2.EvaluateBoardLight(chessGame, 1);
 
-                if (!TransportationTable.ContainsKey(board.HashKey))
-                {
-                    TransportationTable.Add(board.HashKey, maxEval);
-                }
-                else
-                {
-                    HashKeyCollisuions++;
-                    board.PrintMoves();
-                    AllowedToThink = false;
-                    return 0;
-                }
+                //if (!TransportationTable.ContainsKey(board.HashKey))
+                //{
+                //    TransportationTable.Add(board.HashKey, maxEval);
+                //}
+                //else
+                //{
+                //    HashKeyCollisuions++;
+                //    board.PrintMoves();
+                //    AllowedToThink = false;
+                //    return 0;
+                //}
 
                 return maxEval;
             }
@@ -389,19 +388,19 @@ namespace MyChess.ChessBoard.AIs
                 }
 
                 if (!ran)
-                    return evaluator.EvaluateBoardLight(TotalCount);
+                    return EvaluatorV2.EvaluateBoardLight(chessGame, 1);
 
-                if (!TransportationTable.ContainsKey(board.HashKey))
-                {
-                    TransportationTable.Add(board.HashKey, minEval);
-                }
-                else
-                {
-                    HashKeyCollisuions++;
-                    board.PrintMoves();
-                    AllowedToThink = false;
-                    return 0;
-                }
+                //if (!TransportationTable.ContainsKey(board.HashKey))
+                //{
+                //    TransportationTable.Add(board.HashKey, minEval);
+                //}
+                //else
+                //{
+                //    HashKeyCollisuions++;
+                //    board.PrintMoves();
+                //    AllowedToThink = false;
+                //    return 0;
+                //}
 
                 return minEval;
             }

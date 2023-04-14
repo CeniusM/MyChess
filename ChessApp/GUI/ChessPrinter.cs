@@ -163,13 +163,13 @@ namespace MyChessGUI
 
 
 
-            float evaluationv2 = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count) / 300f; // idk 
+            //float evaluationv2 = chessGame.evaluator.EvaluateBoardLight(chessGame.GetPossibleMoves().Count) / 300f; // idk 
 
-            float evalHeightv2 = MyMath.LogisticCurve((float)evaluationv2, 30, 0.3f, 15); // returs a num between -15 and 15
+            //float evalHeightv2 = MyMath.LogisticCurve((float)evaluationv2, 30, 0.3f, 15); // returs a num between -15 and 15
 
-            int evalHeightpxv2 = (int)((-evalHeightv2 / 15f + 1) * 400f); // make eval height into a range between 0, 800
+            //int evalHeightpxv2 = (int)((-evalHeightv2 / 15f + 1) * 400f); // make eval height into a range between 0, 800
 
-            _formGUI.DrawSquare(900, 0, evalHeightpxv2, 100, Color.Black);
+            //_formGUI.DrawSquare(900, 0, evalHeightpxv2, 100, Color.Black);
         }
     }
 }

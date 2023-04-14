@@ -4,7 +4,7 @@ namespace MyChess.ChessBoard.Evaluators;
 
 public class EvaluatorV2
 {
-    public int EvaluateBoardLight(ChessGame game, int moveCount)
+    public static int EvaluateBoardLight(ChessGame game, int moveCount)
     {
         Board board = game.board;
         
