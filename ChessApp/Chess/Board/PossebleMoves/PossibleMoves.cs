@@ -74,11 +74,10 @@ namespace MyChess.PossibleMoves
 
         public int GetKingsPos(int color)
         {
-            int piece = (color | Piece.King);
-            for (int i = 0; i < board.piecePoses.Count; i++)
-                if (board.Square[board.piecePoses[i]] == piece)
-                    return board.piecePoses[i];
-            return -1;
+            if (color == Piece.White)
+                return board.piecePoses[0];
+            else
+                return board.piecePoses[1];
         }
 
         private void KingCheckCheck(bool removeNonCaptures)

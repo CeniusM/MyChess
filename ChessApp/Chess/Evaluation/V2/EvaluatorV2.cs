@@ -18,7 +18,13 @@ public class EvaluatorV2
         }
 
         int eval = 0;
+        float lateGameMultiplier = Evaluations.GetLateGameMultiplier(board);
 
+        eval += Evaluations.GetMaterial(board);
+        eval += Evaluations.GetPiecePosses(board);
+        eval += Evaluations.GetKingToEdgeLateGame(board, lateGameMultiplier);
+        eval += Evaluations.GetPawnStructure(board, lateGameMultiplier);
+        eval += Evaluations.GetSpace(board, lateGameMultiplier);
 
 
         return eval;

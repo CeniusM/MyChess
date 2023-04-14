@@ -58,7 +58,7 @@ namespace MyLib
             }
             catch
             {
-                Console.WriteLine("Failed to write the given console -- message down below --");
+                //Console.WriteLine("Failed to write the given console -- message down below --");
                 Console.WriteLine(text);
             }
         }
