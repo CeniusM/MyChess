@@ -8,7 +8,9 @@ namespace MyChess.ChessBoard.Evaluators.Methods
 {
     public class PiecePosesBonus
     {
-        // piece count * 64
+        /// <summary>
+        /// piece * 64
+        /// </summary>
         public readonly static int[,] PieceBonuses =
         {
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // NULL

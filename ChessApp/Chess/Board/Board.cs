@@ -101,7 +101,12 @@ namespace MyChess.ChessBoard
             piecePoses = new PieceList(32);
             for (int i = 0; i < 64; i++) // put in kings first
             {
-                if ((Square[i] & Piece.PieceBits) == Piece.King)
+                if (Square[i] == Piece.WKing)
+                    piecePoses.AddPieceAtSquare(i);
+            }
+            for (int i = 0; i < 64; i++) // put in kings first
+            {
+                if (Square[i] == Piece.BKing)
                     piecePoses.AddPieceAtSquare(i);
             }
             for (int i = 0; i < 64; i++)
@@ -130,6 +135,14 @@ namespace MyChess.ChessBoard
         public static string LetterToIntNum(string pos)
         {
             throw new NotImplementedException();
+        }
+
+        public int GetKingsPos(int color)
+        {
+            if (color == Piece.White)
+                return piecePoses[0];
+            else
+                return piecePoses[1];
         }
 
 

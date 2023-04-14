@@ -55,11 +55,11 @@ namespace MyChessGUI
         //private ChessGame chessGame = new ChessGame("8/8/1p6/2kp2PP/7P/5K2/8/8 b - - 0 1");
         //private ChessGame chessGame = new ChessGame("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 0");
         //private ChessGame chessGame = new ChessGame("6k1/p7/1p4p1/3ppnPp/1Kb5/8/5P2/2r5 w - - 2 55");
-        private ChessGame chessGame = new ChessGame("6k1/2p2p1p/3b2p1/8/5P2/3r2P1/6rP/R2K3R w - - 0 1");
+        //private ChessGame chessGame = new ChessGame("6k1/2p2p1p/3b2p1/8/5P2/3r2P1/6rP/R2K3R w - - 0 1");
         //private ChessGame chessGame = new ChessGame("7b/8/1B6/8/p5p1/4PkPp/P4P1P/5K2 w - - 12 48");
         //private ChessGame chessGame = new ChessGame("8/8/5k2/4p3/8/3N3P/2K5/8 w - - 0 1");
         //private ChessGame chessGame = new ChessGame("8/1pp5/k7/8/8/8/8/7K w - - 0 1");
-        //private ChessGame chessGame = new ChessGame();
+        private ChessGame chessGame = new ChessGame();
         private int _selecktedSquare = -1;
         // private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;
