@@ -17,6 +17,7 @@ namespace MyChessGUI
         private ChessGame chessGame;
         private Form1 _form;
         private bool _Stop = false;
+        public bool PrintEval = false;
         // private bool _isPrinting = false;
         public ChessPrinter(Form1 form, ChessGame chessGame)
         {
@@ -39,8 +40,38 @@ namespace MyChessGUI
             _formGUI.Print();
         }
 
+        public void PrintStaticBoardEval()
+        {
+            if (!PrintEval)
+                return;
+            Console.SetCursorPosition(0, 0);
+
+            Board board = chessGame.board;
+
+            Console.WriteLine("Static eval of board");
+            Console.WriteLine();
+            Console.WriteLine("Zobrist Key: " + board.HashKey);
+            Console.WriteLine();
+            Console.WriteLine("--Eval--");
+            float lateGameMultiplier = Evaluations.GetLateGameMultiplier(board);
+            Console.WriteLine("LateGameMultiplier: " + lateGameMultiplier + "                   ");
+            Console.WriteLine();
+            Console.WriteLine("Material:           " + Evaluations.GetMaterial(board, lateGameMultiplier) + "                   ");
+            Console.WriteLine("PiecePosses:        " + Evaluations.GetPiecePosses(board, lateGameMultiplier) + "                   ");
+            Console.WriteLine("KingToEdgeLateGame: " + Evaluations.GetKingToEdgeLateGame(board, lateGameMultiplier) + "                   ");
+            Console.WriteLine("KingSafty:          " + Evaluations.GetKingSafty(board, lateGameMultiplier) + "                   ");
+            Console.WriteLine("PawnStructure:      " + Evaluations.GetPawnStructure(board, lateGameMultiplier) + "                   ");
+            Console.WriteLine("Space:              " + Evaluations.GetSpace(board, lateGameMultiplier) + "                   ");
+            Console.WriteLine("Mobility:           " + Evaluations.GetMobility(board, lateGameMultiplier) + "                   ");
+
+            Console.WriteLine("Total: " + EvaluatorV2.EvaluateBoard(chessGame, 1) + "         ");
+
+        }
+
         public void PrintBoard(int selecktedPiece)
         {
+            PrintStaticBoardEval();
+
             DrawFeild();
 
             DrawPossibleMoves(selecktedPiece);

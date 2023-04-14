@@ -4,10 +4,10 @@ namespace MyChess.ChessBoard.Evaluators;
 
 public class EvaluatorV2
 {
-    public static int EvaluateBoardLight(ChessGame game, int moveCount)
+    public static int EvaluateBoard(ChessGame game, int moveCount)
     {
         Board board = game.board;
-        
+
         if (moveCount == 0)
         {
             // king in check
@@ -20,11 +20,13 @@ public class EvaluatorV2
         int eval = 0;
         float lateGameMultiplier = Evaluations.GetLateGameMultiplier(board);
 
-        eval += Evaluations.GetMaterial(board);
-        eval += Evaluations.GetPiecePosses(board);
+        eval += Evaluations.GetMaterial(board, lateGameMultiplier);
+        eval += Evaluations.GetPiecePosses(board, lateGameMultiplier);
         eval += Evaluations.GetKingToEdgeLateGame(board, lateGameMultiplier);
+        eval += Evaluations.GetKingSafty(board, lateGameMultiplier);
         eval += Evaluations.GetPawnStructure(board, lateGameMultiplier);
         eval += Evaluations.GetSpace(board, lateGameMultiplier);
+        eval += Evaluations.GetMobility(board, lateGameMultiplier);
 
 
         return eval;

@@ -17,12 +17,14 @@ namespace MyChess.ChessBoard.AIs
 
     public class AlphaBetaIterativeDeepening : ChessAIBase
     {
-        private Dictionary<ulong, int> TransportationTable = new Dictionary<ulong, int>();
+        // When lower in the tree we can take evals that have a depper depth
+        // BUT if we are neer the root it is way better to do the search instead of using a worse depth search
+        private Dictionary<ulong, (int eval, int depth)> TransportationTable = new Dictionary<ulong, (int eval, int depth)>();
 
         /// <summary>
         /// Max depth
         /// </summary>
-        public const int Depth = 40;
+        public const int Depth = 100;
         //public const int TimeToThinkMS = 40;
         //public const int TimeToThinkMS = 1_000;
         public int TimeToThinkMS = 10_000;
@@ -94,18 +96,23 @@ namespace MyChess.ChessBoard.AIs
             {
                 DepthReached++;
                 var results = Search(DepthReached, moves, bestMoveIndex);
+                //TransportationTable.Clear();
                 //Console.WriteLine("Time Spent: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
                 //        " Best. eval: " + results.Values[results.BestMoveIndex] + " MovesFinished: " + results.MovesFinished + "/" + Count +
                 //        " Alpha Beta Snips: " + ABSnips + ". Nodes: " + Nodes);
+                //if (ShowAIThinking)
+                //    Console.WriteLine("Time: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
+                //            ". eval: " + results.Values[results.BestMoveIndex] + ". MovesFinished: " + results.MovesFinished + "/" + Count +
+                //            ". HashCollisions: " + HashKeyCollisuions + ". Nodes: " + Nodes + ". TTPositions: " + transPositions);
                 if (ShowAIThinking)
                     Console.WriteLine("Time: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached +
-                            ". eval: " + results.Values[results.BestMoveIndex] + ". MovesFinished: " + results.MovesFinished + "/" + Count +
-                            ". HashCollisions: " + HashKeyCollisuions + ". Nodes: " + Nodes);
+                            ". eval: " + results.Values[results.BestMoveIndex]);
                 Nodes = 0;
                 ABSnips = 0;
                 HashKeyCollisuions = 0;
 
                 bestMoveIndex = results.BestMoveIndex;
+                int bestEval = results.Values[results.BestMoveIndex];
                 //Console.WriteLine();
                 if (results.Finished)
                 {
@@ -119,7 +126,13 @@ namespace MyChess.ChessBoard.AIs
                     // Sort moves
 
 
-                    Array.Sort(results.Values, moves);
+                    if (board.playerTurn == Piece.Black)
+                        Array.Sort(results.Values, moves);
+                    else
+                    {
+                        Array.Sort(results.Values, moves);
+                        Array.Reverse(results.Values);
+                    }
 
                     //for (int i = 0; i < Count; i++)
                     //{
@@ -133,8 +146,9 @@ namespace MyChess.ChessBoard.AIs
                     //Array.Copy(results.Values, be);
                     break;
                 }
-                if (results.Values[results.BestMoveIndex] > 1000000 || results.Values[results.BestMoveIndex] < -1000000)
+                if (bestEval > 1000000 || bestEval < -1000000)
                     break;
+
                 if (DepthReached == Depth)
                     break;
                 // If 1/4 of the time have allready gone by, we just stop it there
@@ -142,6 +156,8 @@ namespace MyChess.ChessBoard.AIs
                     break;
             }
             chessGame.possibleMoves.GenerateMoves();
+
+            TransportationTable.Clear();
 
             //Console.WriteLine("Time spent thinking: " + thinkTime.Elapsed.TotalSeconds + "s And reached a depth of: " + DepthReached);
             //Console.WriteLine("Time: " + thinkTime.Elapsed.TotalSeconds + "s to depth of: " + DepthReached);
@@ -161,6 +177,7 @@ namespace MyChess.ChessBoard.AIs
             // And also make sure the values/moves get sorted the right way since black and white wants difrent values
 
 
+            transPositions = 0;
 
 
             int moveCount = moves.Length;
@@ -178,8 +195,6 @@ namespace MyChess.ChessBoard.AIs
                 {
                     if ((float)i / moveCount < 0.75f)
                     {
-
-                        //TransportationTable.Clear();
                         return (values, false, previousBestMove, i);
                     }
                 }
@@ -193,7 +208,6 @@ namespace MyChess.ChessBoard.AIs
                         // if we allmost done we dont stop, 3/4 of the way
                         // This would not be a problem if we could just get the captures only to work
 
-                        //TransportationTable.Clear();
                         return (values, false, previousBestMove, i);
                     }
                 }
@@ -219,31 +233,36 @@ namespace MyChess.ChessBoard.AIs
                 values[i] = eval;
             }
 
-            //TransportationTable.Clear();
             return (values, true, bestMove, moveCount);
         }
 
         long Nodes = 0;
         long ABSnips = 0;
         long HashKeyCollisuions = 0;
+        int transPositions = 0;
         public int AlphaBeta(int depth, bool maxPlayer, int alpha, int beta)
         {
             Nodes++;
-            //if (!AllowedToThink)
-            //    return 0;
             if (depth == 0)
-                return EvaluatorV2.EvaluateBoardLight(chessGame, 1);
+                return EvaluatorV2.EvaluateBoard(chessGame, 1);
             //if (depth == 0)
             //return AlphaBetaOnlyCaptures(maxPlayer, alpha, beta);
 
-            //if (TransportationTable.ContainsKey(board.HashKey))
-                //return TransportationTable[board.HashKey];
+            if (TransportationTable.ContainsKey(board.HashKey))
+            {
+                var val = TransportationTable[board.HashKey];
+                if (val.depth >= depth)
+                {
+                    transPositions++;
+                    return val.eval;
+                }
+            }
 
             chessGame.possibleMoves.GenerateMoves();
             List<Move> movesList = chessGame.GetPossibleMoves();
             int TotalCount = movesList.Count();
             if (TotalCount == 0)
-                return EvaluatorV2.EvaluateBoardLight(chessGame, 0);
+                return EvaluatorV2.EvaluateBoard(chessGame, 0);
             Move[] moves = new Move[movesList.Count];
             movesList.CopyTo(moves);
             MoveOrder.OrderMoves(board, moves);
@@ -265,17 +284,21 @@ namespace MyChess.ChessBoard.AIs
                     }
                 }
 
-                //if (!TransportationTable.ContainsKey(board.HashKey))
+
+                //if (TransportationTable.ContainsKey(board.HashKey))
                 //{
-                //    TransportationTable.Add(board.HashKey, maxEval);
+                //    var val = TransportationTable[board.HashKey];
+                //    if (val.depth < depth)
+                //    {
+                //        TransportationTable.Remove(board.HashKey);
+                //        TransportationTable.Add(board.HashKey, (maxEval, depth));
+                //    }
                 //}
                 //else
-                //{
-                //    HashKeyCollisuions++;
-                //    board.PrintMoves();
-                //    AllowedToThink = false;
-                //    return 0;
-                //}
+                if (TransportationTable.ContainsKey(board.HashKey))
+                    TransportationTable.Remove(board.HashKey);
+                TransportationTable.Add(board.HashKey, (maxEval, depth));
+                TransportationTable[1] = (1, 1);
 
                 return maxEval;
             }
@@ -296,17 +319,18 @@ namespace MyChess.ChessBoard.AIs
                     }
                 }
 
-                //if (!TransportationTable.ContainsKey(board.HashKey))
-                //{
-                //    TransportationTable.Add(board.HashKey, minEval);
-                //}
-                //else
-                //{
-                //    HashKeyCollisuions++;
-                //    board.PrintMoves();
-                //    AllowedToThink = false;
-                //    return 0;
-                //}
+
+                if (TransportationTable.ContainsKey(board.HashKey))
+                {
+                    var val = TransportationTable[board.HashKey];
+                    if (val.depth < depth)
+                    {
+                        TransportationTable.Remove(board.HashKey);
+                        TransportationTable.Add(board.HashKey, (minEval, depth));
+                    }
+                }
+                else
+                    TransportationTable.Add(board.HashKey, (minEval, depth));
 
                 return minEval;
             }
@@ -321,7 +345,7 @@ namespace MyChess.ChessBoard.AIs
             List<Move> movesList = chessGame.GetPossibleMoves();
             int TotalCount = movesList.Count();
             if (TotalCount == 0)
-                return EvaluatorV2.EvaluateBoardLight(chessGame, 0);
+                return EvaluatorV2.EvaluateBoard(chessGame, 0);
             Move[] moves = new Move[movesList.Count];
             movesList.CopyTo(moves);
             MoveOrder.OrderMoves(board, moves);
@@ -349,7 +373,7 @@ namespace MyChess.ChessBoard.AIs
                 }
 
                 if (!ran)
-                    return EvaluatorV2.EvaluateBoardLight(chessGame, 1);
+                    return EvaluatorV2.EvaluateBoard(chessGame, 1);
 
                 //if (!TransportationTable.ContainsKey(board.HashKey))
                 //{
@@ -388,7 +412,7 @@ namespace MyChess.ChessBoard.AIs
                 }
 
                 if (!ran)
-                    return EvaluatorV2.EvaluateBoardLight(chessGame, 1);
+                    return EvaluatorV2.EvaluateBoard(chessGame, 1);
 
                 //if (!TransportationTable.ContainsKey(board.HashKey))
                 //{

@@ -168,7 +168,6 @@ namespace MyChess.ChessBoard
             if (Square[move.TargetSquare] != 0)
                 HashKeyFurther(Square[move.TargetSquare], move.TargetSquare);
             HashKeyFurther(0, 0); // color
-            HashKey ^= RandomHashTable[gameData.Count()];
 
 
 
@@ -286,9 +285,12 @@ namespace MyChess.ChessBoard
                     piecePoses.RemovePieceAtSquare(move.TargetSquare);
 
                 piecePoses.MovePiece(move.StartSquare, move.TargetSquare);
-                Square[move.TargetSquare] = move.PromotionPiece() | playerTurn;
+                int promotionPiece = move.PromotionPiece() | playerTurn;
+                Square[move.TargetSquare] = promotionPiece;
                 Square[move.StartSquare] = 0;
                 enPassantPiece = 64;
+
+                HashKeyFurther(0, promotionPiece);
             }
 
             ChangePlayer();
@@ -296,7 +298,6 @@ namespace MyChess.ChessBoard
 
         public void UnMakeMove()
         {
-            HashKey ^= RandomHashTable[gameData.Count()];
             Move move = moves.Pop();
             DataICouldentGetToWork data = gameData.Pop();
             castle = data.castle;
@@ -385,6 +386,8 @@ namespace MyChess.ChessBoard
             }
             else // promotion
             {
+                HashKeyFurther(0, Square[move.TargetSquare]);
+
                 piecePoses.MovePiece(move.TargetSquare, move.StartSquare);
                 // if (move.CapturedPiece != 0)
                 if (move.CapturedPiece != 0)

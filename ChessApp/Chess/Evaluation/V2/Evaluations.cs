@@ -44,9 +44,11 @@ internal class Evaluations
     // This counts towardss pawns hitting other enemies
     const float PawnAttackEnemy = 10;
 
-    const int DoublePenelty = -15;
-    const int TriplePenelty = -40;
-    const int IsolationPenelty = -10;
+    const int DoublePenelty = -20;
+    const int TriplePenelty = -50;
+    const int IsolationPenelty = -15;
+
+    const int KingCloseDefender = 10;
 
     public static float GetLateGameMultiplier(Board board)
     {
@@ -58,7 +60,7 @@ internal class Evaluations
         return lateGameMultiplier;
     }
 
-    public static int GetMaterial(Board board)
+    public static int GetMaterial(Board board, float LateGameMultiplier)
     {
         int eval = 0;
 
@@ -68,7 +70,7 @@ internal class Evaluations
         return eval;
     }
 
-    public static int GetPiecePosses(Board board)
+    public static int GetPiecePosses(Board board, float LateGameMultiplier)
     {
         int eval = 0;
 
@@ -78,12 +80,12 @@ internal class Evaluations
             int piece = board.Square[square];
             int color = piece & Piece.ColorBits;
             if (color == Piece.White)
-                eval += PiecePosesBonus.PieceBonuses[piece, square];
+                eval += PiecePosesBonus.PieceBonuses[piece, square] / 2;
             else
-                eval -= PiecePosesBonus.PieceBonuses[piece, square];
+                eval -= PiecePosesBonus.PieceBonuses[piece, square] / 2;
         }
-
-        return eval;
+        
+        return (int)(eval * (1 - LateGameMultiplier));
     }
 
     static readonly int[] PawnPushedLateGameBonuses =
@@ -125,7 +127,7 @@ internal class Evaluations
                 else
                 {
                     BlackPawnCounts[collum]++;
-                    WhitePawnPushedBonus += PawnPushedLateGameBonuses[(square >> 3) - 1];
+                    BlackPawnPushedBonus += PawnPushedLateGameBonuses[(square >> 3) - 1];
                 }
             }
         }
@@ -191,13 +193,145 @@ internal class Evaluations
     {
         int eval = 0;
 
-        eval += (int)(KingBonus[board.GetKingsPos(Piece.White)] * lateGameMultiplier);
-        eval -= (int)(KingBonus[board.GetKingsPos(Piece.Black)] * lateGameMultiplier);
+        eval += (int)(KingBonus[board.GetKingsPos(Piece.Black)] * lateGameMultiplier);
+        eval -= (int)(KingBonus[board.GetKingsPos(Piece.White)] * lateGameMultiplier);
+
+        // Should also try and get kings closer to each other if the side is winning
 
         return eval;
     }
 
+    public static int GetKingSafty(Board board, float lateGameMultiplier)
+    {
+        // give bonus for having our pieces closer to the enemy king
+
+        //int[] KingMovmentBonus = { -15, -5, 0, 5, -10, -20, -25, -30};
+
+        int eval = 0;
+
+        int whiteKingPos = board.GetKingsPos(Piece.White);
+        int blackKingPos = board.GetKingsPos(Piece.Black);
+
+        int whiteKingFile = whiteKingPos % 8;
+        int blackKingFile = blackKingPos % 8;
+
+        int whiteKingRank = whiteKingPos >> 3;
+        int blackKingRank = blackKingPos >> 3;
+
+        // Check for pawns the 6 square in front
+        // This only count if the king is close to the back part of the board
+        if (whiteKingRank > 5)
+        {
+            // Infront
+            if (Piece.IsColor(board.Square[whiteKingPos - 8], Piece.White))
+                eval += KingCloseDefender;
+            if (Piece.IsColor(board.Square[whiteKingPos - 16], Piece.White))
+                eval += KingCloseDefender >> 1;
+
+            // Rigth
+            if (whiteKingFile != 0)
+            {
+                if (Piece.IsColor(board.Square[whiteKingPos - 8 + 1], Piece.White))
+                    eval += KingCloseDefender;
+                if (Piece.IsColor(board.Square[whiteKingPos - 16 + 1], Piece.White))
+                    eval += KingCloseDefender >> 1;
+            }
+
+            // Left
+            if (whiteKingFile != 7)
+            {
+                if (Piece.IsColor(board.Square[whiteKingPos - 8 - 1], Piece.White))
+                    eval += KingCloseDefender;
+                if (Piece.IsColor(board.Square[whiteKingPos - 16 - 1], Piece.White))
+                    eval += KingCloseDefender >> 1;
+            }
+        }
+
+
+        if (blackKingRank < 2)
+        {
+            // Infront
+            if (Piece.IsColor(board.Square[blackKingPos + 8], Piece.Black))
+                eval -= KingCloseDefender;
+            if (Piece.IsColor(board.Square[blackKingPos + 16], Piece.Black))
+                eval -= KingCloseDefender >> 1;
+
+            // Right
+            if (blackKingFile != 0)
+            {
+                if (Piece.IsColor(board.Square[blackKingPos + 8 + 1], Piece.Black))
+                    eval -= KingCloseDefender;
+                if (Piece.IsColor(board.Square[blackKingPos + 16 + 1], Piece.Black))
+                    eval -= KingCloseDefender >> 1;
+            }
+
+            // Left
+            if (blackKingFile != 7)
+            {
+                if (Piece.IsColor(board.Square[blackKingPos + 8 - 1], Piece.Black))
+                    eval -= KingCloseDefender;
+                if (Piece.IsColor(board.Square[blackKingPos + 16 - 1], Piece.Black))
+                    eval -= KingCloseDefender >> 1;
+            }
+        }
+
+        // Advanced
+        // Check for bishops hitting on the diagonels
+        // And check for rooks on the file, and knight close by
+        // And the king only need as much defence as there is attacking
+
+        return (int)(eval * (1 - lateGameMultiplier)); // Becomes less important
+    }
+
+    readonly static int[] BonusSquaresWhite =
+    {
+        0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,2,10,11,11,10,2,0,-3,4,11,12,12,11,4,-3,-3,6,11,13,12,11,7,-3,-5,3,10,11,11,10,3,-5,-3,6,-3,1,1,-3,6,-3,-10,-12,-10,-5,-5,-10,-12,-10
+    };
+
+    readonly static int[] BonusSquaresBlack =
+    {
+        -10,-12,-10,-5,-5,-10,-12,-10
+        ,-3,6,-3,1,1,-3,6,-3
+        ,-5,3,10,11,11,10,3,-5
+        ,-3,6,11,13,12,11,7,-3
+        ,-3,4,11,12,12,11,4,-3
+        ,0,2,10,11,11,10,2,0
+        ,0,0,2,2,2,2,0,0
+        ,0,0,0,0,0,0,0,0
+    };
+
     public static int GetSpace(Board board, float lateGameMultiplier)
+    {
+        int eval = 0;
+
+        // Create a map for good square to control ( in this case be on... )
+        // Pawns only count as half for this and king for 0
+        for (int i = 2; i < board.piecePoses.Count; i++)
+        {
+            int pos = board.piecePoses[i];
+            int piece = board.Square[pos];
+            int color = piece & Piece.ColorBits;
+            int type = piece & Piece.PieceBits;
+            if (type == Piece.Pawn)
+            {
+                if (color == Piece.White)
+                    eval += BonusSquaresWhite[pos] / 2;
+                else
+                    eval -= BonusSquaresWhite[pos] / 2;
+            }
+            else
+            {
+                if (color == Piece.White)
+                    eval += BonusSquaresWhite[pos];
+                else
+                    eval -= BonusSquaresWhite[pos];
+            }
+        }
+
+        return eval;
+    }
+
+    public static int GetMobility(Board board, float lateGameMultiplier)
     {
         int eval = 0;
 
