@@ -63,16 +63,9 @@ namespace MyChess
             );
         }
 
-        public static string GetSquareName(int square)
-        {
-            return "" + (char)('a' + (square % 8)) + (char)('1' + 7 - (square >> 3));
-        }
-
         public override string ToString()
         {
-            //return "{S:" + StartSquare + ", T:" + TargetSquare + ", F:" + MoveFlag + ", C:" + CapturedPiece + "}";
-
-            return GetSquareName(StartSquare) + "" + GetSquareName(TargetSquare);
+            return "{S:" + StartSquare + ", T:" + TargetSquare + ", F:" + MoveFlag + ", C:" + CapturedPiece + "}";
         }
     }
 }

@@ -19,19 +19,17 @@ namespace MyChess.ChessBoard.AIs
     {
         // When lower in the tree we can take evals that have a depper depth
         // BUT if we are neer the root it is way better to do the search instead of using a worse depth search
-        private Dictionary<ulong, (int eval, int depth, int pieceCount)> TransportationTable = new Dictionary<ulong, (int eval, int depth, int pieceCount)>();
+        private Dictionary<ulong, (int eval, int depth)> TransportationTable = new Dictionary<ulong, (int eval, int depth)>();
 
         /// <summary>
         /// Max depth
         /// </summary>
         public const int Depth = 100;
-        //public int TimeToThinkMS = 40;
-        //public int TimeToThinkMS = 10;
-        //public int TimeToThinkMS = 2_000;
+        //public const int TimeToThinkMS = 40;
+        //public const int TimeToThinkMS = 1_000;
         public int TimeToThinkMS = 10_000;
         //public int TimeToThinkMS = 100000_000;
         public bool ShowAIThinking = false;
-        public bool ShowAIMoveEvals = false;
         private bool AllowedToThink = true;
 
         public int round = 0; // to stop previus watches from stoping new searches
@@ -94,8 +92,6 @@ namespace MyChess.ChessBoard.AIs
             Move bestMove = new Move(0, 0, 0);
             int bestMoveIndex = 0;
 
-            int[] values = new int[1];
-
             while (AllowedToThink)
             {
                 DepthReached++;
@@ -144,7 +140,6 @@ namespace MyChess.ChessBoard.AIs
                     //}
                     //Console.WriteLine("Time Spent: " + thinkTime.ElapsedMilliseconds + "ms. Detph: " + DepthReached + " Best. eval: " + results.Values[results.BestMoveIndex] + ". Nodes " + Nodes);
 
-                    values = results.Values;
                 }
                 else
                 {
@@ -168,18 +163,6 @@ namespace MyChess.ChessBoard.AIs
             //Console.WriteLine("Time: " + thinkTime.Elapsed.TotalSeconds + "s to depth of: " + DepthReached);
 
             round++;
-
-            if (ShowAIMoveEvals)
-            {
-                if (board.playerTurn == 8)
-                    Console.WriteLine("White moves: ");
-                else
-                    Console.WriteLine("Black moves:dwqdqwdqwdwqdqwdqwd ");
-                for (int i = 0; i < values.Length; i++)
-                {
-                    Console.WriteLine("Move: " + moves[values.Length - i - 1].ToString() + ". Eval: " + values[i]);
-                }
-            }
             return bestMove;
             //return (moves[bestMove], bestMoveEval);
         }
@@ -261,7 +244,7 @@ namespace MyChess.ChessBoard.AIs
         {
             Nodes++;
             if (depth == 0)
-                return EvaluatorV2.EvaluateBoard(chessGame, 1, true, alpha, beta, maxPlayer);
+                return EvaluatorV2.EvaluateBoard(chessGame, 1);
             //if (depth == 0)
             //return AlphaBetaOnlyCaptures(maxPlayer, alpha, beta);
 
@@ -279,7 +262,7 @@ namespace MyChess.ChessBoard.AIs
             List<Move> movesList = chessGame.GetPossibleMoves();
             int TotalCount = movesList.Count();
             if (TotalCount == 0)
-                return EvaluatorV2.EvaluateBoard(chessGame, 0, true, alpha, beta, maxPlayer);
+                return EvaluatorV2.EvaluateBoard(chessGame, 0);
             Move[] moves = new Move[movesList.Count];
             movesList.CopyTo(moves);
             MoveOrder.OrderMoves(board, moves);
@@ -301,16 +284,21 @@ namespace MyChess.ChessBoard.AIs
                     }
                 }
 
+
+                //if (TransportationTable.ContainsKey(board.HashKey))
+                //{
+                //    var val = TransportationTable[board.HashKey];
+                //    if (val.depth < depth)
+                //    {
+                //        TransportationTable.Remove(board.HashKey);
+                //        TransportationTable.Add(board.HashKey, (maxEval, depth));
+                //    }
+                //}
+                //else
                 if (TransportationTable.ContainsKey(board.HashKey))
-                {
-                    if (TransportationTable[board.HashKey].depth < depth)
-                    {
-                        TransportationTable.Remove(board.HashKey);
-                        TransportationTable.Add(board.HashKey, (maxEval, depth, board.piecePoses.Count));
-                    }
-                }
-                else
-                    TransportationTable.Add(board.HashKey, (maxEval, depth, board.piecePoses.Count));
+                    TransportationTable.Remove(board.HashKey);
+                TransportationTable.Add(board.HashKey, (maxEval, depth));
+                TransportationTable[1] = (1, 1);
 
                 return maxEval;
             }
@@ -331,16 +319,112 @@ namespace MyChess.ChessBoard.AIs
                     }
                 }
 
+
                 if (TransportationTable.ContainsKey(board.HashKey))
                 {
-                    if (TransportationTable[board.HashKey].depth < depth)
+                    var val = TransportationTable[board.HashKey];
+                    if (val.depth < depth)
                     {
                         TransportationTable.Remove(board.HashKey);
-                        TransportationTable.Add(board.HashKey, (minEval, depth, board.piecePoses.Count));
+                        TransportationTable.Add(board.HashKey, (minEval, depth));
                     }
                 }
                 else
-                    TransportationTable.Add(board.HashKey, (minEval, depth, board.piecePoses.Count));
+                    TransportationTable.Add(board.HashKey, (minEval, depth));
+
+                return minEval;
+            }
+        }
+
+        public int AlphaBetaOnlyCaptures(bool maxPlayer, int alpha, int beta)
+        {
+            //if (TransportationTable.ContainsKey(board.HashKey))
+            //    return TransportationTable[board.HashKey];
+
+            chessGame.possibleMoves.GenerateMoves();
+            List<Move> movesList = chessGame.GetPossibleMoves();
+            int TotalCount = movesList.Count();
+            if (TotalCount == 0)
+                return EvaluatorV2.EvaluateBoard(chessGame, 0);
+            Move[] moves = new Move[movesList.Count];
+            movesList.CopyTo(moves);
+            MoveOrder.OrderMoves(board, moves);
+
+            if (maxPlayer)
+            {
+                int maxEval = int.MinValue;
+                bool ran = false;
+                foreach (Move move in moves)
+                {
+                    if (board.Square[move.TargetSquare] == 0)
+                        continue;
+                    ran = true;
+                    Nodes++;
+                    board.MakeMove(move);
+                    int eval = AlphaBetaOnlyCaptures(false, alpha, beta);
+                    board.UnMakeMove();
+                    maxEval = Math.Max(maxEval, eval);
+                    alpha = Math.Max(alpha, eval);
+                    if (beta <= alpha)
+                    {
+                        ABSnips++;
+                        break;
+                    }
+                }
+
+                if (!ran)
+                    return EvaluatorV2.EvaluateBoard(chessGame, 1);
+
+                //if (!TransportationTable.ContainsKey(board.HashKey))
+                //{
+                //    TransportationTable.Add(board.HashKey, maxEval);
+                //}
+                //else
+                //{
+                //    HashKeyCollisuions++;
+                //    board.PrintMoves();
+                //    AllowedToThink = false;
+                //    return 0;
+                //}
+
+                return maxEval;
+            }
+            else
+            {
+                int minEval = int.MaxValue;
+                bool ran = false;
+                foreach (Move move in moves)
+                {
+                    if (board.Square[move.TargetSquare] == 0)
+                        continue;
+                    ran = true;
+                    Nodes++;
+                    board.MakeMove(move);
+                    int eval = AlphaBetaOnlyCaptures(true, alpha, beta);
+                    board.UnMakeMove();
+                    minEval = Math.Min(minEval, eval);
+                    beta = Math.Min(beta, eval);
+                    if (beta <= alpha)
+                    {
+                        ABSnips++;
+                        break;
+                    }
+                }
+
+                if (!ran)
+                    return EvaluatorV2.EvaluateBoard(chessGame, 1);
+
+                //if (!TransportationTable.ContainsKey(board.HashKey))
+                //{
+                //    TransportationTable.Add(board.HashKey, minEval);
+                //}
+                //else
+                //{
+                //    HashKeyCollisuions++;
+                //    board.PrintMoves();
+                //    AllowedToThink = false;
+                //    return 0;
+                //}
 
                 return minEval;
             }
@@ -679,100 +763,3 @@ namespace MyChess.ChessBoard.AIs
     }
 }
 */
-
-
-
-
-//public int AlphaBetaOnlyCaptures(bool maxPlayer, int alpha, int beta)
-//{
-//    //if (TransportationTable.ContainsKey(board.HashKey))
-//    //    return TransportationTable[board.HashKey];
-
-//    chessGame.possibleMoves.GenerateMoves();
-//    List<Move> movesList = chessGame.GetPossibleMoves();
-//    int TotalCount = movesList.Count();
-//    if (TotalCount == 0)
-//        return EvaluatorV2.EvaluateBoard(chessGame, 0);
-//    Move[] moves = new Move[movesList.Count];
-//    movesList.CopyTo(moves);
-//    MoveOrder.OrderMoves(board, moves);
-
-//    if (maxPlayer)
-//    {
-//        int maxEval = int.MinValue;
-//        bool ran = false;
-//        foreach (Move move in moves)
-//        {
-//            if (board.Square[move.TargetSquare] == 0)
-//                continue;
-//            ran = true;
-//            Nodes++;
-//            board.MakeMove(move);
-//            int eval = AlphaBetaOnlyCaptures(false, alpha, beta);
-//            board.UnMakeMove();
-//            maxEval = Math.Max(maxEval, eval);
-//            alpha = Math.Max(alpha, eval);
-//            if (beta <= alpha)
-//            {
-//                ABSnips++;
-//                break;
-//            }
-//        }
-
-//        if (!ran)
-//            return EvaluatorV2.EvaluateBoard(chessGame, 1);
-
-//        //if (!TransportationTable.ContainsKey(board.HashKey))
-//        //{
-//        //    TransportationTable.Add(board.HashKey, maxEval);
-//        //}
-//        //else
-//        //{
-//        //    HashKeyCollisuions++;
-//        //    board.PrintMoves();
-//        //    AllowedToThink = false;
-//        //    return 0;
-//        //}
-
-//        return maxEval;
-//    }
-//    else
-//    {
-//        int minEval = int.MaxValue;
-//        bool ran = false;
-//        foreach (Move move in moves)
-//        {
-//            if (board.Square[move.TargetSquare] == 0)
-//                continue;
-//            ran = true;
-//            Nodes++;
-//            board.MakeMove(move);
-//            int eval = AlphaBetaOnlyCaptures(true, alpha, beta);
-//            board.UnMakeMove();
-//            minEval = Math.Min(minEval, eval);
-//            beta = Math.Min(beta, eval);
-//            if (beta <= alpha)
-//            {
-//                ABSnips++;
-//                break;
-//            }
-//        }
-
-//        if (!ran)
-//            return EvaluatorV2.EvaluateBoard(chessGame, 1);
-
-//        //if (!TransportationTable.ContainsKey(board.HashKey))
-//        //{
-//        //    TransportationTable.Add(board.HashKey, minEval);
-//        //}
-//        //else
-//        //{
-//        //    HashKeyCollisuions++;
-//        //    board.PrintMoves();
-//        //    AllowedToThink = false;
-//        //    return 0;
-//        //}
-
-//        return minEval;
-//    }
-//}
