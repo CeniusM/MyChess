@@ -51,7 +51,7 @@ namespace MyChessGUI
         // private ChessGame chessGame = new ChessGame("rnbq1k1r/pp1Pbppp/2p5/8/2B1n3/8/PPP1N1PP/RNBQK2R b KQ - 1 8");
         //private ChessGame chessGame = new ChessGame("6k1/1p1qn1r1/1p2R3/3P2pp/1N6/2P4P/P5P1/1R1Q3K b - - 0 1");
         //private ChessGame chessGame = new ChessGame("1r4k1/R1pbb1pp/2p1pp2/2P1P3/3P1P2/5N2/5P1P/6K1 w - - 3 31");
-        private ChessGame chessGame = new ChessGame("8/8/8/1p4PP/3k4/8/5K2/8 b - - 0 1");
+        //private ChessGame chessGame = new ChessGame("8/8/8/1p4PP/3k4/8/5K2/8 b - - 0 1");
         //private ChessGame chessGame = new ChessGame("r1b1kr2/pppp3p/2n2B2/q7/2B1P3/2P2Q2/P4PPP/R3K2R w KQ - 4 20");
         //private ChessGame chessGame = new ChessGame("r2q1rk1/pbb1npp1/5n1p/3p1N2/7Q/1P2PN2/P1PP1PPP/R1B1K2R w KQ - 1 17");
         //private ChessGame chessGame = new ChessGame("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 0");
@@ -60,9 +60,9 @@ namespace MyChessGUI
         //private ChessGame chessGame = new ChessGame("7b/8/1B6/8/p5p1/4PkPp/P4P1P/5K2 w - - 12 48");
         //private ChessGame chessGame = new ChessGame("8/8/5k2/4p3/8/3N3P/2K5/8 w - - 0 1");
         //private ChessGame chessGame = new ChessGame("8/1pp5/k7/8/8/8/8/7K w - - 0 1");
-        //private ChessGame chessGame = new ChessGame();
+        private ChessGame chessGame = new ChessGame();
         private int _selecktedSquare = -1;
-        // private List<int> highligtedSquare = new();
+         private List<int> highligtedSquare = new();
         private ChessPrinter _chessPrinter;
         private Form1 _form;
         private bool _isRunning = true;

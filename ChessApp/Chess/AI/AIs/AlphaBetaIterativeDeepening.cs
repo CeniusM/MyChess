@@ -284,21 +284,9 @@ namespace MyChess.ChessBoard.AIs
                     }
                 }
 
-
-                //if (TransportationTable.ContainsKey(board.HashKey))
-                //{
-                //    var val = TransportationTable[board.HashKey];
-                //    if (val.depth < depth)
-                //    {
-                //        TransportationTable.Remove(board.HashKey);
-                //        TransportationTable.Add(board.HashKey, (maxEval, depth));
-                //    }
-                //}
-                //else
                 if (TransportationTable.ContainsKey(board.HashKey))
                     TransportationTable.Remove(board.HashKey);
                 TransportationTable.Add(board.HashKey, (maxEval, depth));
-                TransportationTable[1] = (1, 1);
 
                 return maxEval;
             }
@@ -321,16 +309,8 @@ namespace MyChess.ChessBoard.AIs
 
 
                 if (TransportationTable.ContainsKey(board.HashKey))
-                {
-                    var val = TransportationTable[board.HashKey];
-                    if (val.depth < depth)
-                    {
-                        TransportationTable.Remove(board.HashKey);
-                        TransportationTable.Add(board.HashKey, (minEval, depth));
-                    }
-                }
-                else
-                    TransportationTable.Add(board.HashKey, (minEval, depth));
+                    TransportationTable.Remove(board.HashKey);
+                TransportationTable.Add(board.HashKey, (minEval, depth));
 
                 return minEval;
             }
