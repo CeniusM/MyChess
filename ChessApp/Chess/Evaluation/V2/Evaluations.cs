@@ -73,7 +73,7 @@ internal class Evaluations
     public static int GetPiecePosses(Board board, float LateGameMultiplier)
     {
         int eval = 0;
-
+        return 0;
         for (int i = 0; i < board.piecePoses.Count; i++)
         {
             int square = board.piecePoses[i];
@@ -84,7 +84,7 @@ internal class Evaluations
             else
                 eval -= PiecePosesBonus.PieceBonuses[piece, square] / 2;
         }
-        
+
         return (int)(eval * (1 - LateGameMultiplier));
     }
 
@@ -207,6 +207,9 @@ internal class Evaluations
 
         //int[] KingMovmentBonus = { -15, -5, 0, 5, -10, -20, -25, -30};
 
+        if (board.moves.Count < 8)
+            return 0;
+
         int eval = 0;
 
         int whiteKingPos = board.GetKingsPos(Piece.White);
@@ -305,27 +308,18 @@ internal class Evaluations
         int eval = 0;
 
         // Create a map for good square to control ( in this case be on... )
-        // Pawns only count as half for this and king for 0
+        // King for 0
         for (int i = 2; i < board.piecePoses.Count; i++)
         {
             int pos = board.piecePoses[i];
             int piece = board.Square[pos];
             int color = piece & Piece.ColorBits;
             int type = piece & Piece.PieceBits;
-            if (type == Piece.Pawn)
-            {
-                if (color == Piece.White)
-                    eval += BonusSquaresWhite[pos] / 2;
-                else
-                    eval -= BonusSquaresWhite[pos] / 2;
-            }
+
+            if (color == Piece.White)
+                eval += BonusSquaresWhite[pos];
             else
-            {
-                if (color == Piece.White)
-                    eval += BonusSquaresWhite[pos];
-                else
-                    eval -= BonusSquaresWhite[pos];
-            }
+                eval -= BonusSquaresBlack[pos];
         }
 
         return eval;
