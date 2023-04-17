@@ -117,6 +117,7 @@ namespace MyChessGUI
                         break;
                     case 'p':
                         var moves = chessGame.board.moves.ToArray();
+                        Array.Reverse(moves);
                         for (int i = 0; i < moves.Length; i++)
                             Console.WriteLine(moves[i].ToString());
                         break;

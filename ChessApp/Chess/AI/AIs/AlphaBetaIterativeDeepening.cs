@@ -25,9 +25,9 @@ namespace MyChess.ChessBoard.AIs
         /// Max depth
         /// </summary>
         public const int Depth = 100;
-        //public const int TimeToThinkMS = 40;
-        //public const int TimeToThinkMS = 1_000;
-        public int TimeToThinkMS = 10_000;
+        //public int TimeToThinkMS = 40;
+        public int TimeToThinkMS = 1_000;
+        //public int TimeToThinkMS = 10_000;
         //public int TimeToThinkMS = 100000_000;
         public bool ShowAIThinking = false;
         private bool AllowedToThink = true;
