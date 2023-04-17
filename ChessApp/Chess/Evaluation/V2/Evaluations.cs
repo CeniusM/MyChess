@@ -73,7 +73,7 @@ internal class Evaluations
     public static int GetPiecePosses(Board board, float LateGameMultiplier)
     {
         int eval = 0;
-        return 0;
+        //return 0;
         for (int i = 0; i < board.piecePoses.Count; i++)
         {
             int square = board.piecePoses[i];
@@ -207,7 +207,7 @@ internal class Evaluations
 
         //int[] KingMovmentBonus = { -15, -5, 0, 5, -10, -20, -25, -30};
 
-        if (board.moves.Count < 8)
+        if (board.moves.Count < 10)
             return 0;
 
         int eval = 0;
@@ -288,12 +288,12 @@ internal class Evaluations
 
     readonly static int[] BonusSquaresWhite =
     {
-        0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,2,10,11,11,10,2,0,-3,4,11,12,12,11,4,-3,-3,6,11,13,12,11,7,-3,-5,3,10,11,11,10,3,-5,-3,6,-3,1,1,-3,6,-3,-10,-12,-10,-5,-5,-10,-12,-10
+        0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,2,10,11,11,10,2,0,-3,4,11,12,12,11,4,-3,-3,6,11,13,12,11,7,-3,-5,3,10,11,11,10,3,-5,-3,6,-3,1,1,-3,6,-3,-15,-12,-10,-5,-5,-10,-12,-15
     };
 
     readonly static int[] BonusSquaresBlack =
     {
-        -10,-12,-10,-5,-5,-10,-12,-10
+        -15,-12,-10,-5,-5,-10,-12,-15
         ,-3,6,-3,1,1,-3,6,-3
         ,-5,3,10,11,11,10,3,-5
         ,-3,6,11,13,12,11,7,-3
