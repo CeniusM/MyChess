@@ -1,69 +1,55 @@
-using System.ComponentModel;
-using MyChess.ChessBoard;
+// using System.ComponentModel;
+// using MyChess.ChessBoard;
 
 
-// https://en.wikipedia.org/wiki/Portable_Game_Notation
+// // https://en.wikipedia.org/wiki/Portable_Game_Notation
 
-// note:
-// gotta make the GetboardFromFEN faster becous it will be called alot and alot more then GetFenFromBoard
+// // note:
+// // gotta make the GetboardFromFEN faster becous it will be called alot and alot more then GetFenFromBoard
 
-namespace MyChess.PGN
-{
-    public class PGNReader
-    {
-        public static readonly string StartPostion = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-        private enum PGNState
-        {
-            None,
-            Event,
-            Site,
-            Date,
-            Round,
-            White,
-            Black,
-            Result,
-            //optinals, or rather if its setup
-            Setup,
-            FEN,
-            ReadingMoves // last
-        }
-        /// dosent work with Optional tags, and only works with postiotions that start from the initial one
-        public static ChessGame GetChessGame(string PGN) // and is probely slow becous of all the string manipulations, hopefully MyFEN is way faster
-        {
-            try
-            {
-                PGNState state = PGNState.None;
-                ChessGame cg = new ChessGame();
+// namespace MyChess.PGN
+// {
+//     public class PGNWriter
+//     {
+//         /// dosent work with Optional tags, and only works with postiotions that start from the initial one
 
-                for (int i = 0; i < PGN.Length; i++)
-                {
-                    char c = PGN[i];
-                    if (c == '\n' && PGN[i + 1] == '\n')
-                        state = PGNState.ReadingMoves;
+//         /// <summary>
+//         /// Can be used to convert into a .pgn file and saved / used somewhere
+//         /// </summary>
+//         public static List<string> GetChessGame(ChessGame chessGame) // and is probely slow becous of all the string manipulations, hopefully MyFEN is way faster
+//         {
+//             Move[] moves = new Move[chessGame.board.moves.Count];
+//             chessGame.board.moves.CopyTo(moves, 0);
+//             ChessGame cg = new();
+
+//             List<string> list = new List<string>();
+
+//             list.Add("[Event \"?\"]");
+//             list.Add("[Site \"?\"]");
+//             list.Add("[Date \"????.??.??\"]");
+//             list.Add("[Round \"?\"]");
+//             list.Add("[White \"?\"]");
+//             list.Add("[Black \"?\"]");
+//             list.Add("[Result \"*\"]");
+//             list.Add("");
+//             list.Add(""); // for all the moves i think
 
 
-                }
+//             for (int i = 0; i < moves.Count(); i++)
+//             {
+//                 list[list.Count] += GetMove(cg, moves[i]);
+//                 cg.MakeMove(moves[i]);
+//             }
 
+//             return list;
+//         }
 
+//         private static string GetMove(ChessGame cg, Move move)
+//         {
 
+//         }
 
-
-
-
-                return cg;
-            }
-            catch
-            {
-                return new ChessGame();
-            }
-        }
-
-        private static Move GetMove(ChessGame cg, string move)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static bool IsPieceWhite(int p) => (p & Piece.ColorBits) == Piece.White;
-        private static bool IsPieceThisPiece(int p, int pType) => (p & Piece.PieceBits) == pType;
-    }
-}
+//         private static bool IsPieceWhite(int p) => (p & Piece.ColorBits) == Piece.White;
+//         private static bool IsPieceThisPiece(int p, int pType) => (p & Piece.PieceBits) == pType;
+//     }
+// }

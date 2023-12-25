@@ -1,4 +1,5 @@
 ﻿using MyChessGUI;
+using Chess;
 
 namespace winForm;
 

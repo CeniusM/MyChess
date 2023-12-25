@@ -17,7 +17,14 @@ namespace MyChess.UnitTester.Tests
         public static void PerftResults()
         {
 
-            
+
+
+
+            MyLib.MyConsole.WriteLine(PerftSearchWithAVGMoves(new("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"), 4865609, 5));
+            MyLib.MyConsole.WriteLine(PerftSearchWithAVGMoves(new("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 0"), 193690690, 5));
+            MyLib.MyConsole.WriteLine(PerftSearchWithAVGMoves(new("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"), 15833292, 5));
+
+
 
 
 
@@ -85,14 +92,14 @@ namespace MyChess.UnitTester.Tests
             // long[] foo3 = { 14, 191, 2812, 43238, 674624, 11030083, 178633661, 3009794393 };
             // MyLib.MyConsole.WriteLine(FullSearchPrint("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 0", foo3, 6));
 
-            MyLib.MyConsole.WriteLine("Standerd Pos: Initial Position");
-            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 20, 1));
-            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 400, 2));
-            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8902, 3));
-            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 197281, 4));
-            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 4865609, 5));
-            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 119060324, 6));
-            MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 3195901860, 7));
+            // MyLib.MyConsole.WriteLine("Standerd Pos: Initial Position");
+            // MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 20, 1));
+            // MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 400, 2));
+            // MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8902, 3));
+            // MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 197281, 4));
+            // MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 4865609, 5));
+            // MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 119060324, 6));
+            // MyLib.MyConsole.WriteLine(PerftResultSearch(true, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 3195901860, 7));
 
 
             // MyLib.MyConsole.WriteLine("");
@@ -363,6 +370,51 @@ namespace MyChess.UnitTester.Tests
             }
 
             return moveCount;
+        }
+
+        public static string PerftSearchWithAVGMoves(ChessGame chessGame, long ExpectedValue, int Depth)
+        {
+            long moveCount = 0;
+
+            ulong MovesAVG = 0;
+            int MovesRecorded = 0;
+            int MaxMoves = 0;
+
+            SearchMove(Depth);
+
+            MovesAVG = MovesAVG / (ulong)MovesRecorded;
+
+            void SearchMove(int depth)
+            {
+                chessGame.possibleMoves.GenerateMoves();
+                List<Move> movesRef = chessGame.GetPossibleMoves();
+                int Count = movesRef.Count();
+                Move[] moves = new Move[Count];
+                movesRef.CopyTo(moves);
+
+                MovesAVG += (ulong)Count;
+                MovesRecorded++;
+                if (Count > MaxMoves)
+                    MaxMoves = Count;
+
+
+
+                for (int i = 0; i < Count; i++)
+                {
+                    if (depth == 1)
+                    {
+                        moveCount++;
+                        continue;
+                    }
+                    chessGame.board.MakeMove(moves[i]);
+                    SearchMove(depth - 1);
+                    chessGame.board.UnMakeMove();
+                }
+            }
+
+            string str = "AVGMoves: " + MovesAVG + ", MaxValue: " + MaxMoves + ", MoveCount: " + moveCount + (moveCount == ExpectedValue ? "" : (", Expected: " + ExpectedValue + "!"));
+
+            return str;
         }
     }
 }

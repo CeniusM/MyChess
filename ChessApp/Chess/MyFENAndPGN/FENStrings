@@ -1,0 +1,18 @@
+// namespace MyChess.FEN
+// {
+//     readonly struct FENStrings
+//     {
+//         public FENStrings() { }
+//         public readonly string InitialPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+//         public readonly static string[] EquelChessPoses =
+//         {
+//             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"        
+//         };
+
+
+//         public readonly static StringWithExpectedResult...[] ChessPostitionAndEval =
+//         {
+//             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"        
+//         };
+//     }
+// }

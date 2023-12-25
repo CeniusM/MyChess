@@ -10,6 +10,11 @@ namespace MyChess.SpeedTester.Tests
 
         public static void TimeSearch()
         {
+            // warm up
+            PerftSearchWithTime("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 4865609, 5);
+            
+            
+            
             // Print("Standerd Pos: Initial Position");
             Print(PerftSearchWithTime("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 20, 1));
             Print(PerftSearchWithTime("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 400, 2));

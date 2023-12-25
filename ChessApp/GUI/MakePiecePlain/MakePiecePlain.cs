@@ -5,6 +5,7 @@ using CS_Math;
 using MyChess.ChessBoard.Evaluators;
 using MyChess.PossibleMoves;
 using MyChess.ChessBoard.AIs;
+using Chess;
 
 using MyChess.ChessBoard.Evaluators.Methods;
 

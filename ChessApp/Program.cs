@@ -3,6 +3,7 @@ using System.Diagnostics;
 using MyChess.ChessBoard;
 using MyChess;
 using MyChess.PossibleMoves;
+using ChessGUI;
 
 using MyChessGUI;
 
@@ -10,7 +11,7 @@ namespace winForm;
 
 static class Program
 {
-    private static GameOfChess? game;
+    private static GameOfChessV2? game;
     /// <summary>
     ///  The main entry point for the application.
     /// </summary>
@@ -76,9 +77,9 @@ static class Program
         //MyChess.UnitTester.TestRunner.Run();
 
         // SpeedTest
-        //MyChess.SpeedTester.TestRunner.Run();
+        // MyChess.SpeedTester.TestRunner.Run();
 
-        game = new GameOfChess(myForm);
+        game = new(myForm);
         game.Play();
 
         //MakePiecePlain m = new(myForm);
